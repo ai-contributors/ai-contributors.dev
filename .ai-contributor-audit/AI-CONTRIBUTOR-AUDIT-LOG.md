@@ -1,10 +1,10 @@
 ---
 spec_version: "0.1"
 spec_source: https://github.com/ai-contributors/ai-contributor-spec/tree/9d6e0676353315f6c0f86e5ed09468f6ac2286e9
-assessment_started_at: 2026-05-03T17:27:21.208Z
-assessment_completed_at: 2026-05-03T17:28:31.688Z
-assessment_duration: 00:01:10
-audited_commit: 2fdfe55c2e3484f4b2d944dfbdf65de9dfbd2e46
+assessment_started_at: 2026-05-03T17:40:23.612Z
+assessment_completed_at: 2026-05-03T17:41:39.361Z
+assessment_duration: 00:01:15
+audited_commit: f516d2798ef43388689731a0f85e1f76e01806fe
 auditor: OpenAI Codex | GPT-5 | medium
 validator_version: "0.1.0"
 collector_version: "0.1.0"
@@ -62,20 +62,20 @@ Rows between `<!-- BEGIN:STAMPED-COLLECTOR-ROWS -->` and `<!-- END:STAMPED-COLLE
 | Spec IDs | Rules | Command | Output excerpt |
 | -------- | ----- | ------- | -------------- |
 <!-- BEGIN:STAMPED-COLLECTOR-ROWS -->
-<!-- STAMPED-BLOCK-SHA256: 503838db3ff4ce80d83f7dcd3e055c6b411b4577505ebe8179db680b4cdb218e -->
+<!-- STAMPED-BLOCK-SHA256: 2b045e9fcd67bd611cf2694df77de49169e61a721a60aa121b2a19e5e3d37d68 -->
 
-| | `<preflight>` | `npx --yes tsx@4.21.0 audit-collect.ts /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation --out /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation/.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json --commit 2fdfe55c2e3484f4b2d944dfbdf65de9dfbd2e46` | `[audit-collect] wrote .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json — 44 rules; Fulfilled=37 Warning=4 Alarm=0 jud…` |
+| | `<preflight>` | `npx --yes tsx@4.21.0 audit-collect.ts /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation --out /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation/.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json --commit f516d2798ef43388689731a0f85e1f76e01806fe` | `[audit-collect] wrote .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json — 44 rules; Fulfilled=37 Warning=4 Alarm=0 jud…` |
 | | `<preflight>` | `gh api user --jq .login` | `login=ai-contributors; token_tier=api_identity_verified_scopes_unknown; gh api user login=ai-contributors; gh auth stat…` |
 | `AIC-default-branch-protected` | `Branch Protection` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-ci-guardrail-suite` | `CI Gates` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-dependency-review-visibility` | `Dependency Review` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-dependency-vuln-detection` | `Dependency Security` | `gh api repos/ai-contributors/ai-contributors.dev/dependabot/alerts?state=open&severity=high&per_page=1` | `[]` |
 | `AIC-human-review-required` | `Human Review Required` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
-| `AIC-lint-correctness-rules` | `Lint Rules` | `pnpm -r lint` | `\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-2fdfe55c-KEZIBz\n> eslint .\n\n` |
-| `AIC-lockfile-integrity-hashes`, `AIC-lockfile-enforced-in-ci` | `Lockfile Integrity` | `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` | `Done in 349ms using pnpm v10.33.2\n` |
+| `AIC-lint-correctness-rules` | `Lint Rules` | `pnpm -r lint` | `\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-f516d279-eqBb6T\n> eslint .\n\n` |
+| `AIC-lockfile-integrity-hashes`, `AIC-lockfile-enforced-in-ci` | `Lockfile Integrity` | `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` | `Done in 476ms using pnpm v10.33.2\n` |
 | `AIC-push-protection-enabled` | `Push Protection` | `gh api repos/ai-contributors/ai-contributors.dev` | `{\n  "id": 1227930329,\n  "node_id": "R_kgDOSTC62Q",\n  "name": "ai-contributors.dev",\n  "full_name": "ai-contributors/ai-…` |
 | `AIC-secret-scanning-enabled` | `Secret Scanning` | `gh api repos/ai-contributors/ai-contributors.dev/secret-scanning/alerts` | `[]` |
-| `AIC-strict-typing-enabled` | `Strict Types` | `pnpm -r type-check` | `\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-2fdfe55c-KEZIBz\n> pnpm prepare:spec\n\n\n…` |
+| `AIC-strict-typing-enabled` | `Strict Types` | `pnpm -r type-check` | `\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-f516d279-eqBb6T\n> pnpm prepare:spec\n\n\n…` |
 
 <!-- END:STAMPED-COLLECTOR-ROWS -->
 

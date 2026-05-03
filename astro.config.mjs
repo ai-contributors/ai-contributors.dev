@@ -3,8 +3,10 @@ import starlight from "@astrojs/starlight";
 import mermaid from "astro-mermaid";
 import starlightLlmsTxt from "starlight-llms-txt";
 
-const site = process.env.ASTRO_SITE ?? "https://ai-contributors.dev";
-const base = process.env.ASTRO_BASE ?? "/";
+import { CUSTOM_DOMAIN, PRODUCTION_BASE } from "./scripts/pages-routing.mjs";
+
+const site = process.env.ASTRO_SITE ?? CUSTOM_DOMAIN;
+const base = process.env.ASTRO_BASE ?? PRODUCTION_BASE;
 
 export default defineConfig({
   site,

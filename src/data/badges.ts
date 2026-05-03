@@ -56,5 +56,5 @@ export function badgeUrlForLevel(levelId: string): string {
 
 export function badgeMarkdownForLevel(levelId: string): string {
   const level = findLevel(levelId);
-  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/levels/)`;
+  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/ai-contributor-spec/levels/)`;
 }

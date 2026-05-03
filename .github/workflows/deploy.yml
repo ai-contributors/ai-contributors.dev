@@ -56,7 +56,7 @@ jobs:
         run: pnpm build
         env:
           ASTRO_SITE: https://ai-contributors.dev
-          ASTRO_BASE: /
+          ASTRO_BASE: /ai-contributor-spec/
 
       - name: Build PR preview
         if: github.event_name == 'pull_request'
@@ -112,8 +112,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          find gh-pages -mindepth 1 -maxdepth 1 ! -name ".git" ! -name "pr-preview" -exec rm -rf {} +
-          cp -R dist/. gh-pages/
+          find gh-pages -mindepth 1 -maxdepth 1 ! -name ".git" ! -name "pr-preview" ! -name "ai-contributor-spec" -exec rm -rf {} +
+          rm -rf gh-pages/ai-contributor-spec
+          mkdir -p gh-pages/ai-contributor-spec
+          cp -R dist/. gh-pages/ai-contributor-spec/
+          rm -f gh-pages/ai-contributor-spec/CNAME
+          node --input-type=module -e 'import { writeFile } from "node:fs/promises"; import { productionRedirectHtml } from "./scripts/pages-routing.mjs"; await writeFile("gh-pages/index.html", productionRedirectHtml(), "utf8"); await writeFile("gh-pages/CNAME", "ai-contributors.dev\n", "utf8");'
           touch gh-pages/.nojekyll
           git -C gh-pages config user.name "github-actions[bot]"
           git -C gh-pages config user.email "github-actions[bot]@users.noreply.github.com"

@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { productionUrl } from "./pages-routing.mjs";
 import { SOURCE_ROUTES, SPEC_ROOT } from "./spec-content.mjs";
 
 const dist = path.resolve("dist");
@@ -22,7 +23,7 @@ if (!existsSync(llmsPath)) {
     "> Guardrails for repositories where AI reads, writes, reviews, or releases code.",
     "",
     "## Docs",
-    ...SOURCE_ROUTES.map((route) => `- [${route.title}](https://ai-contributors.dev/${route.slug}/)`),
+    ...SOURCE_ROUTES.map((route) => `- [${route.title}](${productionUrl(`${route.slug}/`)})`),
     "",
   ].join("\n");
   await writeFile(llmsPath, index, "utf8");

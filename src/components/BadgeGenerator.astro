@@ -30,7 +30,7 @@ import { BADGE_LEVELS, badgeMarkdownForLevel } from "../data/badges";
     const level = levels.find((entry) => entry.id === levelId);
     if (!level) return "";
     const label = encodeURIComponent(`${level.id} ${level.name}`).replace(/%20/g, "%20");
-    return `[![AI Contributor: ${level.id} ${level.name}](https://img.shields.io/badge/AI%20Contributor-${label}-${level.color})](https://ai-contributors.dev/levels/)`;
+    return `[![AI Contributor: ${level.id} ${level.name}](https://img.shields.io/badge/AI%20Contributor-${label}-${level.color})](https://ai-contributors.dev/ai-contributor-spec/levels/)`;
   }
 
   select?.addEventListener("change", () => {

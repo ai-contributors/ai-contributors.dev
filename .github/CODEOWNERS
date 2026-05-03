@@ -1,0 +1,23 @@
+# Code ownership for sensitive paths.
+# Lines later in this file override earlier ones (GitHub semantics).
+
+*                                      @ai-contributors
+
+# Site source and generated specification pages.
+/src/                                  @ai-contributors
+/scripts/                              @ai-contributors
+/astro.config.mjs                      @ai-contributors
+/package.json                          @ai-contributors
+/pnpm-lock.yaml                        @ai-contributors
+
+# Pinned upstream source.
+/external/ai-contributor-spec          @ai-contributors
+/.gitmodules                           @ai-contributors
+
+# CI workflows + repo-level governance.
+/.github/                              @ai-contributors
+/AGENTS.md                             @ai-contributors
+/SECURITY.md                           @ai-contributors
+/CONTRIBUTING.md                       @ai-contributors
+/LICENSE                               @ai-contributors
+/LICENSE-APACHE                        @ai-contributors

@@ -1,0 +1,76 @@
+# Agents
+
+Authoritative AI instruction file for `ai-contributors.dev`. Human
+contributors and AI agents MUST follow this document.
+
+## What This Repo Is
+
+This repository builds the public Astro/Starlight website for the AI
+Contributor Specification. It presents the pinned specification submodule as
+searchable documentation and deploys to GitHub Pages.
+
+Primary risk surfaces:
+
+- Drift between the pinned `external/ai-contributor-spec` submodule and the
+  generated pages in `src/content/docs/generated-spec/`.
+- GitHub Pages deployment and workflow permissions.
+- Public-facing documentation accuracy.
+
+## Architecture
+
+- `external/ai-contributor-spec/` is a pinned submodule source.
+- `scripts/spec-content.mjs` owns the manifest and generated docs refresh.
+- `src/content/docs/generated-spec/` contains committed generated Markdown so
+  Starlight sidebar slugs resolve in dev, CI, and deploy contexts.
+- `src/content/docs/` contains site-authored Starlight pages.
+- `src/components/` and `src/styles/custom.css` contain the presentation layer.
+- `.github/workflows/` contains CI, dependency review, CodeQL, and Pages deploy.
+
+## Commands
+
+```sh
+pnpm install --frozen-lockfile
+pnpm validate:spec
+pnpm test
+pnpm check
+pnpm build
+pnpm dev
+```
+
+## Forbidden Actions
+
+- Do not edit `src/content/docs/generated-spec/` by hand. Update the pinned
+  submodule or route manifest, then run `pnpm prepare:spec`.
+- Do not change the deployed custom domain without maintainer approval.
+- Do not bypass CI gates or mask failing commands.
+- Do not add secrets, tokens, or environment-specific credentials.
+- Do not modify `.github/workflows/` or `.github/CODEOWNERS` without explicit
+  maintainer approval.
+
+## Credentials
+
+No credentials are required to clone, build, test, or run the site locally.
+CI uses `GITHUB_TOKEN` with explicit least-privilege permissions. GitHub Pages
+must be enabled in repository settings with Build and deployment source set to
+GitHub Actions.
+
+## Authorship And Disclosure
+
+Materially AI-authored pull requests MUST complete the AI Authorship & Agent
+Trace block in `.github/PULL_REQUEST_TEMPLATE.md`. Materially AI-authored
+commits SHOULD include a `Co-Authored-By:` trailer naming the AI tool/model.
+
+Minor autocomplete, spelling, grammar, or formatting suggestions do not require
+AI disclosure.
+
+## Data Classification
+
+| Class | Examples | Allowed in AI context | Notes |
+|---|---|---|---|
+| Public site/source content | `src/`, `docs/`, generated spec pages | Yes | Public by design. |
+| Public CI configuration | `.github/workflows/`, `.github/CODEOWNERS` | Yes | No embedded secrets. |
+| Secrets/credentials | none | No | Do not introduce. |
+| Customer or regulated data | none | No | Out of scope for this repo. |
+
+If a future change introduces non-public data, this table and `SECURITY.md`
+MUST be updated in the same PR.

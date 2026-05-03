@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.astro/
+/coverage/
+/.lighthouseci/
+.worktrees/
+.env.example
+.husky/
+
+external/
+src/content/docs/generated-spec/
+src/data/spec-source.generated.json
+
+AI-CONTRIBUTOR-AUDIT.md
+.ai-contributor-audit/
+docs/superpowers/

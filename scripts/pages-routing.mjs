@@ -1,10 +1,10 @@
-export const CUSTOM_DOMAIN = "https://ai-contributors.dev";
-export const PRODUCTION_BASE = "/ai-contributor-spec/";
-export const PRODUCTION_DIR = "ai-contributor-spec";
-export const GITHUB_PROJECT_BASE = "/ai-contributors.dev/";
+export const CUSTOM_DOMAIN = 'https://ai-contributors.dev';
+export const PRODUCTION_BASE = '/ai-contributor-spec/';
+export const PRODUCTION_DIR = 'ai-contributor-spec';
+export const GITHUB_PROJECT_BASE = '/ai-contributors.dev/';
 
-export function productionUrl(path = "") {
-  const normalizedPath = path.replace(/^\/+/, "");
+export function productionUrl(path = '') {
+  const normalizedPath = path.replace(/^\/+/, '');
   return new URL(`${PRODUCTION_BASE}${normalizedPath}`, CUSTOM_DOMAIN).toString();
 }
 

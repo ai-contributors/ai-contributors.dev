@@ -1,0 +1,1608 @@
+{
+  "$schema_version": "1",
+  "audit_collect_version": "0.1.0",
+  "spec_version": "0.1",
+  "spec_source": null,
+  "assessment_started_at": "2026-05-03T17:08:54.838Z",
+  "target": {
+    "path": "/home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation",
+    "audited_commit": "15c5cac967cf6de47e2270840513aac0516c0462",
+    "default_branch": "main",
+    "host": {
+      "kind": "github",
+      "owner": "ai-contributors",
+      "repo": "ai-contributors.dev"
+    },
+    "mode": "sha-pinned"
+  },
+  "preflight": {
+    "started_at": "2026-05-03T17:08:54.838Z",
+    "completed_at": "2026-05-03T17:09:51.507Z",
+    "extracted_to": "/tmp/audit-collect-15c5cac9-EMI2Pl",
+    "original_worktree_status": "M .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json\n M AI-CONTRIBUTOR-AUDIT.md",
+    "node_modules_cache_hit": true,
+    "tools_available": {
+      "node": "v24.12.0",
+      "pnpm": "10.33.2",
+      "npm": "11.6.2",
+      "gh": "gh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)",
+      "git": "git version 2.43.0"
+    },
+    "executor": {
+      "package": "tsx",
+      "version": "4.21.0",
+      "pin": "tsx@4.21.0",
+      "pin_kind": "npm-exact-version",
+      "invocation": "npx --yes tsx@4.21.0",
+      "node_version": "v24.12.0",
+      "entrypoint": "audit-collect.ts"
+    }
+  },
+  "stack": {
+    "detected": [
+      "node",
+      "pnpm",
+      "pnpm-workspace",
+      "typescript"
+    ],
+    "evidence": [
+      {
+        "file": "package.json"
+      },
+      {
+        "file": "package.json",
+        "field": "packageManager",
+        "value": "pnpm@10.33.2"
+      },
+      {
+        "file": "pnpm-workspace.yaml"
+      },
+      {
+        "file": "tsconfig.json"
+      }
+    ]
+  },
+  "scope_inventory": {
+    "units": [
+      {
+        "id": "root",
+        "path": ".",
+        "manifest": "package.json"
+      },
+      {
+        "id": ".",
+        "path": ".",
+        "manifest": "package.json"
+      }
+    ],
+    "deliberately_excluded": []
+  },
+  "profile": {
+    "path": ".ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md",
+    "present": true,
+    "default_policy": "owner_profile",
+    "answers": [
+      {
+        "question_id": "env-required",
+        "question": "Apply environment-variable template checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `astro.config.mjs` reads `ASTRO_SITE` and `ASTRO_BASE`; `.github/workflows/deploy.yml` sets them for production and PR preview builds.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-env-example-placeholders"
+        ],
+        "source_line": 25
+      },
+      {
+        "question_id": "ui-a11y",
+        "question": "Apply user-interface and accessibility checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. Astro/Starlight site with UI components in `src/components/` and presentation styles in `src/styles/custom.css`.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-a11y-component-checks",
+          "AIC-a11y-review-testing",
+          "AIC-a11y-helpers",
+          "AIC-a11y-keyboard-focus",
+          "AIC-a11y-extra-gates",
+          "AIC-performance-budgets",
+          "AIC-budgets-automated"
+        ],
+        "source_line": 26
+      },
+      {
+        "question_id": "runtime-critical",
+        "question": "Apply backend, proxy, worker, or critical-runtime checks?",
+        "answer": "no",
+        "owner_evidence": "Owner confirmed 2026-05-03. Static documentation site; no backend, API, proxy, worker, or critical runtime source found in `src/`, `scripts/`, or manifests.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-reliability-expectations",
+          "AIC-reliability-consequences",
+          "AIC-observability-redaction",
+          "AIC-failure-handling-explicit",
+          "AIC-retries-backoff-deliberate"
+        ],
+        "source_line": 27
+      },
+      {
+        "question_id": "persistence-layer",
+        "question": "Apply database schema and persistence-layer checks?",
+        "answer": "no",
+        "owner_evidence": "Owner confirmed 2026-05-03. No database dependencies, migrations, schemas, or persistence-layer code found.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-data-integrity-constraints"
+        ],
+        "source_line": 28
+      },
+      {
+        "question_id": "host-push-protection",
+        "question": "Apply hosted push-time secret blocking checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. GitHub-hosted repository with Actions and GitHub Pages deployment; hosted push-protection settings are outside repository files.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-push-protection-enabled"
+        ],
+        "source_line": 29
+      },
+      {
+        "question_id": "host-deploy-env-approvals",
+        "question": "Apply hosted deployment-environment required-reviewer checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `.github/workflows/deploy.yml` uses the `github-pages` deployment environment for production, preview, and cleanup deployment jobs.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-deploy-env-approvals"
+        ],
+        "source_line": 30
+      },
+      {
+        "question_id": "build-sbom-discipline",
+        "question": "Apply build/release dependency identification and SBOM checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `package.json`, `pnpm-lock.yaml`, and GitHub Actions build/deploy workflow define the build and dependency surface.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-sbom-generation",
+          "AIC-release-dependency-identification"
+        ],
+        "source_line": 31
+      },
+      {
+        "question_id": "external-supply-chain-trust",
+        "question": "Apply external-consumer supply-chain trust checks (provenance attestations, artifact signing, immutable build linkage)?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. Public documentation site is built in CI and deployed to GitHub Pages for external consumers.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-build-provenance-attestation",
+          "AIC-build-immutable-refs",
+          "AIC-artifact-signing"
+        ],
+        "source_line": 32
+      },
+      {
+        "question_id": "ci-cd-deploy-creds",
+        "question": "Apply CI/CD workflow and deployment-credential checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `.github/workflows/deploy.yml` builds, previews, deploys, and cleans up GitHub Pages using scoped workflow permissions and `GITHUB_TOKEN`.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-workflow-token-least-privilege",
+          "AIC-short-lived-deploy-creds",
+          "AIC-prod-deploy-protected",
+          "AIC-deploy-env-approvals",
+          "AIC-deployment-separation",
+          "AIC-release-from-ci"
+        ],
+        "source_line": 33
+      },
+      {
+        "question_id": "external-contrib-disclosure",
+        "question": "Apply external-contribution disclosure checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `.github/PULL_REQUEST_TEMPLATE.md` and `AGENTS.md` define AI authorship and prompt-audit disclosure expectations.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-ai-authorship-disclosure-policy"
+        ],
+        "source_line": 34
+      },
+      {
+        "question_id": "ai-provider-allowlist",
+        "question": "Apply external AI provider and model allowlist checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. Repository policy permits materially AI-authored PRs and requires PR disclosure of AI tool/model and prompt-audit metadata.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-ai-provider-allowlist",
+          "AIC-regulated-data-provider-gate",
+          "AIC-provider-deprecation-procedure",
+          "AIC-no-routing-past-eol",
+          "AIC-allowlist-rescope-on-terms-change"
+        ],
+        "source_line": 35
+      },
+      {
+        "question_id": "ai-context-retention",
+        "question": "Apply retained AI prompt, transcript, and tool-output checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. `.github/PULL_REQUEST_TEMPLATE.md` requires `Prompt-Audit`; `docs/superpowers/` contains agent planning and specification artifacts.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-ai-context-retention",
+          "AIC-prompt-audit-trail",
+          "AIC-ai-input-retention"
+        ],
+        "source_line": 36
+      },
+      {
+        "question_id": "mcp-servers",
+        "question": "Apply MCP server checks?",
+        "answer": "no",
+        "owner_evidence": "Owner confirmed 2026-05-03. No MCP configuration found; MCP mentions are generated/public specification content rather than repository workflow configuration.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-mcp-root-scoping",
+          "AIC-mcp-read-only-default",
+          "AIC-mcp-pinned-versions",
+          "AIC-mcp-env-separation",
+          "AIC-mcp-root-prompt",
+          "AIC-mcp-prompt-review",
+          "AIC-mcp-auditability"
+        ],
+        "source_line": 37
+      },
+      {
+        "question_id": "autonomous-runners",
+        "question": "Apply autonomous-agent and scheduled-runner checks?",
+        "answer": "no",
+        "owner_evidence": "Owner confirmed 2026-05-03. Scheduled CodeQL and Dependabot workflows exist, but no autonomous AI runner evidence was found.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-agent-escalation-trigger-enforcement",
+          "AIC-agent-kill-switch",
+          "AIC-agent-rollback-procedure",
+          "AIC-agent-behavior-monitoring",
+          "AIC-agent-cost-ceiling"
+        ],
+        "source_line": 38
+      },
+      {
+        "question_id": "ai-dependency",
+        "question": "Apply AI-introduced dependency checks?",
+        "answer": "yes",
+        "owner_evidence": "Owner confirmed 2026-05-03. AI-authored contributions are permitted with disclosure, and the repository has npm dependencies in `package.json` and `pnpm-lock.yaml`.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-ai-dependency-verification",
+          "AIC-strict-new-dep-policy"
+        ],
+        "source_line": 39
+      },
+      {
+        "question_id": "regulated-ai-data",
+        "question": "Apply regulated, secret, customer, or production-data AI workflow checks?",
+        "answer": "no",
+        "owner_evidence": "Owner confirmed 2026-05-03. `AGENTS.md` classifies repo content as public, states secrets/customer/regulated data are out of scope, and says no credentials are required for local work.",
+        "evidence_kind": "owner_attestation",
+        "evidence_use": "applicability",
+        "affected_aic_ids": [
+          "AIC-ai-data-classification",
+          "AIC-regulated-data-provider-gate",
+          "AIC-ai-prod-data-readonly",
+          "AIC-data-minimization-techniques"
+        ],
+        "source_line": 40
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "github_api": {
+    "token_tier": "api_identity_verified_scopes_unknown",
+    "active_login": "ai-contributors",
+    "scopes_observed": [],
+    "auth_status_excerpt": "gh api user login=ai-contributors; gh auth status timed out after 10000ms; token scopes not reported"
+  },
+  "ai_surface_inventory": {
+    "instruction_files": [
+      "AGENTS.md"
+    ],
+    "rule_files": [],
+    "skill_files": [],
+    "prompt_files": [],
+    "mcp_config_files": [],
+    "ai_sdk_deps": []
+  },
+  "applicability_hints": {
+    "shapes": [
+      "deploying",
+      "package",
+      "web-ui"
+    ],
+    "signals_by_shape": {
+      "package": [
+        "package.json: name=ai-contributors-dev"
+      ],
+      "service": [],
+      "web-ui": [
+        "package.json: dep astro"
+      ],
+      "cli": [],
+      "library": [],
+      "containerized": [],
+      "deploying": [
+        ".github/workflows/deploy.yml"
+      ]
+    }
+  },
+  "instruction_quality_hints": {
+    "canonical_file": "AGENTS.md",
+    "canonical_referenced_in_doc": "README.md",
+    "pointer_files": [],
+    "forbidden_actions_present": true,
+    "forbidden_actions_evidence": "## Forbidden Actions"
+  },
+  "mcp_inventory": {
+    "servers": []
+  },
+  "prompt_skill_inventory": [],
+  "ai_authorship_trail": {
+    "window": 200,
+    "total_commits_scanned": 21,
+    "ai_authored": [
+      {
+        "sha": "15c5cac967cf6de47e2270840513aac0516c0462",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "5f3cb5a73c74071dfb181ccc432da9b7849fed1f",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "48a810d3573c933303b75f1577266633cf96af59",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "77454f2dce94f38613aecf4553570a88e46c82c5",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "a4224be68cc31df9303f0fbee26a62133d623e7f",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "0da760860b07067bd248af8d318eb537c2a81fdb",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      }
+    ],
+    "ratio": 0.286,
+    "most_recent_ai_sha": "15c5cac967cf6de47e2270840513aac0516c0462"
+  },
+  "hosted_settings": {
+    "branch_protection": {
+      "value": {
+        "active": true,
+        "permissive_bypass": false
+      },
+      "source": "gh:rules-api",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "required_status_checks": {
+      "value": [
+        "Analyze (javascript-typescript)",
+        "build",
+        "Dependency Review"
+      ],
+      "source": "gh:rules-api",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "required_reviews": {
+      "value": {
+        "count": 1,
+        "dismiss_stale": true
+      },
+      "source": "gh:rules-api",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "codeowners_enforced": {
+      "value": true,
+      "source": "gh:rules-api",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "secret_scanning": {
+      "value": "enabled",
+      "source": "gh:repo",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "push_protection": {
+      "value": "enabled",
+      "source": "gh:repo",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "dependency_alerts": {
+      "value": {
+        "open_high": 0
+      },
+      "source": "gh:dependabot",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    },
+    "deployment_environments": {
+      "value": [
+        {
+          "name": "github-pages",
+          "has_required_reviewers": true,
+          "required_reviewer_count": 1
+        }
+      ],
+      "source": "gh:environments",
+      "last_checked": "2026-05-03T17:08:54.838Z"
+    }
+  },
+  "bootstrap_smoke": {
+    "enabled": true,
+    "ran": true,
+    "reason": "opt-in run completed",
+    "clone_dir": "<bootstrap-smoke-tmp>",
+    "total_duration_ms": 33433,
+    "steps": [
+      {
+        "label": "install",
+        "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline",
+        "exit_code": 0,
+        "duration_ms": 1757,
+        "stdout_excerpt": "Lockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +1109\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1109, reused 1109, downloaded 0, added 1109, done\n…",
+        "stderr_excerpt": "",
+        "timed_out": false
+      },
+      {
+        "label": "build",
+        "cmd": "pnpm run build",
+        "exit_code": 0,
+        "duration_ms": 30993,
+        "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 prebuild /tmp/bootstrap-smoke-DuKZpM\n> pnpm prepare:spec\n\n\n…",
+        "stderr_excerpt": "Submodule 'external/ai-contributor-spec' (https://github.com/ai-contributors/ai-contributor-spec.git) registered for path 'external/ai-contributor-spec'\nCloning into '/tmp/bootstrap-smoke-DuKZpM/external/ai-contributor-spec'...\nEntry docs → 404 was not found.\n",
+        "timed_out": false
+      }
+    ]
+  },
+  "rules": {
+    "lockfile-integrity": {
+      "spec_rule_name": "Lockfile Integrity",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "lockfiles found: pnpm-lock.yaml"
+      },
+      "commands": [
+        {
+          "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only",
+          "cwd": "<extracted>",
+          "exit_code": 0,
+          "duration_ms": 609,
+          "stdout_excerpt": "Done in 501ms using pnpm v10.33.2\n",
+          "kind": "shell"
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "all 1 lockfile(s) installed cleanly with frozen-lockfile",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-lockfile-integrity-hashes",
+        "AIC-lockfile-enforced-in-ci"
+      ]
+    },
+    "lint-rules": {
+      "spec_rule_name": "Lint Rules",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "package.json present in inventory"
+      },
+      "commands": [
+        {
+          "cmd": "pnpm -r lint",
+          "cwd": "<extracted>",
+          "exit_code": 0,
+          "duration_ms": 789,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-15c5cac9-EMI2Pl\n> eslint .\n\n",
+          "kind": "shell"
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "pnpm -r lint exit 0 across 2 unit(s)",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-lint-correctness-rules"
+      ]
+    },
+    "strict-types": {
+      "spec_rule_name": "Strict Types",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "tsconfigs: tsconfig.json"
+      },
+      "commands": [
+        {
+          "cmd": "pnpm -r type-check",
+          "cwd": "<extracted>",
+          "exit_code": 0,
+          "duration_ms": 8612,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-15c5cac9-EMI2Pl\n> pnpm prepare:spec\n\n\n…",
+          "stderr_excerpt": "Cloning into '/tmp/audit-collect-15c5cac9-EMI2Pl/external/ai-contributor-spec'...\n",
+          "kind": "shell"
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "strict:true and type-check exit 0 across 1 invocation(s)",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-strict-typing-enabled"
+      ]
+    },
+    "pinned-toolchain": {
+      "spec_rule_name": "Pinned Toolchain",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "package.json or general repo"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "exact-version pin(s) found: .nvmrc=24; package.json#packageManager=pnpm@10.33.2; .nvmrc=24; package.json#packageManager=pnpm@10.33.2",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-runtime-version-pinned",
+        "AIC-package-manager-pinned"
+      ]
+    },
+    "pre-commit": {
+      "spec_rule_name": "Pre-Commit",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "repository has package manifests"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": ".husky/pre-commit runs lint + type-check + test",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-precommit-meaningful-checks"
+      ],
+      "raw_artefact_refs": [
+        ".husky/pre-commit"
+      ]
+    },
+    "automated-dependency-updates": {
+      "spec_rule_name": "Automated Dependency Updates",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "dependency manifest present"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": ".github/dependabot.yml declares ecosystem coverage",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-automated-dep-updates"
+      ],
+      "raw_artefact_refs": [
+        ".github/dependabot.yml"
+      ]
+    },
+    "gate-enforcement": {
+      "spec_rule_name": "Gate Enforcement",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "no `continue-on-error: true` in any workflow",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-protected-branch-status-checks"
+      ]
+    },
+    "branch-protection": {
+      "spec_rule_name": "Branch Protection",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "default branch: main"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
+          "exit_code": 0,
+          "duration_ms": 383,
+          "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
+          "kind": "gh_api",
+          "response_summary": [
+            {
+              "type": "deletion",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "non_fast_forward",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_linear_history",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "pull_request",
+              "parameters": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews_on_push": true,
+                "required_reviewers": [],
+                "require_code_owner_review": true,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": true,
+                "allowed_merge_methods": [
+                  "squash"
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_status_checks",
+              "parameters": {
+                "strict_required_status_checks_policy": false,
+                "do_not_enforce_on_create": false,
+                "required_status_checks": [
+                  {
+                    "context": "Analyze (javascript-typescript)"
+                  },
+                  {
+                    "context": "build"
+                  },
+                  {
+                    "context": "Dependency Review"
+                  }
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            }
+          ]
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "default branch 'main' has active rules/protection; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-default-branch-protected"
+      ]
+    },
+    "ci-gates": {
+      "spec_rule_name": "CI Gates",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "default branch: main"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
+          "exit_code": 0,
+          "duration_ms": 383,
+          "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
+          "kind": "gh_api",
+          "response_summary": [
+            {
+              "type": "deletion",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "non_fast_forward",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_linear_history",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "pull_request",
+              "parameters": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews_on_push": true,
+                "required_reviewers": [],
+                "require_code_owner_review": true,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": true,
+                "allowed_merge_methods": [
+                  "squash"
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_status_checks",
+              "parameters": {
+                "strict_required_status_checks_policy": false,
+                "do_not_enforce_on_create": false,
+                "required_status_checks": [
+                  {
+                    "context": "Analyze (javascript-typescript)"
+                  },
+                  {
+                    "context": "build"
+                  },
+                  {
+                    "context": "Dependency Review"
+                  }
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            }
+          ]
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "3 required status check(s): Analyze (javascript-typescript), build, Dependency Review; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-ci-guardrail-suite"
+      ]
+    },
+    "human-review-required": {
+      "spec_rule_name": "Human Review Required",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "default branch: main"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
+          "exit_code": 0,
+          "duration_ms": 383,
+          "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
+          "kind": "gh_api",
+          "response_summary": [
+            {
+              "type": "deletion",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "non_fast_forward",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_linear_history",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "pull_request",
+              "parameters": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews_on_push": true,
+                "required_reviewers": [],
+                "require_code_owner_review": true,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": true,
+                "allowed_merge_methods": [
+                  "squash"
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_status_checks",
+              "parameters": {
+                "strict_required_status_checks_policy": false,
+                "do_not_enforce_on_create": false,
+                "required_status_checks": [
+                  {
+                    "context": "Analyze (javascript-typescript)"
+                  },
+                  {
+                    "context": "build"
+                  },
+                  {
+                    "context": "Dependency Review"
+                  }
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            }
+          ]
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "required_approving_review_count=1; dismiss_stale_reviews_on_push=true; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-human-review-required"
+      ]
+    },
+    "secret-scanning": {
+      "spec_rule_name": "Secret Scanning",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "repository tracks source code"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/secret-scanning/alerts",
+          "exit_code": 0,
+          "duration_ms": 433,
+          "stdout_excerpt": "[]",
+          "kind": "gh_api",
+          "response_summary": []
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "GitHub secret scanning enabled; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-secret-scanning-enabled"
+      ]
+    },
+    "push-protection": {
+      "spec_rule_name": "Push Protection",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "repo: ai-contributors/ai-contributors.dev"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev",
+          "exit_code": 0,
+          "duration_ms": 343,
+          "stdout_excerpt": "{\n  \"id\": 1227930329,\n  \"node_id\": \"R_kgDOSTC62Q\",\n  \"name\": \"ai-contributors.dev\",\n  \"full_name\": \"ai-contributors/ai-contributors.dev\",\n…",
+          "kind": "gh_api",
+          "response_summary": {
+            "id": 1227930329,
+            "node_id": "R_kgDOSTC62Q",
+            "name": "ai-contributors.dev",
+            "full_name": "ai-contributors/ai-contributors.dev",
+            "private": false,
+            "owner": {
+              "login": "ai-contributors",
+              "id": 279388706,
+              "node_id": "U_kgDOEKciIg",
+              "avatar_url": "https://avatars.githubusercontent.com/u/279388706?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/ai-contributors",
+              "html_url": "https://github.com/ai-contributors",
+              "followers_url": "https://api.github.com/users/ai-contributors/followers",
+              "following_url": "https://api.github.com/users/ai-contributors/following{/other_user}",
+              "gists_url": "https://api.github.com/users/ai-contributors/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/ai-contributors/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/ai-contributors/subscriptions",
+              "organizations_url": "https://api.github.com/users/ai-contributors/orgs",
+              "repos_url": "https://api.github.com/users/ai-contributors/repos",
+              "events_url": "https://api.github.com/users/ai-contributors/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/ai-contributors/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "html_url": "https://github.com/ai-contributors/ai-contributors.dev",
+            "description": null,
+            "fork": false,
+            "url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev",
+            "forks_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/forks",
+            "keys_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/keys{/key_id}",
+            "collaborators_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/collaborators{/collaborator}",
+            "teams_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/teams",
+            "hooks_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/hooks",
+            "issue_events_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/issues/events{/number}",
+            "events_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/events",
+            "assignees_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/assignees{/user}",
+            "branches_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/branches{/branch}",
+            "tags_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/tags",
+            "blobs_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/git/blobs{/sha}",
+            "git_tags_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/git/tags{/sha}",
+            "git_refs_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/git/refs{/sha}",
+            "trees_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/git/trees{/sha}",
+            "statuses_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/statuses/{sha}",
+            "languages_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/languages",
+            "stargazers_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/stargazers",
+            "contributors_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/contributors",
+            "subscribers_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/subscribers",
+            "subscription_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/subscription",
+            "commits_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/commits{/sha}",
+            "git_commits_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/git/commits{/sha}",
+            "comments_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/comments{/number}",
+            "issue_comment_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/issues/comments{/number}",
+            "contents_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/contents/{+path}",
+            "compare_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/compare/{base}...{head}",
+            "merges_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/merges",
+            "archive_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/{archive_format}{/ref}",
+            "downloads_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/downloads",
+            "issues_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/issues{/number}",
+            "pulls_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/pulls{/number}",
+            "milestones_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/milestones{/number}",
+            "notifications_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/notifications{?since,all,participating}",
+            "labels_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/labels{/name}",
+            "releases_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/releases{/id}",
+            "deployments_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/deployments",
+            "created_at": "2026-05-03T11:09:13Z",
+            "updated_at": "2026-05-03T15:51:18Z",
+            "pushed_at": "2026-05-03T15:49:06Z",
+            "git_url": "git://github.com/ai-contributors/ai-contributors.dev.git",
+            "ssh_url": "git@github.com:ai-contributors/ai-contributors.dev.git",
+            "clone_url": "https://github.com/ai-contributors/ai-contributors.dev.git",
+            "svn_url": "https://github.com/ai-contributors/ai-contributors.dev",
+            "homepage": "https://ai-contributors.dev/ai-contributor-spec/",
+            "size": 5947,
+            "stargazers_count": 0,
+            "watchers_count": 0,
+            "language": "JavaScript",
+            "has_issues": true,
+            "has_projects": false,
+            "has_downloads": true,
+            "has_wiki": false,
+            "has_pages": true,
+            "has_discussions": false,
+            "forks_count": 0,
+            "mirror_url": null,
+            "archived": false,
+            "disabled": false,
+            "open_issues_count": 0,
+            "license": {
+              "key": "other",
+              "name": "Other",
+              "spdx_id": "NOASSERTION",
+              "url": null,
+              "node_id": "MDc6TGljZW5zZTA="
+            },
+            "allow_forking": true,
+            "is_template": false,
+            "web_commit_signoff_required": false,
+            "has_pull_requests": true,
+            "pull_request_creation_policy": "all",
+            "topics": [],
+            "visibility": "public",
+            "forks": 0,
+            "open_issues": 0,
+            "watchers": 0,
+            "default_branch": "main",
+            "permissions": {
+              "admin": true,
+              "maintain": true,
+              "push": true,
+              "triage": true,
+              "pull": true
+            },
+            "temp_clone_token": "[REDACTED]",
+            "allow_squash_merge": true,
+            "allow_merge_commit": false,
+            "allow_rebase_merge": false,
+            "allow_auto_merge": false,
+            "delete_branch_on_merge": false,
+            "allow_update_branch": false,
+            "use_squash_pr_title_as_default": false,
+            "squash_merge_commit_message": "COMMIT_MESSAGES",
+            "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+            "merge_commit_message": "PR_TITLE",
+            "merge_commit_title": "MERGE_MESSAGE",
+            "security_and_analysis": {
+              "secret_scanning": {
+                "status": "enabled"
+              },
+              "secret_scanning_push_protection": {
+                "status": "enabled"
+              },
+              "dependabot_security_updates": {
+                "status": "enabled"
+              },
+              "secret_scanning_non_provider_patterns": {
+                "status": "disabled"
+              },
+              "secret_scanning_validity_checks": {
+                "status": "disabled"
+              }
+            },
+            "network_count": 0,
+            "subscribers_count": 0
+          }
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "security_and_analysis.secret_scanning_push_protection.status=enabled; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-push-protection-enabled"
+      ]
+    },
+    "dependency-security": {
+      "spec_rule_name": "Dependency Security",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "dependency manifest present"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/dependabot/alerts?state=open&severity=high&per_page=1",
+          "exit_code": 0,
+          "duration_ms": 400,
+          "stdout_excerpt": "[]",
+          "kind": "gh_api",
+          "response_summary": []
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "Dependabot alerts: no open high-severity vulnerabilities; verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-dependency-vuln-detection"
+      ]
+    },
+    "dependency-review-visibility": {
+      "spec_rule_name": "Dependency Review",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "dependency manifest present"
+      },
+      "commands": [
+        {
+          "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
+          "exit_code": 0,
+          "duration_ms": 383,
+          "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
+          "kind": "gh_api",
+          "response_summary": [
+            {
+              "type": "deletion",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "non_fast_forward",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_linear_history",
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "pull_request",
+              "parameters": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews_on_push": true,
+                "required_reviewers": [],
+                "require_code_owner_review": true,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": true,
+                "allowed_merge_methods": [
+                  "squash"
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            },
+            {
+              "type": "required_status_checks",
+              "parameters": {
+                "strict_required_status_checks_policy": false,
+                "do_not_enforce_on_create": false,
+                "required_status_checks": [
+                  {
+                    "context": "Analyze (javascript-typescript)"
+                  },
+                  {
+                    "context": "build"
+                  },
+                  {
+                    "context": "Dependency Review"
+                  }
+                ]
+              },
+              "ruleset_source_type": "Repository",
+              "ruleset_source": "ai-contributors/ai-contributors.dev",
+              "ruleset_id": 15884594
+            }
+          ]
+        }
+      ],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "required dependency security gate runs on pull requests: .github/workflows/deploy.yml; required checks: Analyze (javascript-typescript), build, Dependency Review",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-dependency-review-visibility"
+      ]
+    },
+    "sast-in-ci": {
+      "spec_rule_name": "SAST",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "supported source language present"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "recognized SAST workflow(s) run on pull requests or default branch: .github/workflows/codeql.yml",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-sast-in-ci"
+      ]
+    },
+    "security-policy-documented": {
+      "spec_rule_name": "Security Policy",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "SECURITY.md is tracked and documents a vulnerability disclosure/reporting path"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "SECURITY.md:3 documents the vulnerability disclosure/reporting path",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-vuln-disclosure-path"
+      ],
+      "raw_artefact_refs": [
+        "SECURITY.md"
+      ]
+    },
+    "threat-model-documented": {
+      "spec_rule_name": "Threat Model",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "docs/threat-model.md is tracked and contains a threat model with review-date evidence"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "docs/threat-model.md:3 records a reviewed threat-model artifact with boundaries and threat/control coverage",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-threat-model-required",
+        "AIC-threat-model-artifact",
+        "AIC-threat-model-review-date"
+      ],
+      "raw_artefact_refs": [
+        "docs/threat-model.md"
+      ]
+    },
+    "build-immutable-refs": {
+      "spec_rule_name": "Build Immutable Refs",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "23 `uses:` reference(s) across 3 workflow(s)"
+      },
+      "commands": [],
+      "derived_status": "Warning",
+      "derivation_reason": "23/23 `uses:` reference(s) not pinned to immutable refs: .github/workflows/codeql.yml:30 actions/checkout@v6, .github/workflows/codeql.yml:33 github/codeql-action/init@v4, .github/workflows/codeql.yml:39 github/codeql-action/analyze@v4, .github/workflows/dependency-review.yml:24 actions/checkout@v6, .github/workflows/dependency-review.yml:26 actions/dependency-review-action@v4 (+18 more)",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-build-immutable-refs"
+      ]
+    },
+    "workflow-token-least-privilege": {
+      "spec_rule_name": "Workflow Token Least Privilege",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "all 3 workflow(s) declare scoped `permissions:` (workflow- or every-job-level)",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-workflow-token-least-privilege"
+      ]
+    },
+    "sbom-generation": {
+      "spec_rule_name": "SBOM Generation",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "SBOM-generating action(s) detected: .github/workflows/deploy.yml:82 anchore/sbom-action@v0",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-sbom-generation"
+      ]
+    },
+    "artifact-signing": {
+      "spec_rule_name": "Artifact Signing",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Warning",
+      "derivation_reason": "no recognized signing or attestation action detected in workflows",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-artifact-signing"
+      ]
+    },
+    "build-provenance-attestation": {
+      "spec_rule_name": "Build Provenance Attestation",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Warning",
+      "derivation_reason": "no recognized provenance attestation action detected in workflows",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-build-provenance-attestation"
+      ]
+    },
+    "release-from-ci": {
+      "spec_rule_name": "Release from CI",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "3 workflow file(s)"
+      },
+      "commands": [],
+      "derived_status": "Warning",
+      "derivation_reason": "no recognized publish action or `*publish*` run step detected in workflows",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-release-from-ci"
+      ]
+    },
+    "dead-code-and-cycles-surfaced": {
+      "spec_rule_name": "Dead Code and Cycles Surfaced",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "tracked deps and CI surface"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "madge declared in package.json and invoked in package.json:scripts.deps:check",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-dead-code-and-cycles-surfaced"
+      ]
+    },
+    "architecture-rules-automated": {
+      "spec_rule_name": "Architecture Rules Automated",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "tracked deps and CI surface"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "dependency-cruiser declared in package.json and invoked in package.json:scripts.deps:check",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-architecture-rules-automated"
+      ]
+    },
+    "credential-leakage-checks": {
+      "spec_rule_name": "Credential Leakage Checks",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "tracked deps and CI surface"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "secretlint declared in package.json and invoked in package.json:scripts.secret:scan",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-credential-leakage-checks"
+      ]
+    },
+    "secret-vcs-exclude": {
+      "spec_rule_name": "Secret VCS Exclude",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "81 tracked file(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "no tracked secret-bearing files; .gitignore protects .env, *.pem, *.pfx",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-secret-vcs-exclude"
+      ]
+    },
+    "credential-handling-documented": {
+      "spec_rule_name": "Credential Handling Documented",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "docs corpus"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "docs/credentials.md:1 documents credential handling (subject: \"Credential\"; guidance: \"placeholder\")",
+      "judgment_required": false,
+      "raw_artefact_refs": [
+        "docs/credentials.md"
+      ],
+      "aic_ids": [
+        "AIC-credential-handling-documented"
+      ]
+    },
+    "env-example-placeholders": {
+      "spec_rule_name": "Env Example Placeholders",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "1 env example file(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "every value in .env.example matches a placeholder shape",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-env-example-placeholders"
+      ]
+    },
+    "ai-instruction-authoritative": {
+      "spec_rule_name": "AI Instruction Authoritative",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "canonical: AGENTS.md"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "single authoritative instruction file: AGENTS.md",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-ai-instruction-authoritative"
+      ]
+    },
+    "tool-specific-pointer-only": {
+      "spec_rule_name": "Tool-Specific Pointer Only",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "canonical: AGENTS.md"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "AGENTS.md referenced from README.md; 0 pointer file(s) all classified pointer-only",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-tool-specific-pointer-only"
+      ]
+    },
+    "ai-forbidden-actions": {
+      "spec_rule_name": "AI Forbidden Actions",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "canonical: AGENTS.md"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "AGENTS.md contains forbidden-actions language: \"## Forbidden Actions\"",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-ai-forbidden-actions"
+      ]
+    },
+    "mcp-root-scoping": {
+      "spec_rule_name": "MCP Root Scoping",
+      "applicability": {
+        "verdict": "not_applicable",
+        "trigger_evidence": "no MCP servers configured"
+      },
+      "commands": [],
+      "derived_status": "Not relevant",
+      "derivation_reason": "no MCP server entries found in tracked config files",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-mcp-root-scoping"
+      ]
+    },
+    "mcp-pinned-versions": {
+      "spec_rule_name": "MCP Pinned Versions",
+      "applicability": {
+        "verdict": "not_applicable",
+        "trigger_evidence": "no MCP servers configured"
+      },
+      "commands": [],
+      "derived_status": "Not relevant",
+      "derivation_reason": "no MCP server entries found in tracked config files",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-mcp-pinned-versions"
+      ]
+    },
+    "mcp-read-only-default": {
+      "spec_rule_name": "MCP Read-Only Default",
+      "applicability": {
+        "verdict": "not_applicable",
+        "trigger_evidence": "no MCP servers configured"
+      },
+      "commands": [],
+      "derived_status": "Not relevant",
+      "derivation_reason": "no MCP server entries found in tracked config files",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-mcp-read-only-default"
+      ]
+    },
+    "prompt-audit-trail": {
+      "spec_rule_name": "Prompt Audit Trail",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "0 prompt/skill file(s); 11 doc(s) scanned"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "doc references: AGENTS.md (\"Co-Authored-By\"); docs/ai-governance.md (\"transcript location\")",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-prompt-audit-trail"
+      ]
+    },
+    "sensitive-path-ownership": {
+      "spec_rule_name": "Sensitive Path Ownership",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": ".github/CODEOWNERS"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": ".github/CODEOWNERS covers every tracked sensitive path with at least one owner",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-sensitive-path-ownership"
+      ]
+    },
+    "multiple-test-layers": {
+      "spec_rule_name": "Multiple Test Layers",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "2 test signal(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "distinct test layers: integration, unit",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-multiple-test-layers"
+      ]
+    },
+    "coverage-as-minimum": {
+      "spec_rule_name": "Coverage as Minimum",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "1 threshold(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "coverage threshold(s) > 0: vitest.config.mjs=80",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-coverage-as-minimum"
+      ]
+    },
+    "formatting-automated": {
+      "spec_rule_name": "Formatting Automated",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "tracked tree"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "config: .prettierrc.json; invoked via scripts: package.json",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-formatting-automated"
+      ]
+    },
+    "authoritative-guardrail-doc": {
+      "spec_rule_name": "Authoritative Guardrail Doc",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "docs/guardrails.md"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "docs/guardrails.md linked from README.md, AGENTS.md",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-authoritative-guardrail-doc"
+      ]
+    },
+    "ai-authorship-traceability": {
+      "spec_rule_name": "AI Authorship Traceability",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "last 21 commit(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "6/21 commits carry an AI Co-Authored-By trailer (ratio=0.286); models: Codex, GPT/ChatGPT/OpenAI; most recent: 15c5cac9",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-ai-authorship-traceability"
+      ]
+    },
+    "deploy-env-approvals": {
+      "spec_rule_name": "Deployment Environment Approvals",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "1 environment(s)"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "every deployment environment has required reviewers: github-pages (1); verified with GitHub API identity; token scopes not reported",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-deploy-env-approvals"
+      ]
+    },
+    "clean-clone-bootstrap": {
+      "spec_rule_name": "Clean Clone Bootstrap",
+      "applicability": {
+        "verdict": "applicable",
+        "trigger_evidence": "bootstrap-smoke enabled"
+      },
+      "commands": [],
+      "derived_status": "Fulfilled",
+      "derivation_reason": "clean-clone bootstrap completed: install exit 0, build exit 0",
+      "judgment_required": false,
+      "aic_ids": [
+        "AIC-clean-clone-bootstrap"
+      ]
+    }
+  },
+  "errors": []
+}

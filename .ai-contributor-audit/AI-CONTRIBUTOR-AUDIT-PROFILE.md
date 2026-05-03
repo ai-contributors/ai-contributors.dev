@@ -1,0 +1,41 @@
+# AI Contributor Audit Profile
+
+Draft answers from repository evidence first, then ask the owner to confirm or correct them. Answer each applicability question with `yes`, `no`, or leave it blank for auditor or collector decision. Add evidence or rationale when the answer is not obvious.
+
+For agent-assisted profile creation:
+
+1. Inspect the repository lightly for manifests, source roots, UI files, workflows, release paths, AI instructions, MCP config, prompt/session archives, and policy docs.
+2. Draft each answer with evidence and confidence.
+3. Ask the owner to confirm or correct the draft. Low-confidence, sensitive-data, regulated-data, production-data, and owner-intent answers need explicit confirmation.
+4. Write confirmed answers here. Leave uncertain answers blank and record what owner fact is missing.
+
+Every applicability question is phrased in the same direction:
+
+- `yes` enables the affected checks. They are applicable and still need normal evidence.
+- `no` disables the affected checks when the checklist row allows `Not relevant`.
+- Blank means no confirmed steering; the collector and auditor decide from repository evidence.
+
+Profile answers steer applicability only. They are not waivers and do not make rows `Fulfilled` unless the row's evidence model explicitly accepts owner attestation or policy text.
+
+## Applicability Questions
+
+<!-- BEGIN:GENERATED applicability-questions -->
+| Area | Question | Answer | Evidence / rationale | Affected checks (rule and IDs) |
+| ---- | -------- | ------ | -------------------- | ------------------------------ |
+| Technology shape | Apply environment-variable template checks? | yes | Owner confirmed 2026-05-03. `astro.config.mjs` reads `ASTRO_SITE` and `ASTRO_BASE`; `.github/workflows/deploy.yml` sets them for production and PR preview builds. | `Env Template` - `AIC-env-example-placeholders` |
+| Technology shape | Apply user-interface and accessibility checks? | yes | Owner confirmed 2026-05-03. Astro/Starlight site with UI components in `src/components/` and presentation styles in `src/styles/custom.css`. | `Accessibility` - `AIC-a11y-component-checks`, `AIC-a11y-review-testing`; `A11y Helpers` - `AIC-a11y-helpers`; `A11y Keyboard Focus` - `AIC-a11y-keyboard-focus`; `Additional A11y Gates` - `AIC-a11y-extra-gates`; `Performance Budget` - `AIC-performance-budgets`; `Performance Budgets Automated` - `AIC-budgets-automated` |
+| Technology shape | Apply backend, proxy, worker, or critical-runtime checks? | no | Owner confirmed 2026-05-03. Static documentation site; no backend, API, proxy, worker, or critical runtime source found in `src/`, `scripts/`, or manifests. | `Reliability Targets` - `AIC-reliability-expectations`; `Error Budgets` - `AIC-reliability-consequences`; `Observability` - `AIC-observability-redaction`; `Failure Handling` - `AIC-failure-handling-explicit`, `AIC-retries-backoff-deliberate` |
+| Technology shape | Apply database schema and persistence-layer checks? | no | Owner confirmed 2026-05-03. No database dependencies, migrations, schemas, or persistence-layer code found. | `Data Integrity Constraints` - `AIC-data-integrity-constraints` |
+| Hosting shape | Apply hosted push-time secret blocking checks? | yes | Owner confirmed 2026-05-03. GitHub-hosted repository with Actions and GitHub Pages deployment; hosted push-protection settings are outside repository files. | `Push Protection` - `AIC-push-protection-enabled` |
+| Hosting shape | Apply hosted deployment-environment required-reviewer checks? | yes | Owner confirmed 2026-05-03. `.github/workflows/deploy.yml` uses the `github-pages` deployment environment for production, preview, and cleanup deployment jobs. | `Deployment Protection Rules` - `AIC-deploy-env-approvals` |
+| Use case | Apply build/release dependency identification and SBOM checks? | yes | Owner confirmed 2026-05-03. `package.json`, `pnpm-lock.yaml`, and GitHub Actions build/deploy workflow define the build and dependency surface. | `SBOM` - `AIC-sbom-generation`, `AIC-release-dependency-identification` |
+| Use case | Apply external-consumer supply-chain trust checks (provenance attestations, artifact signing, immutable build linkage)? | yes | Owner confirmed 2026-05-03. Public documentation site is built in CI and deployed to GitHub Pages for external consumers. | `Build Origin Records` - `AIC-build-provenance-attestation`, `AIC-build-immutable-refs`; `Artifact Signing` - `AIC-artifact-signing` |
+| Use case | Apply CI/CD workflow and deployment-credential checks? | yes | Owner confirmed 2026-05-03. `.github/workflows/deploy.yml` builds, previews, deploys, and cleans up GitHub Pages using scoped workflow permissions and `GITHUB_TOKEN`. | `Workflow Security` - `AIC-workflow-token-least-privilege`, `AIC-short-lived-deploy-creds`; `Deployment Protection` - `AIC-prod-deploy-protected`; `Deployment Protection Rules` - `AIC-deploy-env-approvals`; `Deployment Separation` - `AIC-deployment-separation`; `Release from CI` - `AIC-release-from-ci` |
+| Collaboration shape | Apply external-contribution disclosure checks? | yes | Owner confirmed 2026-05-03. `.github/PULL_REQUEST_TEMPLATE.md` and `AGENTS.md` define AI authorship and prompt-audit disclosure expectations. | `AI Authorship Disclosure` - `AIC-ai-authorship-disclosure-policy` |
+| AI shape | Apply external AI provider and model allowlist checks? | yes | Owner confirmed 2026-05-03. Repository policy permits materially AI-authored PRs and requires PR disclosure of AI tool/model and prompt-audit metadata. | `AI Provider Allowlist` - `AIC-ai-provider-allowlist`; `AI Provider Data Gate` - `AIC-regulated-data-provider-gate`; `Provider Deprecation Procedure` - `AIC-provider-deprecation-procedure`; `No Routing Past EOL` - `AIC-no-routing-past-eol`; `Allowlist Rescope on Terms Change` - `AIC-allowlist-rescope-on-terms-change` |
+| AI shape | Apply retained AI prompt, transcript, and tool-output checks? | yes | Owner confirmed 2026-05-03. `.github/PULL_REQUEST_TEMPLATE.md` requires `Prompt-Audit`; `docs/superpowers/` contains agent planning and specification artifacts. | `AI Context Retention` - `AIC-ai-context-retention`; `Prompt Audit Trail` - `AIC-prompt-audit-trail`; `AI Input Retention` - `AIC-ai-input-retention` |
+| AI shape | Apply MCP server checks? | no | Owner confirmed 2026-05-03. No MCP configuration found; MCP mentions are generated/public specification content rather than repository workflow configuration. | `MCP Root Scoping` - `AIC-mcp-root-scoping`; `MCP Read-Only Default` - `AIC-mcp-read-only-default`; `MCP Pinned Versions` - `AIC-mcp-pinned-versions`; `MCP Env Separation` - `AIC-mcp-env-separation`; `MCP Root Prompt` - `AIC-mcp-root-prompt`; `MCP Prompt Review` - `AIC-mcp-prompt-review`; `MCP Auditability` - `AIC-mcp-auditability` |
+| AI shape | Apply autonomous-agent and scheduled-runner checks? | no | Owner confirmed 2026-05-03. Scheduled CodeQL and Dependabot workflows exist, but no autonomous AI runner evidence was found. | `Agent Escalation Triggers` - `AIC-agent-escalation-trigger-enforcement`; `Agent Kill Switch` - `AIC-agent-kill-switch`; `Agent Rollback Procedure` - `AIC-agent-rollback-procedure`; `Agent Behavior Monitoring` - `AIC-agent-behavior-monitoring`; `Agent Cost Ceiling` - `AIC-agent-cost-ceiling` |
+| AI shape | Apply AI-introduced dependency checks? | yes | Owner confirmed 2026-05-03. AI-authored contributions are permitted with disclosure, and the repository has npm dependencies in `package.json` and `pnpm-lock.yaml`. | `AI Dependency Verification` - `AIC-ai-dependency-verification`; `Strict New Dependency Policy` - `AIC-strict-new-dep-policy` |
+| Data and risk shape | Apply regulated, secret, customer, or production-data AI workflow checks? | no | Owner confirmed 2026-05-03. `AGENTS.md` classifies repo content as public, states secrets/customer/regulated data are out of scope, and says no credentials are required for local work. | `AI Data Classification` - `AIC-ai-data-classification`; `AI Provider Data Gate` - `AIC-regulated-data-provider-gate`; `AI Prod Data Read-Only` - `AIC-ai-prod-data-readonly`; `Data Minimization Techniques` - `AIC-data-minimization-techniques` |
+<!-- END:GENERATED applicability-questions -->

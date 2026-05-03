@@ -48,6 +48,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Coverage
+        run: pnpm coverage:check
+
       - name: Check
         run: pnpm check
 
@@ -70,6 +73,23 @@ jobs:
         with:
           name: site-dist
           path: dist
+          if-no-files-found: error
+
+      - name: Lighthouse accessibility and performance budgets
+        run: pnpm lhci:assert
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom.cyclonedx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cyclonedx.json
           if-no-files-found: error
 
   deploy:

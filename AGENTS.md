@@ -31,11 +31,26 @@ Primary risk surfaces:
 ```sh
 pnpm install --frozen-lockfile
 pnpm validate:spec
+pnpm lint
+pnpm format:check
+pnpm type-check
+pnpm deps:check
+pnpm secret:scan
 pnpm test
 pnpm check
 pnpm build
 pnpm dev
 ```
+
+## Guardrails And Policy
+
+- Machine and manual guardrails: `docs/guardrails.md`.
+- Credential handling and rotation: `docs/credentials.md`.
+- Threat model, auth boundary, runtime validation boundary, and test layers:
+  `docs/threat-model.md`.
+- AI provider allowlist, context retention, redaction, agent scope,
+  permissions, isolation, shared skills, untrusted input, and code-test
+  independence: `docs/ai-governance.md`.
 
 ## Forbidden Actions
 
@@ -66,14 +81,18 @@ commits SHOULD include a `Co-Authored-By:` trailer naming the AI tool/model.
 Minor autocomplete, spelling, grammar, or formatting suggestions do not require
 AI disclosure.
 
+Agents MUST preserve unrelated user work. Do not revert, overwrite, or reformat
+files outside the assigned scope unless a maintainer explicitly requests that
+exact change.
+
 ## Data Classification
 
-| Class | Examples | Allowed in AI context | Notes |
-|---|---|---|---|
-| Public site/source content | `src/`, `docs/`, generated spec pages | Yes | Public by design. |
-| Public CI configuration | `.github/workflows/`, `.github/CODEOWNERS` | Yes | No embedded secrets. |
-| Secrets/credentials | none | No | Do not introduce. |
-| Customer or regulated data | none | No | Out of scope for this repo. |
+| Class                      | Examples                                   | Allowed in AI context | Notes                       |
+| -------------------------- | ------------------------------------------ | --------------------- | --------------------------- |
+| Public site/source content | `src/`, `docs/`, generated spec pages      | Yes                   | Public by design.           |
+| Public CI configuration    | `.github/workflows/`, `.github/CODEOWNERS` | Yes                   | No embedded secrets.        |
+| Secrets/credentials        | none                                       | No                    | Do not introduce.           |
+| Customer or regulated data | none                                       | No                    | Out of scope for this repo. |
 
 If a future change introduces non-public data, this table and `SECURITY.md`
 MUST be updated in the same PR.

@@ -48,6 +48,7 @@ The manifest check covers these source files:
 - `AI-CONTRIBUTOR-COVERAGE.md`
 - `CHANGELOG.md`
 - `skills/ai-contributor-audit/README.md`
+- `skills/ai-contributor-audit/SKILL.md`
 - `skills/ai-contributor-audit-fix/SKILL.md`
 - `skills/ai-contributor-audit-profile/SKILL.md`
 
@@ -65,6 +66,7 @@ The first scaffold provides these public routes:
 - `/audit/prompt/` generated from `AI-CONTRIBUTOR-AUDIT-PROMPT.md`.
 - `/skills/` from a committed overview page.
 - `/skills/audit/` generated from `skills/ai-contributor-audit/README.md`.
+- `/skills/audit/skill/` generated from `skills/ai-contributor-audit/SKILL.md`.
 - `/skills/audit-fix/` generated from `skills/ai-contributor-audit-fix/SKILL.md`.
 - `/skills/audit-profile/` generated from `skills/ai-contributor-audit-profile/SKILL.md`.
 - `/guide/typescript-pnpm/` generated from `AI-CONTRIBUTOR-GUIDE.md`.

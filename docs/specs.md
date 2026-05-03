@@ -285,8 +285,8 @@ The index page **must** stay fully static. It must not show a live GitHub star c
   - the PR body **should** list the spec commits being pulled in (`git log OLD..NEW`) and show both the old/new version tags and SHAs,
   - the PR **must not** be auto-merged; a human reviewer must approve and merge it after CI and the deploy preview pass.
 - **10.5. Audit workflow.** `.github/workflows/audit.yml` **must** run the `ai-contributor-audit` skill (from the submodule) against this repository on a weekly schedule and fail the workflow if `conformance_level` drops below 3.
-- **10.6. Hosting.** GitHub Pages, custom domain `ai-contributors.dev`, deployed from the artifact (no `gh-pages` branch).
-- **10.7. PR previews.** On pull requests, build the site and post a deploy-preview link as a PR comment. The preview **must not** publish to the production domain.
+- **10.6. Hosting.** GitHub Pages, custom domain `ai-contributors.dev`, deployed with GitHub Actions and `actions/deploy-pages`. The workflow may use a generated `gh-pages` branch as deployment storage for the current production build plus preview directories, but the repository's GitHub Pages source **must** remain set to GitHub Actions rather than "Deploy from a branch".
+- **10.7. PR previews.** On pull requests, build the site with a preview-specific Astro base path and post a deploy-preview link as a PR comment. Preview links **must** use the GitHub Pages project URL shape `https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-<number>/`, not the production domain, and preview directories **must** be removed when the pull request closes.
 - **10.8. Caching.** Pages should set `Cache-Control: max-age=300` on HTML and 1 year `immutable` on hashed assets. Starlight emits hashed asset names by default.
 
 ---

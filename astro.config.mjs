@@ -3,8 +3,12 @@ import starlight from "@astrojs/starlight";
 import mermaid from "astro-mermaid";
 import starlightLlmsTxt from "starlight-llms-txt";
 
+const site = process.env.ASTRO_SITE ?? "https://ai-contributors.dev";
+const base = process.env.ASTRO_BASE ?? "/";
+
 export default defineConfig({
-  site: "https://ai-contributors.dev",
+  site,
+  base,
   integrations: [
     starlight({
       title: "AI Contributor Spec",

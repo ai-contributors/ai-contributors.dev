@@ -4,8 +4,8 @@
 
 ## Documentation Sets
 
-- [Abridged documentation](https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-3/llms-small.txt): a compact version of the documentation for AI Contributor Spec, with non-essential content removed
-- [Complete documentation](https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-3/llms-full.txt): the full documentation for AI Contributor Spec
+- [Abridged documentation](https://ai-contributors.dev/pr-preview/pr-3/llms-small.txt): a compact version of the documentation for AI Contributor Spec, with non-essential content removed
+- [Complete documentation](https://ai-contributors.dev/pr-preview/pr-3/llms-full.txt): the full documentation for AI Contributor Spec
 
 ## Notes
 

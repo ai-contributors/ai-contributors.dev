@@ -8,9 +8,9 @@ Guardrails for repositories where AI reads, writes, reviews, or releases code.
 
 This specification treats AI as a system actor and defines reviewable guardrails for agent, harness, and tool behavior.
 
-[Read the spec](/ai-contributors.dev/pr-preview/pr-3/specification/)[Run the audit](/ai-contributors.dev/pr-preview/pr-3/skills/)[Get a badge](/ai-contributors.dev/pr-preview/pr-3/levels/)
+[Read the spec](/pr-preview/pr-3/specification/)[Run the audit](/pr-preview/pr-3/skills/)[Get a badge](/pr-preview/pr-3/levels/)
 
-[**L0** Unassessed ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L1** AI Assisted ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L2** AI Reviewed ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L3** AI Authored ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L4** AI Governed](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)
+[**L0** Unassessed ](/pr-preview/pr-3/specification/#conformance-levels)[**L1** AI Assisted ](/pr-preview/pr-3/specification/#conformance-levels)[**L2** AI Reviewed ](/pr-preview/pr-3/specification/#conformance-levels)[**L3** AI Authored ](/pr-preview/pr-3/specification/#conformance-levels)[**L4** AI Governed](/pr-preview/pr-3/specification/#conformance-levels)
 
 **Install the audit skill**
 
@@ -1501,7 +1501,7 @@ If you’re contributing a parallel guide for another stack (Python + uv, Go, Ru
 
 # Conformance levels
 
-[**L0** Unassessed ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L1** AI Assisted ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L2** AI Reviewed ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L3** AI Authored ](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)[**L4** AI Governed](/ai-contributors.dev/pr-preview/pr-3/specification/#conformance-levels)
+[**L0** Unassessed ](/pr-preview/pr-3/specification/#conformance-levels)[**L1** AI Assisted ](/pr-preview/pr-3/specification/#conformance-levels)[**L2** AI Reviewed ](/pr-preview/pr-3/specification/#conformance-levels)[**L3** AI Authored ](/pr-preview/pr-3/specification/#conformance-levels)[**L4** AI Governed](/pr-preview/pr-3/specification/#conformance-levels)
 
 Conformance level L3 - AI Authored (L3) \[!\[AI Contributor: L3 AI Authored]\(https\://img.shields.io/badge/AI%20Contributor-L3%20AI%20Authored-blueviolet)]\(https\://ai-contributors.dev/ai-contributor-spec/levels/) Copy Markdown
 

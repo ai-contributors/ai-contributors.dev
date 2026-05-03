@@ -43,6 +43,15 @@ const grouped = pillars.map((p) => ({
   clauses: clauses.filter((c) => c.pillar === p.id),
 }));
 
+interface CoverageTable {
+  headers: string[];
+  rows: string[][];
+}
+const coverage = (specData as { coverage?: { glance: string[]; byScope: CoverageTable; byPillar: CoverageTable; byLevel: CoverageTable; cumulative: CoverageTable } }).coverage;
+function isNumeric(s: string) {
+  return /^[\d—–-]+$/.test(s.replace(/\s/g, ''));
+}
+
 function highlightWeight(t: string): string {
   // Render upper-case weight terms in bold; preserve any backticked code spans.
   const escaped = t
@@ -258,6 +267,115 @@ function highlightWeight(t: string): string {
               ))}
             </>
           ))
+        }
+
+        {
+          coverage && (
+            <section id="coverage" class="coverage-section">
+              <div class="coverage-head">
+                <div class="eyebrow">Coverage map · non-normative</div>
+                <h2>How the rules are distributed.</h2>
+                <p class="lede">
+                  How the checklist's rows fan out across pillars, scopes, and minimum
+                  conformance levels. Use this for audit-effort estimates; the checklist itself
+                  is the source of truth for scoring.
+                </p>
+              </div>
+
+              <ul class="coverage-glance">
+                {coverage.glance.map((line) => (
+                  <li>{line}</li>
+                ))}
+              </ul>
+
+              <div class="coverage-grid">
+                <div class="coverage-block">
+                  <h3>By scope</h3>
+                  <table class="coverage-table">
+                    <thead>
+                      <tr>
+                        {coverage.byScope.headers.map((h, i) => (
+                          <th class={i === 0 ? '' : 'num'}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coverage.byScope.rows.map((row) => (
+                        <tr>
+                          {row.map((cell, i) => (
+                            <td class={i === 0 ? '' : 'num'}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="coverage-block">
+                  <h3>By minimum level</h3>
+                  <table class="coverage-table">
+                    <thead>
+                      <tr>
+                        {coverage.byLevel.headers.map((h, i) => (
+                          <th class={i === 0 ? '' : 'num'}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coverage.byLevel.rows.map((row) => (
+                        <tr>
+                          {row.map((cell, i) => (
+                            <td class={i === 0 ? '' : 'num'}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="coverage-block">
+                  <h3>By pillar</h3>
+                  <table class="coverage-table">
+                    <thead>
+                      <tr>
+                        {coverage.byPillar.headers.map((h, i) => (
+                          <th class={i === 0 ? '' : 'num'}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coverage.byPillar.rows.map((row) => (
+                        <tr>
+                          {row.map((cell, i) => (
+                            <td class={i === 0 || !isNumeric(cell) ? '' : 'num'}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="coverage-block">
+                  <h3>Cumulative closure</h3>
+                  <table class="coverage-table">
+                    <thead>
+                      <tr>
+                        {coverage.cumulative.headers.map((h, i) => (
+                          <th class={i === 0 ? '' : 'num'}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coverage.cumulative.rows.map((row) => (
+                        <tr>
+                          {row.map((cell, i) => (
+                            <td class={i === 0 ? '' : 'num'}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          )
         }
 
         <footer class="spec-foot">

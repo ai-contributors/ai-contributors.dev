@@ -40,6 +40,25 @@ const pipeline = [
   { label: 'audit-validate.ts', sub: 'read-only' },
 ];
 
+const resources = [
+  {
+    kind: 'Audit',
+    tag: 'no-install',
+    title: 'Audit prompt',
+    desc: 'A self-contained prompt you paste into any coding agent. Produces audit.md and evidence.json without installing the skill.',
+    meta: 'no skills required',
+    href: '/audit/prompt/',
+  },
+  {
+    kind: 'Guide',
+    tag: 'stack',
+    title: 'TypeScript + pnpm',
+    desc: 'Clause-by-clause walk-through for TypeScript repos using pnpm. What to put in AGENTS.md, what CI must do, and what passes at L0–L3.',
+    meta: 'pnpm ≥ 9 · Node ≥ 20',
+    href: '/guide/typescript-pnpm/',
+  },
+];
+
 const installSnippet = `# install all three skills from the ai-contributors registry
 $ npx skills add ai-contributors/ai-contributor-spec \\
     --skill ai-contributor-audit-profile \\
@@ -101,6 +120,7 @@ const invokeSnippet = `# from any agent that supports skills
             <a href="#audit">Audit</a>
             <a href="#levels">Levels</a>
             <a href="#pillars">Pillars</a>
+            <a href="#resources">Resources</a>
             <a href="/specification/">Spec</a>
             <a
               href="https://github.com/ai-contributors/ai-contributor-spec"
@@ -373,6 +393,40 @@ const invokeSnippet = `# from any agent that supports skills
         </div>
       </section>
 
+      <hr class="rule" />
+
+      <section id="resources" class="resources">
+        <div class="section-head">
+          <span class="section-num">§ 05 · Resources</span>
+          <h2>Drop-in prompts and stack guides.</h2>
+          <p class="section-sub">
+            Companion documents alongside the specification. The audit prompt is the no-install
+            path; the stack guides translate language-agnostic clauses into concrete artifacts
+            for one ecosystem at a time.
+          </p>
+        </div>
+        <ul class="resource-grid">
+          {
+            resources.map((it) => (
+              <li class="resource-card">
+                <a href={it.href} class="resource-link">
+                  <div class="resource-head">
+                    <span class="resource-kind">{it.kind}</span>
+                    <span class="resource-tag">{it.tag}</span>
+                  </div>
+                  <div class="resource-title">{it.title}</div>
+                  <p class="resource-desc">{it.desc}</p>
+                  <div class="resource-foot">
+                    <span>{it.meta}</span>
+                    <span class="resource-arrow">Read →</span>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
       <footer class="footer">
         <div class="footer-inner">
           <div class="footer-mark">
@@ -390,6 +444,7 @@ const invokeSnippet = `# from any agent that supports skills
               <a href="#audit">Audit loop</a>
               <a href="#levels">Levels</a>
               <a href="#pillars">Pillars</a>
+              <a href="#resources">Resources</a>
             </div>
             <div>
               <div class="footer-h">Source</div>

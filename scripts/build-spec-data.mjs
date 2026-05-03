@@ -8,6 +8,7 @@ const CHECKLIST_MD = path.join(
   repoRoot,
   'external/ai-contributor-spec/.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md',
 );
+const COVERAGE_MD = path.join(repoRoot, 'external/ai-contributor-spec/AI-CONTRIBUTOR-COVERAGE.md');
 const OUT = path.join(repoRoot, 'src/data/spec-data.generated.json');
 
 const PILLAR_SLUGS = {
@@ -161,6 +162,56 @@ function deriveClauseLevels({ clauses }, aicLevel) {
   }
 }
 
+function extractGeneratedBlock(md, name) {
+  const re = new RegExp(
+    `<!-- BEGIN:GENERATED ${name} -->\\s*([\\s\\S]*?)\\s*<!-- END:GENERATED ${name} -->`,
+  );
+  const m = re.exec(md);
+  return m ? m[1].trim() : '';
+}
+
+function parsePipeTable(block) {
+  const rows = block
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith('|'));
+  if (rows.length < 2) return { headers: [], rows: [] };
+  const split = (line) =>
+    line
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((c) =>
+        c
+          .trim()
+          .replace(/^`(.+)`$/, '$1')
+          .replace(/\*\*/g, ''),
+      );
+  const headers = split(rows[0]);
+  const body = rows.slice(2).map(split);
+  return { headers, rows: body };
+}
+
+function parseCoverage(md) {
+  const glanceBlock = extractGeneratedBlock(md, 'at-a-glance');
+  const glance = glanceBlock
+    .split('\n')
+    .map((l) =>
+      l
+        .replace(/^\s*-\s*/, '')
+        .replace(/`/g, '')
+        .trim(),
+    )
+    .filter(Boolean);
+  return {
+    glance,
+    byScope: parsePipeTable(extractGeneratedBlock(md, 'by-scope')),
+    byPillar: parsePipeTable(extractGeneratedBlock(md, 'by-pillar')),
+    byLevel: parsePipeTable(extractGeneratedBlock(md, 'by-level')),
+    cumulative: parsePipeTable(extractGeneratedBlock(md, 'cumulative')),
+  };
+}
+
 export async function buildSpecData() {
   const specMd = await readFile(SPEC_MD, 'utf8');
   const checklistMd = await readFile(CHECKLIST_MD, 'utf8');
@@ -174,12 +225,15 @@ export async function buildSpecData() {
     if (meta) p.description = meta.description;
   }
   const levels = parseLevelTable(specMd);
+  const coverageMd = await readFile(COVERAGE_MD, 'utf8');
+  const coverage = parseCoverage(coverageMd);
 
   const data = {
     version: 'v0.1',
     pillars: parsed.pillars,
     clauses: parsed.clauses,
     levels,
+    coverage,
   };
   await mkdir(path.dirname(OUT), { recursive: true });
   await writeFile(OUT, `${JSON.stringify(data, null, 2)}\n`, 'utf8');

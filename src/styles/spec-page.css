@@ -647,6 +647,107 @@
   color: var(--ink);
 }
 
+/* Coverage */
+.coverage-section {
+  margin-top: 64px;
+  padding-top: 56px;
+  border-top: 1px solid var(--ink);
+}
+.coverage-head {
+  margin-bottom: 32px;
+}
+.coverage-head .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+.coverage-head h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.2vw, 40px);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+.coverage-head .lede {
+  font-size: 16px;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+.coverage-glance {
+  list-style: none;
+  margin: 0 0 40px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.coverage-glance li {
+  text-wrap: pretty;
+}
+.coverage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+.coverage-block h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 0 0 12px;
+}
+.coverage-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  font-size: 13.5px;
+}
+.coverage-table th,
+.coverage-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-2);
+}
+.coverage-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.coverage-table thead th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.coverage-table td.num,
+.coverage-table th.num {
+  font-family: var(--mono);
+  text-align: right;
+  white-space: nowrap;
+}
+@media (max-width: 880px) {
+  .coverage-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .spec-foot {
   margin-top: 80px;
   padding-top: 32px;

@@ -31,12 +31,6 @@ export const SOURCE_ROUTES = [
     title: 'TypeScript + pnpm + GitHub Adoption',
   },
   {
-    source: 'AI-CONTRIBUTOR-COVERAGE.md',
-    file: 'coverage.md',
-    slug: 'coverage',
-    title: 'Coverage Matrix',
-  },
-  {
     source: 'CHANGELOG.md',
     file: 'changelog.md',
     slug: 'changelog',

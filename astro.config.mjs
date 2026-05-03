@@ -59,7 +59,7 @@ export default defineConfig({
           label: 'Adoption',
           items: [
             { label: 'TypeScript + pnpm + GitHub', slug: 'guide/typescript-pnpm' },
-            { label: 'Coverage matrix', slug: 'coverage' },
+            { label: 'Coverage matrix', link: '/specification/#coverage' },
           ],
         },
         {

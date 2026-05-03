@@ -3,10 +3,10 @@
   "audit_collect_version": "0.1.0",
   "spec_version": "0.1",
   "spec_source": null,
-  "assessment_started_at": "2026-05-03T17:08:54.838Z",
+  "assessment_started_at": "2026-05-03T17:18:03.543Z",
   "target": {
     "path": "/home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation",
-    "audited_commit": "15c5cac967cf6de47e2270840513aac0516c0462",
+    "audited_commit": "b4e8e74123134d292e4460586c52b8f5c7980837",
     "default_branch": "main",
     "host": {
       "kind": "github",
@@ -16,10 +16,10 @@
     "mode": "sha-pinned"
   },
   "preflight": {
-    "started_at": "2026-05-03T17:08:54.838Z",
-    "completed_at": "2026-05-03T17:09:51.507Z",
-    "extracted_to": "/tmp/audit-collect-15c5cac9-EMI2Pl",
-    "original_worktree_status": "M .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json\n M AI-CONTRIBUTOR-AUDIT.md",
+    "started_at": "2026-05-03T17:18:03.543Z",
+    "completed_at": "2026-05-03T17:18:59.436Z",
+    "extracted_to": "/tmp/audit-collect-b4e8e741-LrITlt",
+    "original_worktree_status": "",
     "node_modules_cache_hit": true,
     "tools_available": {
       "node": "v24.12.0",
@@ -367,53 +367,18 @@
   "prompt_skill_inventory": [],
   "ai_authorship_trail": {
     "window": 200,
-    "total_commits_scanned": 21,
+    "total_commits_scanned": 16,
     "ai_authored": [
       {
-        "sha": "15c5cac967cf6de47e2270840513aac0516c0462",
-        "matched_authors": [
-          "Codex",
-          "GPT/ChatGPT/OpenAI"
-        ]
-      },
-      {
-        "sha": "5f3cb5a73c74071dfb181ccc432da9b7849fed1f",
-        "matched_authors": [
-          "Codex",
-          "GPT/ChatGPT/OpenAI"
-        ]
-      },
-      {
-        "sha": "48a810d3573c933303b75f1577266633cf96af59",
-        "matched_authors": [
-          "Codex",
-          "GPT/ChatGPT/OpenAI"
-        ]
-      },
-      {
-        "sha": "77454f2dce94f38613aecf4553570a88e46c82c5",
-        "matched_authors": [
-          "Codex",
-          "GPT/ChatGPT/OpenAI"
-        ]
-      },
-      {
-        "sha": "a4224be68cc31df9303f0fbee26a62133d623e7f",
-        "matched_authors": [
-          "Codex",
-          "GPT/ChatGPT/OpenAI"
-        ]
-      },
-      {
-        "sha": "0da760860b07067bd248af8d318eb537c2a81fdb",
+        "sha": "b4e8e74123134d292e4460586c52b8f5c7980837",
         "matched_authors": [
           "Codex",
           "GPT/ChatGPT/OpenAI"
         ]
       }
     ],
-    "ratio": 0.286,
-    "most_recent_ai_sha": "15c5cac967cf6de47e2270840513aac0516c0462"
+    "ratio": 0.063,
+    "most_recent_ai_sha": "b4e8e74123134d292e4460586c52b8f5c7980837"
   },
   "hosted_settings": {
     "branch_protection": {
@@ -422,7 +387,7 @@
         "permissive_bypass": false
       },
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "required_status_checks": {
       "value": [
@@ -431,7 +396,7 @@
         "Dependency Review"
       ],
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "required_reviews": {
       "value": {
@@ -439,29 +404,29 @@
         "dismiss_stale": true
       },
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "codeowners_enforced": {
       "value": true,
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "secret_scanning": {
       "value": "enabled",
       "source": "gh:repo",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "push_protection": {
       "value": "enabled",
       "source": "gh:repo",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "dependency_alerts": {
       "value": {
         "open_high": 0
       },
       "source": "gh:dependabot",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     },
     "deployment_environments": {
       "value": [
@@ -472,7 +437,7 @@
         }
       ],
       "source": "gh:environments",
-      "last_checked": "2026-05-03T17:08:54.838Z"
+      "last_checked": "2026-05-03T17:18:03.543Z"
     }
   },
   "bootstrap_smoke": {
@@ -480,13 +445,13 @@
     "ran": true,
     "reason": "opt-in run completed",
     "clone_dir": "<bootstrap-smoke-tmp>",
-    "total_duration_ms": 33433,
+    "total_duration_ms": 33138,
     "steps": [
       {
         "label": "install",
         "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline",
         "exit_code": 0,
-        "duration_ms": 1757,
+        "duration_ms": 1746,
         "stdout_excerpt": "Lockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +1109\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1109, reused 1109, downloaded 0, added 1109, done\n…",
         "stderr_excerpt": "",
         "timed_out": false
@@ -495,9 +460,9 @@
         "label": "build",
         "cmd": "pnpm run build",
         "exit_code": 0,
-        "duration_ms": 30993,
-        "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 prebuild /tmp/bootstrap-smoke-DuKZpM\n> pnpm prepare:spec\n\n\n…",
-        "stderr_excerpt": "Submodule 'external/ai-contributor-spec' (https://github.com/ai-contributors/ai-contributor-spec.git) registered for path 'external/ai-contributor-spec'\nCloning into '/tmp/bootstrap-smoke-DuKZpM/external/ai-contributor-spec'...\nEntry docs → 404 was not found.\n",
+        "duration_ms": 30772,
+        "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 prebuild /tmp/bootstrap-smoke-iUdyAD\n> pnpm prepare:spec\n\n\n…",
+        "stderr_excerpt": "Submodule 'external/ai-contributor-spec' (https://github.com/ai-contributors/ai-contributor-spec.git) registered for path 'external/ai-contributor-spec'\nCloning into '/tmp/bootstrap-smoke-iUdyAD/external/ai-contributor-spec'...\nEntry docs → 404 was not found.\n",
         "timed_out": false
       }
     ]
@@ -514,8 +479,8 @@
           "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 609,
-          "stdout_excerpt": "Done in 501ms using pnpm v10.33.2\n",
+          "duration_ms": 407,
+          "stdout_excerpt": "Done in 347ms using pnpm v10.33.2\n",
           "kind": "shell"
         }
       ],
@@ -538,8 +503,8 @@
           "cmd": "pnpm -r lint",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 789,
-          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-15c5cac9-EMI2Pl\n> eslint .\n\n",
+          "duration_ms": 703,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-b4e8e741-LrITlt\n> eslint .\n\n",
           "kind": "shell"
         }
       ],
@@ -561,9 +526,9 @@
           "cmd": "pnpm -r type-check",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 8612,
-          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-15c5cac9-EMI2Pl\n> pnpm prepare:spec\n\n\n…",
-          "stderr_excerpt": "Cloning into '/tmp/audit-collect-15c5cac9-EMI2Pl/external/ai-contributor-spec'...\n",
+          "duration_ms": 8830,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-b4e8e741-LrITlt\n> pnpm prepare:spec\n\n\n…",
+          "stderr_excerpt": "Cloning into '/tmp/audit-collect-b4e8e741-LrITlt/external/ai-contributor-spec'...\n",
           "kind": "shell"
         }
       ],
@@ -647,7 +612,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 383,
+          "duration_ms": 361,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -727,7 +692,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 383,
+          "duration_ms": 361,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -807,7 +772,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 383,
+          "duration_ms": 361,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -887,7 +852,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/secret-scanning/alerts",
           "exit_code": 0,
-          "duration_ms": 433,
+          "duration_ms": 399,
           "stdout_excerpt": "[]",
           "kind": "gh_api",
           "response_summary": []
@@ -910,7 +875,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev",
           "exit_code": 0,
-          "duration_ms": 343,
+          "duration_ms": 364,
           "stdout_excerpt": "{\n  \"id\": 1227930329,\n  \"node_id\": \"R_kgDOSTC62Q\",\n  \"name\": \"ai-contributors.dev\",\n  \"full_name\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": {
@@ -1079,7 +1044,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/dependabot/alerts?state=open&severity=high&per_page=1",
           "exit_code": 0,
-          "duration_ms": 400,
+          "duration_ms": 398,
           "stdout_excerpt": "[]",
           "kind": "gh_api",
           "response_summary": []
@@ -1102,7 +1067,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 383,
+          "duration_ms": 361,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -1565,11 +1530,11 @@
       "spec_rule_name": "AI Authorship Traceability",
       "applicability": {
         "verdict": "applicable",
-        "trigger_evidence": "last 21 commit(s)"
+        "trigger_evidence": "last 16 commit(s)"
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": "6/21 commits carry an AI Co-Authored-By trailer (ratio=0.286); models: Codex, GPT/ChatGPT/OpenAI; most recent: 15c5cac9",
+      "derivation_reason": "1/16 commits carry an AI Co-Authored-By trailer (ratio=0.063); models: Codex, GPT/ChatGPT/OpenAI; most recent: b4e8e741",
       "judgment_required": false,
       "aic_ids": [
         "AIC-ai-authorship-traceability"

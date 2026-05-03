@@ -13,12 +13,6 @@ export const SPEC_METADATA_PATH = path.join(repoRoot, 'src/data/spec-source.gene
 
 export const SOURCE_ROUTES = [
   {
-    source: 'AI-CONTRIBUTOR-SPECIFICATION.md',
-    file: 'specification.md',
-    slug: 'specification',
-    title: 'Specification',
-  },
-  {
     source: 'AI-CONTRIBUTOR-AUDIT-MODEL.md',
     file: 'audit-model.md',
     slug: 'audit/model',

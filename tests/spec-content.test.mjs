@@ -51,7 +51,7 @@ test('assertSpecSource reports all missing required files', async () => {
     () => assertSpecSource({ root }),
     (error) => {
       assert.match(error.message, /Missing required spec source files/);
-      assert.match(error.message, /AI-CONTRIBUTOR-SPECIFICATION\.md/);
+      assert.match(error.message, /AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
       assert.match(error.message, /skills\/ai-contributor-audit\/SKILL\.md/);
       return true;
     },
@@ -101,15 +101,14 @@ test('generateDocs creates Starlight route files with custom slugs', async () =>
   const root = await makeSpecRoot();
   const outDir = await mkdtemp(path.join(tmpdir(), 'generated-docs-'));
   const result = await generateDocs({ root, outDir });
-  const specification = await readFile(path.join(outDir, 'specification.md'), 'utf8');
+  const auditModel = await readFile(path.join(outDir, 'audit-model.md'), 'utf8');
   const auditSkill = await readFile(path.join(outDir, 'skills-audit-skill.md'), 'utf8');
 
   assert.equal(result.generated.length, SOURCE_ROUTES.length);
-  assert.match(specification, /title: Specification/);
-  assert.match(specification, /slug: specification/);
-  assert.match(specification, /Source body for AI-CONTRIBUTOR-SPECIFICATION\.md/);
+  assert.match(auditModel, /title: Audit Evidence Model/);
+  assert.match(auditModel, /slug: audit\/model/);
+  assert.match(auditModel, /Source body for AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
   assert.match(auditSkill, /slug: skills\/audit\/skill/);
-  assert.ok(existsSync(path.join(outDir, 'specification.md')));
 
   await rm(root, { recursive: true, force: true });
   await rm(outDir, { recursive: true, force: true });
@@ -118,13 +117,13 @@ test('generateDocs creates Starlight route files with custom slugs', async () =>
 test('generateDocs updates expected files before removing stale files', async () => {
   const root = await makeSpecRoot();
   const outDir = await mkdtemp(path.join(tmpdir(), 'generated-docs-'));
-  await writeFile(path.join(outDir, 'specification.md'), 'old specification', 'utf8');
+  await writeFile(path.join(outDir, 'audit-model.md'), 'old audit model', 'utf8');
   await writeFile(path.join(outDir, 'stale.md'), 'stale route', 'utf8');
 
   await generateDocs({ root, outDir });
 
-  const specification = await readFile(path.join(outDir, 'specification.md'), 'utf8');
-  assert.match(specification, /Source body for AI-CONTRIBUTOR-SPECIFICATION\.md/);
+  const auditModel = await readFile(path.join(outDir, 'audit-model.md'), 'utf8');
+  assert.match(auditModel, /Source body for AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
   assert.equal(existsSync(path.join(outDir, 'stale.md')), false);
 
   await rm(root, { recursive: true, force: true });

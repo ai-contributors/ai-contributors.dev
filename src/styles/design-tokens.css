@@ -1,0 +1,69 @@
+/* ai-contributors / spec — shared design tokens (B/W system).
+   Used by custom Astro pages outside Starlight. */
+
+:root {
+  --ink: #0a0a0a;
+  --ink-2: #2a2a2a;
+  --mute: #6e6e6e;
+  --line: #d9d9d9;
+  --line-2: #ececec;
+  --paper: #fafafa;
+  --paper-2: #ffffff;
+  --hover: #f3f3f3;
+  --mono: ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  --serif: 'Instrument Serif', 'Iowan Old Style', 'Apple Garamond', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --logo-light: #cfcfcf;
+  --logo-dark: #8a8a8a;
+  --logo-ink: #0a0a0a;
+  --logo-letter: #ffffff;
+}
+
+[data-invert='1'] {
+  --ink: #f5f5f5;
+  --ink-2: #d0d0d0;
+  --mute: #8a8a8a;
+  --line: #2a2a2a;
+  --line-2: #1d1d1d;
+  --paper: #0a0a0a;
+  --paper-2: #050505;
+  --hover: #141414;
+
+  --logo-light: #3a3a3a;
+  --logo-dark: #5e5e5e;
+  --logo-ink: #f5f5f5;
+  --logo-letter: #0a0a0a;
+}
+
+body.spec-canvas {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+body.spec-canvas *,
+body.spec-canvas *::before,
+body.spec-canvas *::after {
+  box-sizing: border-box;
+}
+
+body.spec-canvas a {
+  color: inherit;
+  text-decoration: none;
+}
+body.spec-canvas a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-feature-settings: 'ss01', 'cv02';
+}

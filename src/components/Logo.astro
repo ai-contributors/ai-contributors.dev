@@ -1,0 +1,83 @@
+---
+interface Props {
+  size?: number;
+  spec?: boolean;
+}
+const { size = 28, spec = true } = Astro.props;
+const cell = 24;
+const gap = 8;
+const r = 11;
+const total = 4 * cell + 3 * gap;
+const positions = [];
+for (let row = 0; row < 4; row++) {
+  for (let col = 0; col < 4; col++) {
+    positions.push({
+      row,
+      col,
+      x: col * (cell + gap) + cell / 2,
+      y: row * (cell + gap) + cell / 2,
+    });
+  }
+}
+const aiIdx = positions.findIndex((p) => p.row === 1 && p.col === 2);
+const specL = ['S', 'P', 'E', 'C'];
+---
+
+<svg
+  viewBox={`0 0 ${total} ${total}`}
+  width={size}
+  height={size}
+  role="img"
+  aria-label="ai-contributors"
+>
+  {
+    positions.map((p, i) => {
+      const isAi = i === aiIdx;
+      const isBottom = p.row === 3 && spec;
+      const isBottomDot = p.row === 3 && !spec;
+      const fill =
+        isAi || isBottom || isBottomDot
+          ? isAi || isBottom
+            ? 'var(--logo-ink)'
+            : (p.row + p.col) % 2 === 0
+              ? 'var(--logo-light)'
+              : 'var(--logo-dark)'
+          : (p.row + p.col) % 2 === 0
+            ? 'var(--logo-light)'
+            : 'var(--logo-dark)';
+      return (
+        <g>
+          <circle cx={p.x} cy={p.y} r={r} fill={fill} />
+          {isAi && (
+            <text
+              x={p.x}
+              y={p.y + 0.5}
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-family="ui-monospace,monospace"
+              font-size="11"
+              font-weight="700"
+              fill="var(--logo-letter)"
+            >
+              ai
+            </text>
+          )}
+          {isBottom && (
+            <text
+              x={p.x}
+              y={p.y + 0.5}
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-family="ui-monospace,monospace"
+              font-size="11"
+              font-weight="700"
+              fill="var(--logo-letter)"
+            >
+              {specL[p.col]}
+            </text>
+          )}
+        </g>
+      );
+    })
+  }
+</svg>

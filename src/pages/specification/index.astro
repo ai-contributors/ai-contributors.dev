@@ -1,0 +1,428 @@
+---
+import Logo from '../../components/Logo.astro';
+import specData from '../../data/spec-data.generated.json';
+import specSource from '../../data/spec-source.generated.json';
+import '../../styles/design-tokens.css';
+import '../../styles/spec-page.css';
+
+interface Rule {
+  w: 'MUST' | 'MUST_WHEN' | 'SHOULD' | 'MAY';
+  id: string;
+  t: string;
+  lvl: string | null;
+}
+interface Pillar {
+  id: string;
+  num: string;
+  icon: string;
+  name: string;
+  range: string;
+  description: string;
+}
+interface Clause {
+  num: number;
+  title: string;
+  pillar: string;
+  lvl: string;
+  rules: Rule[];
+}
+
+const pillars = specData.pillars as Pillar[];
+const clauses = specData.clauses as Clause[];
+const version = specData.version;
+
+const WEIGHT_LABEL: Record<Rule['w'], string> = {
+  MUST: 'MUST',
+  MUST_WHEN: 'MUST·when',
+  SHOULD: 'SHOULD',
+  MAY: 'MAY',
+};
+
+const grouped = pillars.map((p) => ({
+  pillar: p,
+  clauses: clauses.filter((c) => c.pillar === p.id),
+}));
+
+function highlightWeight(t: string): string {
+  // Render upper-case weight terms in bold; preserve any backticked code spans.
+  const escaped = t
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\bMUST NOT\b/g, '<em class="w-must">MUST NOT</em>')
+    .replace(/\bMUST\b/g, '<em class="w-must">MUST</em>')
+    .replace(/\bSHOULD NOT\b/g, '<em class="w-should">SHOULD NOT</em>')
+    .replace(/\bSHOULD\b/g, '<em class="w-should">SHOULD</em>')
+    .replace(/\bMAY\b/g, '<em class="w-may">MAY</em>');
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Specification · ai-contributors / spec</title>
+    <meta
+      name="description"
+      content="The full AI Contributor specification — 29 clauses across 7 pillars, with MUST / MUST when applicable / SHOULD / MAY rules and stable AIC- IDs."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="spec-canvas">
+    <a id="_top"></a>
+    <header class="spec-topbar">
+      <div class="spec-topbar-inner">
+        <a class="brand" href="/" aria-label="ai-contributors / spec">
+          <Logo size={28} />
+          <span class="brand-name">ai-contributors</span>
+          <span class="brand-slash">/</span>
+          <span class="brand-doc">spec</span>
+        </a>
+        <div class="sticky-pillar" data-sticky-pillar></div>
+        <div class="spec-topbar-right">
+          <span class="spec-progress" data-progress>§1 of §{clauses.length}</span>
+          <a
+            href="https://github.com/ai-contributors/ai-contributor-spec"
+            class="spec-ghost-link"
+            rel="noopener">GitHub ↗</a
+          >
+          <button type="button" class="spec-theme-toggle" data-theme-toggle>Dark</button>
+        </div>
+      </div>
+      <div class="spec-progress-bar"><span data-progress-bar></span></div>
+    </header>
+
+    <main class="spec-layout">
+      <aside class="toc">
+        <div class="toc-section">
+          <div class="toc-h">Filter</div>
+          <div class="toc-sub">Normative weight</div>
+          <div class="chip-row" data-weight-row>
+            {
+              (['MUST', 'MUST_WHEN', 'SHOULD', 'MAY'] as const).map((w) => (
+                <button
+                  type="button"
+                  class={`chip chip-w chip-${w.toLowerCase()}`}
+                  data-weight={w}
+                  aria-pressed="true"
+                >
+                  {WEIGHT_LABEL[w]}
+                </button>
+              ))
+            }
+          </div>
+          <div class="toc-sub" style="margin-top:18px">Pillar</div>
+          <div class="chip-col" data-pillar-row>
+            {
+              pillars.map((p) => (
+                <button type="button" class="chip chip-p" data-pillar={p.id} aria-pressed="true">
+                  <span class="chip-icon" aria-hidden="true">
+                    {p.icon}
+                  </span>
+                  <span class="chip-label">{p.name}</span>
+                  <span class="chip-range">{p.range}</span>
+                </button>
+              ))
+            }
+          </div>
+          <div class="toc-sub" style="margin-top:18px">Reading mode</div>
+          <div class="seg" data-density>
+            <button type="button" class="seg-btn" data-density-btn="compact">Compact</button>
+            <button type="button" class="seg-btn is-on" data-density-btn="spacious"
+              >Spacious</button
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div class="toc-h">Contents</div>
+          {
+            grouped.map(({ pillar, clauses: cs }) => (
+              <div class="toc-pillar" data-toc-pillar={pillar.id}>
+                <div class="toc-pillar-h">
+                  <span class="toc-pillar-num">{pillar.num}</span>
+                  <span>{pillar.name}</span>
+                </div>
+                <ul>
+                  {cs.map((c) => (
+                    <li>
+                      <a href={`#c${c.num}`} data-toc-link={`c${c.num}`}>
+                        <span class="toc-num">§{c.num}</span>
+                        <span class="toc-title">{c.title}</span>
+                        <span class={`toc-lvl lvl-${c.lvl.toLowerCase()}`}>{c.lvl}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </aside>
+
+      <div class="spec-content">
+        <div class="spec-hero">
+          <div class="eyebrow">specification · {version} · {specSource.shortSha}</div>
+          <h1>The AI Contributor Spec</h1>
+          <p class="lede">
+            Twenty-nine clauses across seven pillars. Five levels from baseline hygiene to
+            autonomous AI operation. Use <em>MUST</em> / <em>SHOULD</em> / <em>MAY</em> in the
+            RFC&nbsp;2119 sense.
+          </p>
+          <div class="spec-meta">
+            <a
+              class="meta-chip"
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="cc-glyphs">CC&nbsp;BY&nbsp;4.0</span>
+              <span>Creative Commons Attribution 4.0 International</span>
+            </a>
+          </div>
+        </div>
+
+        {
+          grouped.map(({ pillar, clauses: cs }) => (
+            <>
+              <section class="pillar-div" id={`p-${pillar.id}`} data-pillar-section={pillar.id}>
+                <div class="pd-rule" />
+                <div class="pd-head">
+                  <span class="pd-num">{pillar.num}</span>
+                  <div>
+                    <h2>
+                      <span class="pd-icon" aria-hidden="true">
+                        {pillar.icon}
+                      </span>
+                      {pillar.name}
+                    </h2>
+                    <div class="pd-meta">
+                      {pillar.range} · {cs.length} clauses
+                    </div>
+                    <p class="pd-desc">{pillar.description}</p>
+                  </div>
+                </div>
+              </section>
+              {cs.map((c) => (
+                <article
+                  class="clause"
+                  id={`c${c.num}`}
+                  data-clause-num={c.num}
+                  data-clause-pillar={c.pillar}
+                  data-clause-pillar-name={pillar.name}
+                  data-clause-pillar-icon={pillar.icon}
+                  data-clause-pillar-num={pillar.num}
+                  data-clause-title={c.title}
+                >
+                  <header class="clause-head">
+                    <div class="clause-num-wrap">
+                      <a href={`#c${c.num}`} class="clause-num">
+                        §{c.num}
+                      </a>
+                      <span class={`clause-lvl lvl-${c.lvl.toLowerCase()}`}>
+                        required at {c.lvl}
+                      </span>
+                    </div>
+                    <h3 class="clause-title">{c.title}</h3>
+                  </header>
+                  <ol class="rule-list">
+                    {c.rules.map((r) => (
+                      <li class={`rule rule-${r.w.toLowerCase()}`} data-rule-w={r.w}>
+                        <span class="rule-w">{WEIGHT_LABEL[r.w]}</span>
+                        <span class="rule-text" set:html={highlightWeight(r.t)} />
+                        <a class="rule-id" href={`#${r.id}`} title="Permalink">
+                          {r.id}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                  <footer class="clause-foot">
+                    <span>
+                      {pillar.icon} {pillar.name}
+                    </span>
+                    <span>·</span>
+                    <span>{c.rules.length} rules</span>
+                    <span>·</span>
+                    <a href="#_top">↑ top</a>
+                  </footer>
+                </article>
+              ))}
+            </>
+          ))
+        }
+
+        <footer class="spec-foot">
+          <div>end of specification · {version} · pinned to {specSource.shortSha}</div>
+          <a href="/" class="back-link">← back to start page</a>
+        </footer>
+      </div>
+    </main>
+
+    <script is:inline>
+      const root = document.documentElement;
+      const ALL_WEIGHTS = ['MUST', 'MUST_WHEN', 'SHOULD', 'MAY'];
+
+      // Theme
+      const stored = localStorage.getItem('ac-theme');
+      if (stored === 'dark') root.dataset.invert = '1';
+      const themeBtn = document.querySelector('[data-theme-toggle]');
+      const syncTheme = () => {
+        const dark = root.dataset.invert === '1';
+        if (themeBtn) themeBtn.textContent = dark ? 'Light' : 'Dark';
+      };
+      syncTheme();
+      themeBtn?.addEventListener('click', () => {
+        const dark = root.dataset.invert === '1';
+        if (dark) {
+          delete root.dataset.invert;
+          localStorage.setItem('ac-theme', 'light');
+        } else {
+          root.dataset.invert = '1';
+          localStorage.setItem('ac-theme', 'dark');
+        }
+        syncTheme();
+      });
+
+      // Density
+      const densityRoot = document.querySelector('[data-density]');
+      const setDensity = (mode) => {
+        root.dataset.density = mode;
+        densityRoot
+          ?.querySelectorAll('[data-density-btn]')
+          .forEach((b) => b.classList.toggle('is-on', b.dataset.densityBtn === mode));
+      };
+      densityRoot?.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-density-btn]');
+        if (!t) return;
+        setDensity(t.dataset.densityBtn);
+      });
+      setDensity('spacious');
+
+      // Filters
+      const activeWeights = new Set(ALL_WEIGHTS);
+      const activePillars = new Set(
+        Array.from(document.querySelectorAll('[data-pillar]')).map((b) => b.dataset.pillar),
+      );
+
+      const applyFilters = () => {
+        document.querySelectorAll('.rule').forEach((r) => {
+          r.classList.toggle('is-hidden', !activeWeights.has(r.dataset.ruleW));
+        });
+        document.querySelectorAll('.clause').forEach((c) => {
+          const visibleRules = c.querySelectorAll('.rule:not(.is-hidden)').length;
+          c.classList.toggle(
+            'is-hidden',
+            !activePillars.has(c.dataset.clausePillar) || visibleRules === 0,
+          );
+        });
+        document.querySelectorAll('[data-pillar-section]').forEach((s) => {
+          s.style.display = activePillars.has(s.dataset.pillarSection) ? '' : 'none';
+        });
+        document.querySelectorAll('[data-toc-pillar]').forEach((s) => {
+          s.style.display = activePillars.has(s.dataset.tocPillar) ? '' : 'none';
+        });
+      };
+
+      document.querySelector('[data-weight-row]')?.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-weight]');
+        if (!t) return;
+        const w = t.dataset.weight;
+        if (activeWeights.has(w)) activeWeights.delete(w);
+        else activeWeights.add(w);
+        if (activeWeights.size === 0) ALL_WEIGHTS.forEach((x) => activeWeights.add(x));
+        document.querySelectorAll('[data-weight]').forEach((b) => {
+          const on = activeWeights.has(b.dataset.weight);
+          b.classList.toggle('is-off', !on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+        applyFilters();
+      });
+
+      document.querySelector('[data-pillar-row]')?.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-pillar]');
+        if (!t) return;
+        const p = t.dataset.pillar;
+        if (activePillars.has(p)) activePillars.delete(p);
+        else activePillars.add(p);
+        if (activePillars.size === 0)
+          document
+            .querySelectorAll('[data-pillar]')
+            .forEach((b) => activePillars.add(b.dataset.pillar));
+        document.querySelectorAll('[data-pillar]').forEach((b) => {
+          const on = activePillars.has(b.dataset.pillar);
+          b.classList.toggle('is-off', !on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+        applyFilters();
+      });
+
+      // Scroll spy + sticky pillar header + progress
+      const stickyEl = document.querySelector('[data-sticky-pillar]');
+      const progressEl = document.querySelector('[data-progress]');
+      const progressBar = document.querySelector('[data-progress-bar]');
+      const total = document.querySelectorAll('.clause').length;
+
+      const setActive = (el) => {
+        document
+          .querySelectorAll('[data-toc-link]')
+          .forEach((a) => a.classList.toggle('is-active', a.dataset.tocLink === el.id));
+        if (stickyEl) {
+          const d = el.dataset;
+          stickyEl.innerHTML =
+            '<span class="sp-num">' +
+            d.clausePillarNum +
+            '</span><span class="sp-icon" aria-hidden="true">' +
+            d.clausePillarIcon +
+            '</span><span class="sp-name">' +
+            d.clausePillarName +
+            '</span><span class="sp-sep">›</span><span class="sp-clause">§' +
+            d.clauseNum +
+            ' ' +
+            d.clauseTitle +
+            '</span>';
+        }
+        if (progressEl) {
+          progressEl.textContent = '§' + el.dataset.clauseNum + ' of §' + total;
+        }
+        if (progressBar) {
+          const cur = Number(el.dataset.clauseNum) || 1;
+          progressBar.style.width = (cur / total) * 100 + '%';
+        }
+      };
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible[0]) setActive(visible[0].target);
+        },
+        { rootMargin: '-120px 0px -60% 0px', threshold: 0 },
+      );
+      document.querySelectorAll('.clause').forEach((c) => obs.observe(c));
+
+      // Smooth scroll for TOC links
+      document.querySelectorAll('[data-toc-link]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          const target = document.getElementById(a.dataset.tocLink);
+          if (!target) return;
+          e.preventDefault();
+          const y = target.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        });
+      });
+
+      const first = document.querySelector('.clause');
+      if (first) setActive(first);
+    </script>
+  </body>
+</html>

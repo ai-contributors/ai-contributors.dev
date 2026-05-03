@@ -32,8 +32,8 @@ export default defineConfig({
         {
           label: 'Start here',
           items: [
-            { label: 'Home', slug: '' },
-            { label: 'Specification', slug: 'specification' },
+            { label: 'Home', link: '/' },
+            { label: 'Specification', link: '/specification/' },
             { label: 'Conformance levels', slug: 'levels' },
           ],
         },

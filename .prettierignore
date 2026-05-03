@@ -10,6 +10,7 @@ dist/
 
 external/
 src/content/docs/generated-spec/
+src/data/spec-data.generated.json
 AI-CONTRIBUTOR-AUDIT.md
 .ai-contributor-audit/
 docs/superpowers/

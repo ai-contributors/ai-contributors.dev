@@ -65,8 +65,8 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm build
         env:
-          ASTRO_SITE: https://ai-contributors.github.io
-          ASTRO_BASE: /ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
+          ASTRO_SITE: https://ai-contributors.dev
+          ASTRO_BASE: /pr-preview/pr-${{ github.event.pull_request.number }}/
 
       - name: Upload built site
         uses: actions/upload-artifact@v7
@@ -171,7 +171,7 @@ jobs:
       pull-requests: write
     environment:
       name: github-pages
-      url: https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
+      url: https://ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -227,7 +227,7 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-            const previewUrl = `https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-${prNumber}/`;
+            const previewUrl = `https://ai-contributors.dev/pr-preview/pr-${prNumber}/`;
             const marker = '<!-- ai-contributors-preview-url -->';
             const body = `${marker}\n## Preview Deployment\n\n${previewUrl}\n\nThis preview is rebuilt from the latest pull request commit and removed when the pull request closes.`;
 

@@ -1,7 +1,7 @@
 export const CUSTOM_DOMAIN = 'https://ai-contributors.dev';
 export const PRODUCTION_BASE = '/ai-contributor-spec/';
 export const PRODUCTION_DIR = 'ai-contributor-spec';
-export const GITHUB_PROJECT_BASE = '/ai-contributors.dev/';
+export const PREVIEW_BASE = '/pr-preview/';
 
 export function productionUrl(path = '') {
   const normalizedPath = path.replace(/^\/+/, '');
@@ -13,7 +13,7 @@ export function previewBaseForPr(prNumber) {
     throw new Error(`Invalid pull request number: ${prNumber}`);
   }
 
-  return `${GITHUB_PROJECT_BASE}pr-preview/pr-${prNumber}/`;
+  return `${PREVIEW_BASE}pr-${prNumber}/`;
 }
 
 export function productionRedirectHtml() {

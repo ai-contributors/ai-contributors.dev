@@ -25,6 +25,6 @@ test('root redirect points browser users to the production subfolder', () => {
   );
 });
 
-test('PR preview base remains under the GitHub Pages project URL', () => {
-  assert.equal(previewBaseForPr(123), '/ai-contributors.dev/pr-preview/pr-123/');
+test('PR preview base matches the custom-domain preview path', () => {
+  assert.equal(previewBaseForPr(123), '/pr-preview/pr-123/');
 });

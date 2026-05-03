@@ -10,29 +10,29 @@ importers:
     dependencies:
       '@astrojs/starlight':
         specifier: 0.38.4
-        version: 0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
+        version: 0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
       '@mermaid-js/layout-elk':
         specifier: 0.2.1
         version: 0.2.1(mermaid@11.14.0)
       astro:
         specifier: 6.2.1
-        version: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
+        version: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
       astro-mermaid:
         specifier: 2.0.1
-        version: 2.0.1(@mermaid-js/layout-elk@0.2.1(mermaid@11.14.0))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))(mermaid@11.14.0)
+        version: 2.0.1(@mermaid-js/layout-elk@0.2.1(mermaid@11.14.0))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))(mermaid@11.14.0)
       mermaid:
         specifier: 11.14.0
         version: 11.14.0
       starlight-llms-txt:
         specifier: 0.8.1
-        version: 0.8.1(@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
+        version: 0.8.1(@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
     devDependencies:
       '@astrojs/check':
         specifier: 0.9.9
-        version: 0.9.9(prettier@3.8.3)(typescript@5.9.3)
+        version: 0.9.9(prettier@3.8.3)(typescript@6.0.3)
       typescript:
-        specifier: 5.9.3
-        version: 5.9.3
+        specifier: 6.0.3
+        version: 6.0.3
 
 packages:
 
@@ -2265,8 +2265,8 @@ packages:
   typescript-auto-import-cache@0.3.6:
     resolution: {integrity: sha512-RpuHXrknHdVdK7wv/8ug3Fr0WNsNi5l5aB8MYYuXhq2UH5lnEB1htJ1smhtD5VeCsGr2p8mUDtd83LCQDFVgjQ==}
 
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2600,12 +2600,12 @@ snapshots:
       package-manager-detector: 1.6.0
       tinyexec: 1.1.2
 
-  '@astrojs/check@0.9.9(prettier@3.8.3)(typescript@5.9.3)':
+  '@astrojs/check@0.9.9(prettier@3.8.3)(typescript@6.0.3)':
     dependencies:
-      '@astrojs/language-server': 2.16.7(prettier@3.8.3)(typescript@5.9.3)
+      '@astrojs/language-server': 2.16.7(prettier@3.8.3)(typescript@6.0.3)
       chokidar: 4.0.3
       kleur: 4.1.5
-      typescript: 5.9.3
+      typescript: 6.0.3
       yargs: 17.7.2
     transitivePeerDependencies:
       - prettier
@@ -2619,12 +2619,12 @@ snapshots:
     dependencies:
       picomatch: 4.0.4
 
-  '@astrojs/language-server@2.16.7(prettier@3.8.3)(typescript@5.9.3)':
+  '@astrojs/language-server@2.16.7(prettier@3.8.3)(typescript@6.0.3)':
     dependencies:
       '@astrojs/compiler': 2.13.1
       '@astrojs/yaml2ts': 0.2.3
       '@jridgewell/sourcemap-codec': 1.5.5
-      '@volar/kit': 2.4.28(typescript@5.9.3)
+      '@volar/kit': 2.4.28(typescript@6.0.3)
       '@volar/language-core': 2.4.28
       '@volar/language-server': 2.4.28
       '@volar/language-service': 2.4.28
@@ -2670,12 +2670,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))':
+  '@astrojs/mdx@5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))':
     dependencies:
       '@astrojs/markdown-remark': 7.1.1
       '@mdx-js/mdx': 3.1.1
       acorn: 8.16.0
-      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
+      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
       es-module-lexer: 2.1.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -2699,17 +2699,17 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 4.4.2
 
-  '@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))':
+  '@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))':
     dependencies:
       '@astrojs/markdown-remark': 7.1.1
-      '@astrojs/mdx': 5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
+      '@astrojs/mdx': 5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
       '@astrojs/sitemap': 3.7.2
       '@pagefind/default-ui': 1.5.2
       '@types/hast': 3.0.4
       '@types/js-yaml': 4.0.9
       '@types/mdast': 4.0.4
-      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
-      astro-expressive-code: 0.41.7(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
+      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
+      astro-expressive-code: 0.41.7(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
       bcp-47: 2.1.0
       hast-util-from-html: 2.0.3
       hast-util-select: 6.0.4
@@ -3428,12 +3428,12 @@ snapshots:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
 
-  '@volar/kit@2.4.28(typescript@5.9.3)':
+  '@volar/kit@2.4.28(typescript@6.0.3)':
     dependencies:
       '@volar/language-service': 2.4.28
       '@volar/typescript': 2.4.28
       typesafe-path: 0.2.2
-      typescript: 5.9.3
+      typescript: 6.0.3
       vscode-languageserver-textdocument: 1.0.12
       vscode-uri: 3.1.0
 
@@ -3516,14 +3516,14 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro-expressive-code@0.41.7(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)):
+  astro-expressive-code@0.41.7(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)):
     dependencies:
-      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
+      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
       rehype-expressive-code: 0.41.7
 
-  astro-mermaid@2.0.1(@mermaid-js/layout-elk@0.2.1(mermaid@11.14.0))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))(mermaid@11.14.0):
+  astro-mermaid@2.0.1(@mermaid-js/layout-elk@0.2.1(mermaid@11.14.0))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))(mermaid@11.14.0):
     dependencies:
-      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
+      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
       import-meta-resolve: 4.2.0
       mdast-util-to-string: 4.0.0
       mermaid: 11.14.0
@@ -3531,7 +3531,7 @@ snapshots:
     optionalDependencies:
       '@mermaid-js/layout-elk': 0.2.1(mermaid@11.14.0)
 
-  astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4):
+  astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4):
     dependencies:
       '@astrojs/compiler': 4.0.0
       '@astrojs/internal-helpers': 0.9.0
@@ -3576,7 +3576,7 @@ snapshots:
       tinyclip: 0.1.12
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
-      tsconfck: 3.1.6(typescript@5.9.3)
+      tsconfck: 3.1.6(typescript@6.0.3)
       ultrahtml: 1.6.0
       unifont: 0.7.4
       unist-util-visit: 5.1.0
@@ -5410,13 +5410,13 @@ snapshots:
 
   space-separated-tokens@2.0.2: {}
 
-  starlight-llms-txt@0.8.1(@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)):
+  starlight-llms-txt@0.8.1(@astrojs/starlight@0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)))(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)):
     dependencies:
-      '@astrojs/mdx': 5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
-      '@astrojs/starlight': 0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4))
+      '@astrojs/mdx': 5.0.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
+      '@astrojs/starlight': 0.38.4(astro@6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4))
       '@types/hast': 3.0.4
       '@types/micromatch': 4.0.10
-      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@5.9.3)(yaml@2.8.4)
+      astro: 6.2.1(@types/node@24.12.2)(rollup@4.60.2)(typescript@6.0.3)(yaml@2.8.4)
       github-slugger: 2.0.0
       hast-util-select: 6.0.4
       micromatch: 4.0.8
@@ -5489,9 +5489,9 @@ snapshots:
 
   ts-dedent@2.2.0: {}
 
-  tsconfck@3.1.6(typescript@5.9.3):
+  tsconfck@3.1.6(typescript@6.0.3):
     optionalDependencies:
-      typescript: 5.9.3
+      typescript: 6.0.3
 
   tslib@2.8.1:
     optional: true
@@ -5502,7 +5502,7 @@ snapshots:
     dependencies:
       semver: 7.7.4
 
-  typescript@5.9.3: {}
+  typescript@6.0.3: {}
 
   ufo@1.6.4: {}
 

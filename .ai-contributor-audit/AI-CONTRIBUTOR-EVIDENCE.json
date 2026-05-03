@@ -3,10 +3,10 @@
   "audit_collect_version": "0.1.0",
   "spec_version": "0.1",
   "spec_source": null,
-  "assessment_started_at": "2026-05-03T17:40:23.612Z",
+  "assessment_started_at": "2026-05-03T18:29:29.109Z",
   "target": {
     "path": "/home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation",
-    "audited_commit": "f516d2798ef43388689731a0f85e1f76e01806fe",
+    "audited_commit": "3f3da08bf652162f9543c5f544d6385cad6151ab",
     "default_branch": "main",
     "host": {
       "kind": "github",
@@ -16,10 +16,10 @@
     "mode": "sha-pinned"
   },
   "preflight": {
-    "started_at": "2026-05-03T17:40:23.612Z",
-    "completed_at": "2026-05-03T17:41:18.272Z",
-    "extracted_to": "/tmp/audit-collect-f516d279-eqBb6T",
-    "original_worktree_status": "",
+    "started_at": "2026-05-03T18:29:29.109Z",
+    "completed_at": "2026-05-03T18:30:20.838Z",
+    "extracted_to": "/tmp/audit-collect-3f3da08b-4FlXfF",
+    "original_worktree_status": "M .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md\n M .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json\n M AI-CONTRIBUTOR-AUDIT.md\n?? \"C:\\\\Users\\\\sasc9948\\\\AppData\\\\Local\\\\lighthouse.57002072/\"\n?? \"C:\\\\Users\\\\sasc9948\\\\AppData\\\\Local\\\\lighthouse.90668527/\"",
     "node_modules_cache_hit": true,
     "tools_available": {
       "node": "v24.12.0",
@@ -367,8 +367,22 @@
   "prompt_skill_inventory": [],
   "ai_authorship_trail": {
     "window": 200,
-    "total_commits_scanned": 20,
+    "total_commits_scanned": 22,
     "ai_authored": [
+      {
+        "sha": "3f3da08bf652162f9543c5f544d6385cad6151ab",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
+      {
+        "sha": "a9f09806a0de97317f57c9490ddb32e9dec14c5b",
+        "matched_authors": [
+          "Codex",
+          "GPT/ChatGPT/OpenAI"
+        ]
+      },
       {
         "sha": "f516d2798ef43388689731a0f85e1f76e01806fe",
         "matched_authors": [
@@ -405,8 +419,8 @@
         ]
       }
     ],
-    "ratio": 0.25,
-    "most_recent_ai_sha": "f516d2798ef43388689731a0f85e1f76e01806fe"
+    "ratio": 0.318,
+    "most_recent_ai_sha": "3f3da08bf652162f9543c5f544d6385cad6151ab"
   },
   "hosted_settings": {
     "branch_protection": {
@@ -415,7 +429,7 @@
         "permissive_bypass": false
       },
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "required_status_checks": {
       "value": [
@@ -424,7 +438,7 @@
         "Dependency Review"
       ],
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "required_reviews": {
       "value": {
@@ -432,29 +446,29 @@
         "dismiss_stale": true
       },
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "codeowners_enforced": {
       "value": true,
       "source": "gh:rules-api",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "secret_scanning": {
       "value": "enabled",
       "source": "gh:repo",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "push_protection": {
       "value": "enabled",
       "source": "gh:repo",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "dependency_alerts": {
       "value": {
         "open_high": 0
       },
       "source": "gh:dependabot",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     },
     "deployment_environments": {
       "value": [
@@ -465,7 +479,7 @@
         }
       ],
       "source": "gh:environments",
-      "last_checked": "2026-05-03T17:40:23.612Z"
+      "last_checked": "2026-05-03T18:29:29.109Z"
     }
   },
   "bootstrap_smoke": {
@@ -473,13 +487,13 @@
     "ran": true,
     "reason": "opt-in run completed",
     "clone_dir": "<bootstrap-smoke-tmp>",
-    "total_duration_ms": 31233,
+    "total_duration_ms": 29297,
     "steps": [
       {
         "label": "install",
         "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline",
         "exit_code": 0,
-        "duration_ms": 1876,
+        "duration_ms": 1923,
         "stdout_excerpt": "Lockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +1108\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1108, reused 1108, downloaded 0, added 1108, done\n…",
         "stderr_excerpt": "",
         "timed_out": false
@@ -488,9 +502,9 @@
         "label": "build",
         "cmd": "pnpm run build",
         "exit_code": 0,
-        "duration_ms": 28836,
-        "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 prebuild /tmp/bootstrap-smoke-9ohV4N\n> pnpm prepare:spec\n\n\n…",
-        "stderr_excerpt": "Submodule 'external/ai-contributor-spec' (https://github.com/ai-contributors/ai-contributor-spec.git) registered for path 'external/ai-contributor-spec'\nCloning into '/tmp/bootstrap-smoke-9ohV4N/external/ai-contributor-spec'...\nEntry docs → 404 was not found.\n",
+        "duration_ms": 26681,
+        "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 build /tmp/bootstrap-smoke-ClFwZ8\n> astro build && node scripts/generate-llms.mjs\n\n20:29:55 [astro-mermaid] Setting up Mermaid integration\n…",
+        "stderr_excerpt": "Entry docs → 404 was not found.\n",
         "timed_out": false
       }
     ]
@@ -507,8 +521,8 @@
           "cmd": "pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 592,
-          "stdout_excerpt": "Done in 476ms using pnpm v10.33.2\n",
+          "duration_ms": 467,
+          "stdout_excerpt": "Done in 391ms using pnpm v10.33.2\n",
           "kind": "shell"
         }
       ],
@@ -531,8 +545,8 @@
           "cmd": "pnpm -r lint",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 878,
-          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-f516d279-eqBb6T\n> eslint .\n\n",
+          "duration_ms": 955,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-3f3da08b-4FlXfF\n> eslint .\n\n",
           "kind": "shell"
         }
       ],
@@ -554,9 +568,8 @@
           "cmd": "pnpm -r type-check",
           "cwd": "<extracted>",
           "exit_code": 0,
-          "duration_ms": 8875,
-          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 pretype-check /tmp/audit-collect-f516d279-eqBb6T\n> pnpm prepare:spec\n\n\n…",
-          "stderr_excerpt": "Cloning into '/tmp/audit-collect-f516d279-eqBb6T/external/ai-contributor-spec'...\n",
+          "duration_ms": 8112,
+          "stdout_excerpt": "\n> ai-contributors-dev@0.1.0 type-check /tmp/audit-collect-3f3da08b-4FlXfF\n> astro check\n\n20:29:44 [astro-mermaid] Setting up Mermaid integration\n…",
           "kind": "shell"
         }
       ],
@@ -590,7 +603,7 @@
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": ".husky/pre-commit runs lint + type-check + test",
+      "derivation_reason": ".husky/pre-commit runs lint + secret-scan",
       "judgment_required": false,
       "aic_ids": [
         "AIC-precommit-meaningful-checks"
@@ -640,7 +653,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 339,
+          "duration_ms": 315,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -720,7 +733,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 339,
+          "duration_ms": 315,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -800,7 +813,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 339,
+          "duration_ms": 315,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -880,7 +893,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/secret-scanning/alerts",
           "exit_code": 0,
-          "duration_ms": 438,
+          "duration_ms": 407,
           "stdout_excerpt": "[]",
           "kind": "gh_api",
           "response_summary": []
@@ -903,7 +916,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev",
           "exit_code": 0,
-          "duration_ms": 406,
+          "duration_ms": 353,
           "stdout_excerpt": "{\n  \"id\": 1227930329,\n  \"node_id\": \"R_kgDOSTC62Q\",\n  \"name\": \"ai-contributors.dev\",\n  \"full_name\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": {
@@ -975,13 +988,13 @@
             "deployments_url": "https://api.github.com/repos/ai-contributors/ai-contributors.dev/deployments",
             "created_at": "2026-05-03T11:09:13Z",
             "updated_at": "2026-05-03T15:51:18Z",
-            "pushed_at": "2026-05-03T17:34:10Z",
+            "pushed_at": "2026-05-03T17:45:18Z",
             "git_url": "git://github.com/ai-contributors/ai-contributors.dev.git",
             "ssh_url": "git@github.com:ai-contributors/ai-contributors.dev.git",
             "clone_url": "https://github.com/ai-contributors/ai-contributors.dev.git",
             "svn_url": "https://github.com/ai-contributors/ai-contributors.dev",
             "homepage": "https://ai-contributors.dev/ai-contributor-spec/",
-            "size": 5947,
+            "size": 8688,
             "stargazers_count": 0,
             "watchers_count": 0,
             "language": "JavaScript",
@@ -1072,7 +1085,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/dependabot/alerts?state=open&severity=high&per_page=1",
           "exit_code": 0,
-          "duration_ms": 416,
+          "duration_ms": 365,
           "stdout_excerpt": "[]",
           "kind": "gh_api",
           "response_summary": []
@@ -1095,7 +1108,7 @@
         {
           "cmd": "gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main",
           "exit_code": 0,
-          "duration_ms": 339,
+          "duration_ms": 315,
           "stdout_excerpt": "[\n  {\n    \"type\": \"deletion\",\n    \"ruleset_source_type\": \"Repository\",\n    \"ruleset_source\": \"ai-contributors/ai-contributors.dev\",\n…",
           "kind": "gh_api",
           "response_summary": [
@@ -1251,7 +1264,7 @@
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": "SBOM-generating action(s) detected: .github/workflows/deploy.yml:82 anchore/sbom-action@v0",
+      "derivation_reason": "SBOM-generating action(s) detected: .github/workflows/deploy.yml:99 anchore/sbom-action@v0",
       "judgment_required": false,
       "aic_ids": [
         "AIC-sbom-generation"
@@ -1335,7 +1348,7 @@
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": "secretlint declared in package.json and invoked in package.json:scripts.secret:scan",
+      "derivation_reason": "secretlint declared in package.json and invoked in package.json:scripts.secret-scan",
       "judgment_required": false,
       "aic_ids": [
         "AIC-credential-leakage-checks"
@@ -1345,11 +1358,11 @@
       "spec_rule_name": "Secret VCS Exclude",
       "applicability": {
         "verdict": "applicable",
-        "trigger_evidence": "81 tracked file(s)"
+        "trigger_evidence": "86 tracked file(s)"
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": "no tracked secret-bearing files; .gitignore protects .env, *.pem, *.pfx",
+      "derivation_reason": "no tracked secret-bearing files; .gitignore protects .env, *.pem, id_rsa, *.pfx",
       "judgment_required": false,
       "aic_ids": [
         "AIC-secret-vcs-exclude"
@@ -1558,11 +1571,11 @@
       "spec_rule_name": "AI Authorship Traceability",
       "applicability": {
         "verdict": "applicable",
-        "trigger_evidence": "last 20 commit(s)"
+        "trigger_evidence": "last 22 commit(s)"
       },
       "commands": [],
       "derived_status": "Fulfilled",
-      "derivation_reason": "5/20 commits carry an AI Co-Authored-By trailer (ratio=0.25); models: Codex, GPT/ChatGPT/OpenAI; most recent: f516d279",
+      "derivation_reason": "7/22 commits carry an AI Co-Authored-By trailer (ratio=0.318); models: Codex, GPT/ChatGPT/OpenAI; most recent: 3f3da08b",
       "judgment_required": false,
       "aic_ids": [
         "AIC-ai-authorship-traceability"

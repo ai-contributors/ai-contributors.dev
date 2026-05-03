@@ -20,9 +20,9 @@ Full audit artifacts live in `.ai-contributor-audit/`:
 | Level                          | Status     | Date reached | Notes                                                                                               |
 | ------------------------------ | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
 | **Level 0 — Baseline Hygiene** | ✅ Yes     | 2026-05-03   | Reached.                                                                                            |
-| **Level 1 — Hardened**         | ✅ Yes     | 2026-05-03   | Reached.                                                                                            |
-| **Level 2 — AI Assisted**      | ✅ Yes     | 2026-05-03   | Reached.                                                                                            |
-| **Level 3 — AI Authored**      | ✅ Yes     | 2026-05-03   | Reached.                                                                                            |
+| **Level 1 — Hardened**         | ✅ Yes     |              | Reached.                                                                                            |
+| **Level 2 — AI Assisted**      | ✅ Yes     |              | Reached.                                                                                            |
+| **Level 3 — AI Authored**      | ✅ Yes     |              | Reached.                                                                                            |
 | **Level 4 — AI Autonomous**    | ⚠️ Partial |              | Not reached; autonomous-runner rows are not relevant, and many Level 4 SHOULD rows remain warnings. |
 
 ### Deriving `conformance_level`
@@ -100,7 +100,6 @@ Populate this table from **every** checklist row where **Status** is `Alarm` or 
 | 5        | L4    | `Minimum Capability Set`         | SHOULD | ⚠️ Warning     | Document minimum required agent capabilities by task type.                                                |       |             |
 | 5        | L4    | `Naming and Export Conventions`  | SHOULD | ⚠️ Warning     | Document naming/export conventions or enforce them through lint rules.                                    |       |             |
 | 5        | L4    | `OIDC Federation`                | SHOULD | ⚠️ Warning     | Prefer OIDC or GitHub Pages-native deploy credentials over pushing with GITHUB_TOKEN where feasible.      |       |             |
-| 5        | L4    | `Performance Budgets Automated`  | SHOULD | ⚠️ Warning     | Automate performance budgets in CI.                                                                       |       |             |
 | 5        | L4    | `Policy Effective Dates`         | SHOULD | ⚠️ Warning     | Add effective dates and review cadence to policy documents.                                               |       |             |
 | 5        | L4    | `Policy Evidence Links`          | SHOULD | ⚠️ Warning     | Link policies to enforcement evidence such as workflows, settings, or tests.                              |       |             |
 | 5        | L4    | `Preserve User Work`             | SHOULD | ⚠️ Warning     | Add an explicit AI/contributor rule to preserve unrelated user work and avoid reverting others changes.   |       |             |

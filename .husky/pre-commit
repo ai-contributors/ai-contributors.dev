@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+pnpm lint
+pnpm format:check
+pnpm secret-scan

@@ -45,11 +45,29 @@ jobs:
       - name: Validate spec source
         run: pnpm validate:spec
 
+      - name: Prepare generated spec pages
+        run: pnpm prepare:spec
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
       - name: Test
         run: pnpm test
 
+      - name: Coverage
+        run: pnpm coverage:check
+
       - name: Check
         run: pnpm check
+
+      - name: Dependency boundaries
+        run: pnpm deps:check
+
+      - name: Secret scan
+        run: pnpm secret:scan
 
       - name: Build production
         if: github.event_name != 'pull_request'
@@ -62,14 +80,33 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm build
         env:
-          ASTRO_SITE: https://ai-contributors.github.io
-          ASTRO_BASE: /ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
+          ASTRO_SITE: https://ai-contributors.dev
+          ASTRO_BASE: /pr-preview/pr-${{ github.event.pull_request.number }}/
 
       - name: Upload built site
         uses: actions/upload-artifact@v7
         with:
           name: site-dist
           path: dist
+          if-no-files-found: error
+
+      - name: Lighthouse accessibility and performance budgets
+        run: pnpm lhci:assert
+        env:
+          ASTRO_BASE: ${{ github.event_name == 'pull_request' && format('/pr-preview/pr-{0}/', github.event.pull_request.number) || '/ai-contributor-spec/' }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom.cyclonedx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cyclonedx.json
           if-no-files-found: error
 
   deploy:
@@ -151,7 +188,7 @@ jobs:
       pull-requests: write
     environment:
       name: github-pages
-      url: https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
+      url: https://ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -207,7 +244,7 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-            const previewUrl = `https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-${prNumber}/`;
+            const previewUrl = `https://ai-contributors.dev/pr-preview/pr-${prNumber}/`;
             const marker = '<!-- ai-contributors-preview-url -->';
             const body = `${marker}\n## Preview Deployment\n\n${previewUrl}\n\nThis preview is rebuilt from the latest pull request commit and removed when the pull request closes.`;
 

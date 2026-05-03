@@ -11,12 +11,22 @@
   "scripts": {
     "predev": "pnpm prepare:spec",
     "dev": "astro dev",
+    "setup:spec": "node scripts/setup-spec-source.mjs",
     "prepare:spec": "node scripts/generate-docs.mjs",
     "validate:spec": "node scripts/validate-spec-source.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "precheck": "pnpm prepare:spec",
-    "check": "astro check",
-    "prebuild": "pnpm prepare:spec",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "node --test tests/*.test.mjs tests/unit/*.test.js tests/integration/*.test.js",
+    "type-check": "astro check",
+    "coverage:check": "vitest run --coverage",
+    "prelhci:assert": "node scripts/prepare-lhci-dist.mjs",
+    "lhci:assert": "lhci autorun --config .lighthouserc.cjs",
+    "deps:check": "depcruise --config .dependency-cruiser.cjs astro.config.mjs src/content.config.ts scripts tests src/data && madge --extensions js,mjs,ts --circular astro.config.mjs src/content.config.ts scripts tests src/data",
+    "secretlint:scan": "node scripts/secret-scan-tracked.mjs",
+    "secret-scan": "pnpm secretlint:scan",
+    "secret:scan": "pnpm secretlint:scan",
+    "check": "pnpm type-check",
     "build": "astro build && node scripts/generate-llms.mjs",
     "preview": "astro preview"
   },
@@ -30,9 +40,23 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",
-    "typescript": "6.0.3"
+    "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
+    "@secretlint/secretlint-rule-preset-recommend": "^12.3.1",
+    "@vitest/coverage-v8": "^4.1.5",
+    "dependency-cruiser": "^17.4.0",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "madge": "^8.0.0",
+    "prettier": "^3.8.3",
+    "secretlint": "^12.3.1",
+    "typescript": "6.0.3",
+    "vitest": "^4.1.5"
   },
   "pnpm": {
+    "overrides": {
+      "uuid": "^14.0.0"
+    },
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"

@@ -34,6 +34,18 @@ Out of scope:
 - GitHub-hosted settings that are not controlled by repository files, unless a
   repo file creates an unsafe assumption about them.
 
+## Security Design Review
+
+The current lightweight threat model is `docs/threat-model.md`. It records
+assets, trust boundaries, entry points, attacker paths, controls, auth boundary,
+runtime validation boundary, and review date. Review it quarterly and whenever
+workflows, deployment behavior, generated-spec routing, package manifests, or
+the pinned specification submodule change.
+
+Credential handling and rotation expectations are documented in
+`docs/credentials.md`. Machine and manual guardrails are documented in
+`docs/guardrails.md`.
+
 ## Supported Versions
 
 Security fixes land on `main`. The deployed site should be considered supported

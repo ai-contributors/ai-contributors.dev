@@ -1,4 +1,4 @@
-#  Website Specification for AI Contributor Spec - ai-contributors.dev
+# Website Specification for AI Contributor Spec - ai-contributors.dev
 
 > This file lives in [`ai-contributors/ai-contributors.dev`](https://github.com/ai-contributors/ai-contributors.dev). The website is a **separate repository** from the specification ([`ai-contributors/ai-contributor-spec`](https://github.com/ai-contributors/ai-contributor-spec)); the spec is pulled in as a Git submodule at build time so the website never duplicates spec content and the spec repository stays uncluttered by site code.
 
@@ -25,16 +25,16 @@ Out of scope for v1: blog, account system, telemetry, plugin registry, third-par
 
 The site should feel native to this category: clean, doc-heavy, vendor-neutral, fast.
 
-| Site | What it specifies | Steward | Public source repository |
-|---|---|---|---|
-| [agents.md](https://agents.md) | `AGENTS.md` file format — "README for agents" | Linux Foundation / Agentic AI Foundation | [`agentsmd/agents.md`](https://github.com/agentsmd/agents.md) (Next.js + Tailwind) |
-| [agentskills.io](https://agentskills.io) | `SKILL.md` folder format | Anthropic + community | [`agentskills/agentskills`](https://github.com/agentskills/agentskills) (spec/SDK only, site not public) |
-| [openspec.dev](https://openspec.dev) | Spec-driven development workflow (`openspec/`) | Fission-AI | [`Fission-AI/OpenSpec`](https://github.com/Fission-AI/OpenSpec) (CLI; site not public) |
-| [opencode.ai](https://opencode.ai) | Open-source coding agent + `opencode.json` | sst / Anomaly | [`sst/opencode`](https://github.com/sst/opencode) |
-| [skills.sh](https://skills.sh) | Skill-package directory + leaderboard | Vercel | [`vercel-labs/skills`](https://github.com/vercel-labs/skills) (CLI; site not public) |
-| [llmstxt.org](https://llmstxt.org) | `/llms.txt` proposal | Answer.AI | [`AnswerDotAI/llms-txt`](https://github.com/AnswerDotAI/llms-txt) |
-| [github.github.io/spec-kit](https://github.com/github/spec-kit) | Spec-Driven Dev toolkit | GitHub | [`github/spec-kit`](https://github.com/github/spec-kit) |
-| [modelcontextprotocol.io](https://modelcontextprotocol.io) | Model Context Protocol | Anthropic + community | [`modelcontextprotocol/modelcontextprotocol`](https://github.com/modelcontextprotocol/modelcontextprotocol) |
+| Site                                                            | What it specifies                              | Steward                                  | Public source repository                                                                                    |
+| --------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [agents.md](https://agents.md)                                  | `AGENTS.md` file format — "README for agents"  | Linux Foundation / Agentic AI Foundation | [`agentsmd/agents.md`](https://github.com/agentsmd/agents.md) (Next.js + Tailwind)                          |
+| [agentskills.io](https://agentskills.io)                        | `SKILL.md` folder format                       | Anthropic + community                    | [`agentskills/agentskills`](https://github.com/agentskills/agentskills) (spec/SDK only, site not public)    |
+| [openspec.dev](https://openspec.dev)                            | Spec-driven development workflow (`openspec/`) | Fission-AI                               | [`Fission-AI/OpenSpec`](https://github.com/Fission-AI/OpenSpec) (CLI; site not public)                      |
+| [opencode.ai](https://opencode.ai)                              | Open-source coding agent + `opencode.json`     | sst / Anomaly                            | [`sst/opencode`](https://github.com/sst/opencode)                                                           |
+| [skills.sh](https://skills.sh)                                  | Skill-package directory + leaderboard          | Vercel                                   | [`vercel-labs/skills`](https://github.com/vercel-labs/skills) (CLI; site not public)                        |
+| [llmstxt.org](https://llmstxt.org)                              | `/llms.txt` proposal                           | Answer.AI                                | [`AnswerDotAI/llms-txt`](https://github.com/AnswerDotAI/llms-txt)                                           |
+| [github.github.io/spec-kit](https://github.com/github/spec-kit) | Spec-Driven Dev toolkit                        | GitHub                                   | [`github/spec-kit`](https://github.com/github/spec-kit)                                                     |
+| [modelcontextprotocol.io](https://modelcontextprotocol.io)      | Model Context Protocol                         | Anthropic + community                    | [`modelcontextprotocol/modelcontextprotocol`](https://github.com/modelcontextprotocol/modelcontextprotocol) |
 
 Two structural patterns are observable in this category:
 
@@ -73,7 +73,7 @@ The website lives in its own repository (`ai-contributors/ai-contributors.dev`) 
 
 ## 4. Self-conformance requirement (NORMATIVE)
 
-This repository (`ai-contributors/ai-contributors.dev`) **must** demonstrably satisfy at least **Level 3 (AI Authored)** of the AI Contributor Specification — *"AI completes delegated tasks, opens pull requests, or changes files for review."*
+This repository (`ai-contributors/ai-contributors.dev`) **must** demonstrably satisfy at least **Level 3 (AI Authored)** of the AI Contributor Specification — _"AI completes delegated tasks, opens pull requests, or changes files for review."_
 
 This is a **separate audit** from the one that runs against `ai-contributor-spec`. Both repositories hold their own L3 claim independently.
 
@@ -92,20 +92,20 @@ This is a **separate audit** from the one that runs against `ai-contributor-spec
 
 ## 5. Recommended tech stack — Astro + Starlight on GitHub Pages
 
-| Layer | Choice | Why |
-|---|---|---|
-| Framework | **Astro 6.x** | Markdown-first, ships zero JS by default, fits docs-heavy content. native CSP, Zod 4, runs on the Node 24.x pin below. |
-| Docs theme | **Starlight** | Sidebar, Pagefind search, dark mode, code tabs, asides, callouts — out of the box. |
-| Spec content | **Git submodule** of `ai-contributor-spec` at `external/ai-contributor-spec/` | Source-of-truth (§3); reproducible builds. |
-| Styling | Starlight defaults + minimal custom CSS for the index hero | Avoid divergence from the category aesthetic. |
-| Search | **Pagefind** (bundled with Starlight) | Static, no backend, indexes every clause. |
-| `llms.txt` | **`starlight-llms-txt` plugin** | Auto-generates `/ai-contributor-spec/llms.txt` and `/ai-contributor-spec/llms-full.txt`. A spec project in the AI-context business **must** publish its own. |
-| Diagrams | **`astro-mermaid`** | The audit-flow ASCII diagram in the spec README becomes a real Mermaid diagram. |
-| Package manager | **pnpm** | Matches the spec ecosystem. |
-| Node | **24.x LTS** | Same pin as the audit runtime in the submodule. |
-| CI | **GitHub Actions** | Native to GitHub Pages deploys. |
-| Hosting | **GitHub Pages** | No vendor lock-in; matches the dual-licensed, vendor-neutral posture of the spec. |
-| Domain | **Custom domain `ai-contributors.dev`** from day one (the repo name implies it). Canonical production URL is `https://ai-contributors.dev/ai-contributor-spec/`; PR previews use `https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-<number>/`. | |
+| Layer           | Choice                                                                                                                                                                                                                                  | Why                                                                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework       | **Astro 6.x**                                                                                                                                                                                                                           | Markdown-first, ships zero JS by default, fits docs-heavy content. native CSP, Zod 4, runs on the Node 24.x pin below.                                       |
+| Docs theme      | **Starlight**                                                                                                                                                                                                                           | Sidebar, Pagefind search, dark mode, code tabs, asides, callouts — out of the box.                                                                           |
+| Spec content    | **Git submodule** of `ai-contributor-spec` at `external/ai-contributor-spec/`                                                                                                                                                           | Source-of-truth (§3); reproducible builds.                                                                                                                   |
+| Styling         | Starlight defaults + minimal custom CSS for the index hero                                                                                                                                                                              | Avoid divergence from the category aesthetic.                                                                                                                |
+| Search          | **Pagefind** (bundled with Starlight)                                                                                                                                                                                                   | Static, no backend, indexes every clause.                                                                                                                    |
+| `llms.txt`      | **`starlight-llms-txt` plugin**                                                                                                                                                                                                         | Auto-generates `/ai-contributor-spec/llms.txt` and `/ai-contributor-spec/llms-full.txt`. A spec project in the AI-context business **must** publish its own. |
+| Diagrams        | **`astro-mermaid`**                                                                                                                                                                                                                     | The audit-flow ASCII diagram in the spec README becomes a real Mermaid diagram.                                                                              |
+| Package manager | **pnpm**                                                                                                                                                                                                                                | Matches the spec ecosystem.                                                                                                                                  |
+| Node            | **24.x LTS**                                                                                                                                                                                                                            | Same pin as the audit runtime in the submodule.                                                                                                              |
+| CI              | **GitHub Actions**                                                                                                                                                                                                                      | Native to GitHub Pages deploys.                                                                                                                              |
+| Hosting         | **GitHub Pages**                                                                                                                                                                                                                        | No vendor lock-in; matches the dual-licensed, vendor-neutral posture of the spec.                                                                            |
+| Domain          | **Custom domain `ai-contributors.dev`** from day one (the repo name implies it). Canonical production URL is `https://ai-contributors.dev/ai-contributor-spec/`; PR previews use `https://ai-contributors.dev/pr-preview/pr-<number>/`. |                                                                                                                                                              |
 
 ### Explicitly rejected alternatives
 
@@ -185,24 +185,24 @@ The logo assets are design inputs for the website, not normative specification c
 
 ## 8. Sitemap (v1)
 
-| Route | Title | Source | Notes |
-|---|---|---|---|
-| `/` | Root redirect | generated deploy artifact | Static redirect page pointing to `/ai-contributor-spec/`. |
-| `/ai-contributor-spec/` | AI Contributor Spec | `src/content/docs/index.mdx` | Custom hero, level ladder, install snippet, three CTAs. |
-| `/ai-contributor-spec/specification/` | Specification | `external/ai-contributor-spec/AI-CONTRIBUTOR-SPECIFICATION.md` | Sidebar grouped by the 7 pillars; one anchor per clause. |
-| `/ai-contributor-spec/levels/` | Conformance levels | submodule + `<BadgeGenerator />` | Level dropdown → paste-ready Markdown badge. No SVG download in v1. |
-| `/ai-contributor-spec/audit/` | How the audit runs | `src/content/docs/audit/flow.mdx` | Short bridge + Mermaid diagram. |
-| `/ai-contributor-spec/audit/model/` | Audit evidence model | `external/ai-contributor-spec/AI-CONTRIBUTOR-AUDIT-MODEL.md` | |
-| `/ai-contributor-spec/audit/prompt/` | No-skill audit prompt | `external/ai-contributor-spec/AI-CONTRIBUTOR-AUDIT-PROMPT.md` | |
-| `/ai-contributor-spec/skills/` | Skills overview | `src/content/docs/skills/index.mdx` | Cards + canonical install snippet. |
-| `/ai-contributor-spec/skills/audit/` | `ai-contributor-audit` | `external/ai-contributor-spec/skills/ai-contributor-audit/README.md` | |
-| `/ai-contributor-spec/skills/audit-fix/` | `ai-contributor-audit-fix` | `external/ai-contributor-spec/skills/ai-contributor-audit-fix/SKILL.md` | |
-| `/ai-contributor-spec/skills/audit-profile/` | `ai-contributor-audit-profile` | `external/ai-contributor-spec/skills/ai-contributor-audit-profile/SKILL.md` | |
-| `/ai-contributor-spec/guide/typescript-pnpm/` | TypeScript + pnpm + GitHub adoption | `external/ai-contributor-spec/AI-CONTRIBUTOR-GUIDE.md` | |
-| `/ai-contributor-spec/coverage/` | Coverage matrix | `external/ai-contributor-spec/AI-CONTRIBUTOR-COVERAGE.md` | |
-| `/ai-contributor-spec/changelog/` | Changelog | `external/ai-contributor-spec/CHANGELOG.md` | |
-| `/ai-contributor-spec/story/` *(optional)* | How this got built | `src/content/docs/story.mdx` | Personal narrative. Not normative. See "Optional pages" below for seed text. |
-| `/ai-contributor-spec/llms.txt` and `/ai-contributor-spec/llms-full.txt` | — | Auto-generated by `starlight-llms-txt` | Required. `/llms-full.txt` includes the full public docs set: specification, audit model, audit prompt, adoption guide, coverage, changelog, and skill documentation. |
+| Route                                                                    | Title                               | Source                                                                      | Notes                                                                                                                                                                 |
+| ------------------------------------------------------------------------ | ----------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                                                                      | Root redirect                       | generated deploy artifact                                                   | Static redirect page pointing to `/ai-contributor-spec/`.                                                                                                             |
+| `/ai-contributor-spec/`                                                  | AI Contributor Spec                 | `src/content/docs/index.mdx`                                                | Custom hero, level ladder, install snippet, three CTAs.                                                                                                               |
+| `/ai-contributor-spec/specification/`                                    | Specification                       | `external/ai-contributor-spec/AI-CONTRIBUTOR-SPECIFICATION.md`              | Sidebar grouped by the 7 pillars; one anchor per clause.                                                                                                              |
+| `/ai-contributor-spec/levels/`                                           | Conformance levels                  | submodule + `<BadgeGenerator />`                                            | Level dropdown → paste-ready Markdown badge. No SVG download in v1.                                                                                                   |
+| `/ai-contributor-spec/audit/`                                            | How the audit runs                  | `src/content/docs/audit/flow.mdx`                                           | Short bridge + Mermaid diagram.                                                                                                                                       |
+| `/ai-contributor-spec/audit/model/`                                      | Audit evidence model                | `external/ai-contributor-spec/AI-CONTRIBUTOR-AUDIT-MODEL.md`                |                                                                                                                                                                       |
+| `/ai-contributor-spec/audit/prompt/`                                     | No-skill audit prompt               | `external/ai-contributor-spec/AI-CONTRIBUTOR-AUDIT-PROMPT.md`               |                                                                                                                                                                       |
+| `/ai-contributor-spec/skills/`                                           | Skills overview                     | `src/content/docs/skills/index.mdx`                                         | Cards + canonical install snippet.                                                                                                                                    |
+| `/ai-contributor-spec/skills/audit/`                                     | `ai-contributor-audit`              | `external/ai-contributor-spec/skills/ai-contributor-audit/README.md`        |                                                                                                                                                                       |
+| `/ai-contributor-spec/skills/audit-fix/`                                 | `ai-contributor-audit-fix`          | `external/ai-contributor-spec/skills/ai-contributor-audit-fix/SKILL.md`     |                                                                                                                                                                       |
+| `/ai-contributor-spec/skills/audit-profile/`                             | `ai-contributor-audit-profile`      | `external/ai-contributor-spec/skills/ai-contributor-audit-profile/SKILL.md` |                                                                                                                                                                       |
+| `/ai-contributor-spec/guide/typescript-pnpm/`                            | TypeScript + pnpm + GitHub adoption | `external/ai-contributor-spec/AI-CONTRIBUTOR-GUIDE.md`                      |                                                                                                                                                                       |
+| `/ai-contributor-spec/coverage/`                                         | Coverage matrix                     | `external/ai-contributor-spec/AI-CONTRIBUTOR-COVERAGE.md`                   |                                                                                                                                                                       |
+| `/ai-contributor-spec/changelog/`                                        | Changelog                           | `external/ai-contributor-spec/CHANGELOG.md`                                 |                                                                                                                                                                       |
+| `/ai-contributor-spec/story/` _(optional)_                               | How this got built                  | `src/content/docs/story.mdx`                                                | Personal narrative. Not normative. See "Optional pages" below for seed text.                                                                                          |
+| `/ai-contributor-spec/llms.txt` and `/ai-contributor-spec/llms-full.txt` | —                                   | Auto-generated by `starlight-llms-txt`                                      | Required. `/llms-full.txt` includes the full public docs set: specification, audit model, audit prompt, adoption guide, coverage, changelog, and skill documentation. |
 
 ### Sidebar grouping
 
@@ -212,26 +212,26 @@ Configured in `astro.config.mjs` under Starlight's `sidebar`:
 - **Audit** — `/ai-contributor-spec/audit/`, `/ai-contributor-spec/audit/model/`, `/ai-contributor-spec/audit/prompt/`
 - **Skills** — `/ai-contributor-spec/skills/`, `/ai-contributor-spec/skills/audit/`, `/ai-contributor-spec/skills/audit-fix/`, `/ai-contributor-spec/skills/audit-profile/`
 - **Adoption** — `/ai-contributor-spec/guide/typescript-pnpm/`, `/ai-contributor-spec/coverage/`
-- **Reference** — `/ai-contributor-spec/changelog/`, `/ai-contributor-spec/story/` *(if published)*, link out to the spec repo on GitHub
+- **Reference** — `/ai-contributor-spec/changelog/`, `/ai-contributor-spec/story/` _(if published)_, link out to the spec repo on GitHub
 
 ### Optional pages
 
 These are not required for v1. If they are added, the source-of-truth (§3) and self-conformance (§4) rules still apply.
 
-#### `/story/` — *How this got built*
+#### `/story/` — _How this got built_
 
 A short narrative page explaining how the project actually came to be. Personal voice, written by the maintainer. Useful for newcomers who want to know whether the project comes from a working codebase or from a committee — and for this project, the answer is one of the more interesting things about it.
 
 Suggested seed content for the page (cleanup and expansion welcome):
 
-````markdown
+```markdown
 # How the AI Contributor Spec actually got built
 
 Here's the honest path it took from first idea to public repo in 14 days.
 
 with I didn't plan an open specification. I planned a policy document for one of my own
 repos — rules for how AI agents were allowed to contribute code.
-````
+```
 
 Guidelines if the page is published:
 
@@ -250,8 +250,8 @@ Blog, contributor list page (link to GitHub instead), MCP server registry, licen
 
 The hero is the only page that contains marketing copy. Anatomy, top to bottom:
 
-1. **Headline** — one sentence, pulled verbatim from the spec repo's `README.md` lead: *"Guardrails for repositories where AI reads, writes, reviews, or releases code."*
-2. **Subhead** — the second sentence: *"This specification treats AI as a system actor and defines reviewable guardrails for agent, harness, and tool behavior."*
+1. **Headline** — one sentence, pulled verbatim from the spec repo's `README.md` lead: _"Guardrails for repositories where AI reads, writes, reviews, or releases code."_
+2. **Subhead** — the second sentence: _"This specification treats AI as a system actor and defines reviewable guardrails for agent, harness, and tool behavior."_
 3. **Three primary CTAs** — `Read the spec` → `/ai-contributor-spec/specification/`, `Run the audit` → `/ai-contributor-spec/skills/`, `Get a badge` → `/ai-contributor-spec/levels/`.
 4. **L0 → L4 ladder** — visual `<LevelLadder />` component, links each level into `/ai-contributor-spec/specification/#conformance-levels`. Use the same colour palette as the existing badges (`blue`, `green`, `brightgreen`, `blueviolet`).
 5. **Install snippet** — `<InstallCommand />` showing `npx skills add ai-contributors/ai-contributor-spec --skill …` in a copy-button code block.
@@ -268,7 +268,7 @@ The index page **must** stay fully static. It must not show a live GitHub star c
 ## 10. Build and deploy
 
 - **10.1. Build command.** `pnpm build` from the repository root. Output: `dist/`.
-- **10.2. Local preview.** `pnpm dev`, default port 4321. Run `git submodule update --init --recursive` first.
+- **10.2. Local preview.** `pnpm dev`, default port 4321. Run `pnpm setup:spec` first.
 - **10.3. Deploy workflow** — `.github/workflows/deploy.yml` **must**:
   - run on push to `main` and on every pull request,
   - check out this repo with `submodules: recursive`,
@@ -288,7 +288,7 @@ The index page **must** stay fully static. It must not show a live GitHub star c
   - the PR **must not** be auto-merged; a human reviewer must approve and merge it after CI and the deploy preview pass.
 - **10.5. Audit workflow.** `.github/workflows/audit.yml` **must** run the `ai-contributor-audit` skill (from the submodule) against this repository on a weekly schedule and fail the workflow if `conformance_level` drops below 3.
 - **10.6. Hosting.** GitHub Pages, custom domain `ai-contributors.dev`, with repository Pages source set to **Deploy from a branch** using the generated `gh-pages` branch at `/`. The custom-domain root `/` **must** redirect to `/ai-contributor-spec/`; the production Astro site **must** be built and served from `/ai-contributor-spec/`. The `gh-pages` branch is generated deployment output only, not authored source content.
-- **10.7. PR previews.** On pull requests, build the site with a preview-specific Astro base path and post a deploy-preview link as a PR comment. Preview links **must** use the GitHub Pages project URL shape `https://ai-contributors.github.io/ai-contributors.dev/pr-preview/pr-<number>/`, not the production domain, and preview directories **must** be removed when the pull request closes.
+- **10.7. PR previews.** On pull requests, build the site with a preview-specific Astro base path and post a deploy-preview link as a PR comment. Preview links **must** use the custom-domain URL shape `https://ai-contributors.dev/pr-preview/pr-<number>/`, and preview directories **must** be removed when the pull request closes.
 - **10.8. Caching.** Pages should set `Cache-Control: max-age=300` on HTML and 1 year `immutable` on hashed assets. Starlight emits hashed asset names by default.
 
 ---

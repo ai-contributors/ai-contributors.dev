@@ -16,8 +16,13 @@
 
 # CI workflows + repo-level governance.
 /.github/                              @ai-contributors
+/.github/workflows/                    @ai-contributors
 /AGENTS.md                             @ai-contributors
 /SECURITY.md                           @ai-contributors
 /CONTRIBUTING.md                       @ai-contributors
+/docs/guardrails.md                    @ai-contributors
+/docs/threat-model.md                  @ai-contributors
+/docs/ai-governance.md                 @ai-contributors
+/docs/credentials.md                   @ai-contributors
 /LICENSE                               @ai-contributors
 /LICENSE-APACHE                        @ai-contributors

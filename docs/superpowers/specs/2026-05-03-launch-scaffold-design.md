@@ -27,9 +27,9 @@ This design covers the launch scaffold only. It intentionally excludes the full 
 
 ## Architecture
 
-The site uses Astro with Starlight. Source Markdown from the spec submodule is treated as an external input. A Node script validates the source manifest, reads the submodule version metadata, and generates ignored Starlight content files before Astro runs.
+The site uses Astro with Starlight. Source Markdown from the spec submodule is treated as an external input. A Node script validates the source manifest, reads the submodule version metadata, and refreshes committed Starlight content files before Astro runs.
 
-The generated docs files live under a gitignored generated content directory, for example `src/content/docs/_generated/`. They are created from the pinned submodule on each build and are not manually edited. Site-authored pages, such as the homepage and short audit/skills bridge pages, stay in committed source files and avoid normative specification text.
+The generated docs files live under `src/content/docs/generated-spec/`. They are created from the pinned submodule and committed so Astro and Starlight can resolve sidebar slugs in dev, build, and deploy contexts. Site-authored pages, such as the homepage and short audit/skills bridge pages, stay in committed source files and avoid normative specification text.
 
 This approach keeps Starlight routing conventional while preserving the source-of-truth rule: committed repository files do not contain copied specification content. If a future Astro/Starlight version makes external content loaders easier for docs routes, the generator can be replaced without changing public routes.
 

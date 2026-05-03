@@ -1,0 +1,41 @@
+{
+  "name": "ai-contributors-dev",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": "10.33.2"
+  },
+  "scripts": {
+    "predev": "pnpm prepare:spec",
+    "dev": "astro dev",
+    "prepare:spec": "node scripts/generate-docs.mjs",
+    "validate:spec": "node scripts/validate-spec-source.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "precheck": "pnpm prepare:spec",
+    "check": "astro check",
+    "prebuild": "pnpm prepare:spec",
+    "build": "astro build && node scripts/generate-llms.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.38.4",
+    "@mermaid-js/layout-elk": "0.2.1",
+    "astro": "6.2.1",
+    "astro-mermaid": "2.0.1",
+    "mermaid": "11.14.0",
+    "starlight-llms-txt": "0.8.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

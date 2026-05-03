@@ -1,2 +1,11 @@
+node_modules/
+dist/
+.astro/
+.pnpm-store/
+
 .worktrees/
 .superpowers/
+
+src/data/spec-source.generated.json
+
+*.log

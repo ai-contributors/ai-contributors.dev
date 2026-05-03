@@ -1,0 +1,23 @@
+---
+const command = "npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit";
+---
+
+<div class="install-command">
+  <p><strong>Install the audit skill</strong></p>
+  <pre><code>{command}</code></pre>
+  <button type="button" data-copy={command}>Copy</button>
+</div>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
+    button.addEventListener("click", async () => {
+      const value = button.dataset.copy;
+      if (!value) return;
+      await navigator.clipboard.writeText(value);
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1400);
+    });
+  }
+</script>

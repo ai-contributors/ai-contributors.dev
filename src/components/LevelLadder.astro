@@ -1,0 +1,14 @@
+---
+import { BADGE_LEVELS } from "../data/badges";
+---
+
+<nav class="level-ladder" aria-label="AI Contributor conformance levels">
+  {
+    BADGE_LEVELS.map((level) => (
+      <a class="level-step" href="/specification/#conformance-levels">
+        <strong>{level.id}</strong>
+        <span>{level.name}</span>
+      </a>
+    ))
+  }
+</nav>

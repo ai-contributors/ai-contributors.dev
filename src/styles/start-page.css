@@ -157,17 +157,17 @@
   text-decoration: none;
   transform: translateY(-1px);
 }
-a.btn-primary,
+body.spec-canvas a.btn-primary,
 .btn-primary {
   background: var(--ink);
   color: var(--paper-2);
 }
-a.btn-primary:hover,
+body.spec-canvas a.btn-primary:hover,
 .btn-primary:hover {
   background: var(--ink-2);
   color: var(--paper-2);
 }
-a.btn-ghost,
+body.spec-canvas a.btn-ghost,
 .btn-ghost {
   background: var(--paper-2);
   color: var(--ink);

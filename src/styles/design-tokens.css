@@ -36,6 +36,16 @@
   --logo-letter: #0a0a0a;
 }
 
+html:has(body.spec-canvas) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(body.spec-canvas) {
+    scroll-behavior: auto;
+  }
+}
+
 body.spec-canvas {
   margin: 0;
   padding: 0;

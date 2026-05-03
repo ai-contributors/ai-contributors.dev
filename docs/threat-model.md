@@ -75,7 +75,7 @@ Current test layers are:
 - Dependency-boundary and circular-dependency checking through
   `pnpm deps:check`.
 - Build validation through `pnpm build`.
-- Accessibility and performance budget assertions through `.lighthouserc.json`
+- Accessibility and performance budget assertions through `.lighthouserc.cjs`
   and `pnpm lhci:assert` in CI.
 
 Additional accessibility, performance, or built-artifact checks should be added

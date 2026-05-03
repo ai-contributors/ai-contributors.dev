@@ -45,6 +45,15 @@ jobs:
       - name: Validate spec source
         run: pnpm validate:spec
 
+      - name: Prepare generated spec pages
+        run: pnpm prepare:spec
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
       - name: Test
         run: pnpm test
 
@@ -53,6 +62,12 @@ jobs:
 
       - name: Check
         run: pnpm check
+
+      - name: Dependency boundaries
+        run: pnpm deps:check
+
+      - name: Secret scan
+        run: pnpm secret:scan
 
       - name: Build production
         if: github.event_name != 'pull_request'
@@ -77,6 +92,8 @@ jobs:
 
       - name: Lighthouse accessibility and performance budgets
         run: pnpm lhci:assert
+        env:
+          ASTRO_BASE: ${{ github.event_name == 'pull_request' && format('/pr-preview/pr-{0}/', github.event.pull_request.number) || '/ai-contributor-spec/' }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0

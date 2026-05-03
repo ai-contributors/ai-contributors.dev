@@ -11,21 +11,22 @@
   "scripts": {
     "predev": "pnpm prepare:spec",
     "dev": "astro dev",
+    "setup:spec": "node scripts/setup-spec-source.mjs",
     "prepare:spec": "node scripts/generate-docs.mjs",
     "validate:spec": "node scripts/validate-spec-source.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "test": "node --test tests/*.test.mjs tests/unit/*.test.js tests/integration/*.test.js",
-    "pretype-check": "pnpm prepare:spec",
     "type-check": "astro check",
     "coverage:check": "vitest run --coverage",
-    "lhci:assert": "lhci autorun",
+    "prelhci:assert": "node scripts/prepare-lhci-dist.mjs",
+    "lhci:assert": "lhci autorun --config .lighthouserc.cjs",
     "deps:check": "depcruise --config .dependency-cruiser.cjs astro.config.mjs src/content.config.ts scripts tests src/data && madge --extensions js,mjs,ts --circular astro.config.mjs src/content.config.ts scripts tests src/data",
-    "secret:scan": "secretlint --secretlintrc .secretlintrc.json .env.example AGENTS.md CONTRIBUTING.md README.md SECURITY.md package.json pnpm-lock.yaml \"docs/**/*\" \"scripts/**/*\" \"src/**/*\" \"tests/**/*\" \".github/**/*\"",
-    "precheck": "pnpm prepare:spec",
+    "secretlint:scan": "node scripts/secret-scan-tracked.mjs",
+    "secret-scan": "pnpm secretlint:scan",
+    "secret:scan": "pnpm secretlint:scan",
     "check": "pnpm type-check",
-    "prebuild": "pnpm prepare:spec",
     "build": "astro build && node scripts/generate-llms.mjs",
     "preview": "astro preview"
   },
@@ -54,7 +55,7 @@
   },
   "pnpm": {
     "overrides": {
-      "uuid": "^11.1.1"
+      "uuid": "^14.0.0"
     },
     "onlyBuiltDependencies": [
       "esbuild",

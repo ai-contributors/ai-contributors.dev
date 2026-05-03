@@ -5,7 +5,10 @@ export default [
   {
     ignores: [
       '.astro/**',
+      '.lhci-dist/**',
+      '.lighthouseci/**',
       '.worktrees/**',
+      'coverage/**',
       'dist/**',
       'external/**',
       'node_modules/**',
@@ -14,7 +17,7 @@ export default [
   },
   js.configs.recommended,
   {
-    files: ['**/*.mjs', '**/*.js'],
+    files: ['**/*.mjs', '**/*.js', '**/*.cjs'],
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {

@@ -27,6 +27,7 @@ Use Node.js 24.x and pnpm 10.33.2.
 
 ```sh
 pnpm install --frozen-lockfile
+pnpm setup:spec
 pnpm validate:spec
 pnpm lint
 pnpm format:check

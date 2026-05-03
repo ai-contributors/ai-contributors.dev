@@ -1,7 +1,7 @@
-import { ensureSpecSourceReady, generateDocs, writeSpecMetadata } from './spec-content.mjs';
+import { assertSpecSource, generateDocs, writeSpecMetadata } from './spec-content.mjs';
 
 try {
-  await ensureSpecSourceReady();
+  await assertSpecSource();
   const result = await generateDocs();
   const metadata = await writeSpecMetadata();
   console.log(

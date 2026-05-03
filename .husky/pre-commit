@@ -3,8 +3,4 @@ set -eu
 
 pnpm lint
 pnpm format:check
-pnpm type-check
-pnpm deps:check
-pnpm coverage:check
-pnpm test
-pnpm secret:scan
+pnpm secret-scan

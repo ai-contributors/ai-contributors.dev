@@ -19,9 +19,9 @@ reviewable.
 | Type safety                 | `pnpm type-check` and `pnpm check`                      | Local command, pre-commit, CI check         |
 | Formatting                  | `pnpm format:check`                                     | Local command, pre-commit or CI check       |
 | Lint correctness            | `pnpm lint`                                             | Local command, pre-commit or CI check       |
-| Coverage threshold          | `pnpm coverage:check`                                   | Local command, pre-commit, CI check         |
-| Accessibility/performance   | `.lighthouserc.json`, `pnpm lhci:assert`                | CI check                                    |
-| Dependency boundaries       | `pnpm deps:check`                                       | Local command, pre-commit or CI check       |
+| Coverage threshold          | `pnpm coverage:check`                                   | Local command, CI check                     |
+| Accessibility/performance   | `.lighthouserc.cjs`, `pnpm lhci:assert`                 | CI check                                    |
+| Dependency boundaries       | `pnpm deps:check`                                       | Local command, CI check                     |
 | Secret leakage              | `pnpm secret:scan`, `.gitignore`, `.secretlintrc.json`  | Local command, pre-commit or CI check       |
 | Dependency review           | `.github/workflows/dependency-review.yml`               | Pull request check                          |
 | SAST                        | `.github/workflows/codeql.yml`                          | Pull request or scheduled security check    |
@@ -85,7 +85,7 @@ Executable evidence: `pnpm validate:spec`, `pnpm type-check`, `pnpm test`,
   `pnpm build`.
 - Quality suite: `pnpm lint`, `pnpm format:check`, `pnpm type-check`,
   `pnpm deps:check`, `pnpm coverage:check`, `pnpm test`.
-- User-facing site budgets: `.lighthouserc.json`, `pnpm lhci:assert`.
+- User-facing site budgets: `.lighthouserc.cjs`, `pnpm lhci:assert`.
 - Secret hygiene: `.gitignore`, `.secretlintrc.json`, `pnpm secret:scan`,
   `docs/credentials.md`.
 - Security review: `SECURITY.md`, `docs/threat-model.md`, CodeQL workflow,

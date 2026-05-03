@@ -1,7 +1,7 @@
-import { ensureSpecSourceReady } from './spec-content.mjs';
+import { assertSpecSource } from './spec-content.mjs';
 
 try {
-  await ensureSpecSourceReady();
+  await assertSpecSource();
   console.log('Spec source manifest OK');
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);

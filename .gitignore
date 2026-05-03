@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.lhci-dist/
 .astro/
 /coverage/
 /.lighthouseci/
@@ -9,15 +10,16 @@ dist/
 !.env.example
 !.env.sample
 !.env.template
+*.env.local
+id_rsa*
 *.pem
 *.key
 *.p12
 *.pfx
+*.kubeconfig
 *service-account*.json
 
 .worktrees/
 .superpowers/
-
-src/data/spec-source.generated.json
 
 *.log

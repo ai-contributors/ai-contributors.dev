@@ -268,7 +268,7 @@ The index page **must** stay fully static. It must not show a live GitHub star c
 ## 10. Build and deploy
 
 - **10.1. Build command.** `pnpm build` from the repository root. Output: `dist/`.
-- **10.2. Local preview.** `pnpm dev`, default port 4321. Run `git submodule update --init --recursive` first.
+- **10.2. Local preview.** `pnpm dev`, default port 4321. Run `pnpm setup:spec` first.
 - **10.3. Deploy workflow** — `.github/workflows/deploy.yml` **must**:
   - run on push to `main` and on every pull request,
   - check out this repo with `submodules: recursive`,

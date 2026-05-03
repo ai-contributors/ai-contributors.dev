@@ -50,7 +50,7 @@ function findLevel(levelId: string) {
 
 export function badgeUrlForLevel(levelId: string): string {
   const level = findLevel(levelId);
-  const label = encodeURIComponent(`${level.id} ${level.name}`).replace(/%20/g, '%20');
+  const label = encodeURIComponent(`${level.id} ${level.name}`);
   return `https://img.shields.io/badge/AI%20Contributor-${label}-${level.color}`;
 }
 

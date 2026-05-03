@@ -169,7 +169,7 @@ export function getSpecVersionMetadata({ root = SPEC_ROOT } = {}) {
   try {
     const sha = git(root, ['rev-parse', 'HEAD']);
     const shortSha = git(root, ['rev-parse', '--short', 'HEAD']);
-    let tag = 'unknown';
+    let tag;
     try {
       tag = git(root, ['describe', '--exact-match', '--tags', 'HEAD']);
     } catch {

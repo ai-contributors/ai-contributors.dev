@@ -612,19 +612,53 @@ body.spec-canvas a.skill-link,
 
 /* Levels */
 .levels-table {
+  width: 100%;
+  border-collapse: collapse;
   border: 1px solid var(--line);
   background: var(--paper-2);
   margin-bottom: 56px;
+  table-layout: fixed;
 }
-.lvl-row {
-  display: grid;
-  grid-template-columns: 80px 180px 200px 1fr;
-  align-items: center;
-  gap: 24px;
+.levels-table th,
+.levels-table td {
   padding: 18px 24px;
-  border-bottom: 1px solid var(--line-2);
+  text-align: left;
+  vertical-align: middle;
   font-size: 14.5px;
+}
+.levels-table thead .lvl-row {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.levels-table tbody tr {
+  border-bottom: 1px solid var(--line-2);
   transition: background 120ms ease;
+}
+.levels-table tbody tr:last-child {
+  border-bottom: none;
+}
+.levels-table tbody tr:hover {
+  background: var(--hover);
+}
+.levels-table th {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  font-weight: 600;
+}
+.levels-table th:nth-child(1),
+.levels-table td:nth-child(1) {
+  width: 90px;
+}
+.levels-table th:nth-child(2),
+.levels-table td:nth-child(2) {
+  width: 180px;
+}
+.levels-table th:nth-child(3),
+.levels-table td:nth-child(3) {
+  width: 200px;
 }
 .lvl-auto {
   display: flex;
@@ -649,21 +683,6 @@ body.spec-canvas a.skill-link,
   letter-spacing: 0.04em;
   min-width: 36px;
   text-align: right;
-}
-.lvl-row:last-child {
-  border-bottom: none;
-}
-.lvl-row:hover {
-  background: var(--hover);
-}
-.lvl-head {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--mute);
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
 }
 .lvl-tag {
   font-family: var(--mono);
@@ -1007,14 +1026,10 @@ body.spec-canvas a.resource-link,
   .pillar:nth-last-child(-n + 1) {
     border-bottom: none;
   }
-  .lvl-row {
-    grid-template-columns: 60px 1fr;
-    gap: 12px;
-  }
-  .lvl-row > .lvl-desc,
-  .lvl-row > .lvl-auto,
-  .lvl-head > :nth-child(3),
-  .lvl-head > :nth-child(4) {
+  .levels-table th:nth-child(3),
+  .levels-table th:nth-child(4),
+  .levels-table td:nth-child(3),
+  .levels-table td:nth-child(4) {
     display: none;
   }
   .footer-inner {

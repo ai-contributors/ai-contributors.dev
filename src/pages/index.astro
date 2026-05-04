@@ -342,30 +342,34 @@ const invokeSnippet = `# from any agent that supports skills
           </p>
         </div>
 
-        <div class="levels-table" role="table">
-          <div class="lvl-row lvl-head" role="row">
-            <span role="columnheader">Min. level</span>
-            <span role="columnheader">Name</span>
-            <span role="columnheader">Autonomy</span>
-            <span role="columnheader">Use this when…</span>
-          </div>
-          {
-            levels.map((l, i) => {
-              const pct = (i / (levels.length - 1)) * 100;
-              return (
-                <div class="lvl-row" role="row">
-                  <span class="lvl-tag">{l.lvl}</span>
-                  <span class="lvl-name">{l.name}</span>
-                  <span class="lvl-auto">
-                    <span class="lvl-bar"><span class="lvl-fill" style={`width:${pct}%`} /></span>
-                    <span class="lvl-pct mono">{pct}%</span>
-                  </span>
-                  <span class="lvl-desc">{l.when}</span>
-                </div>
-              );
-            })
-          }
-        </div>
+        <table class="levels-table">
+          <thead>
+            <tr class="lvl-row lvl-head">
+              <th scope="col">Min. level</th>
+              <th scope="col">Name</th>
+              <th scope="col">Autonomy</th>
+              <th scope="col">Use this when…</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              levels.map((l, i) => {
+                const pct = (i / (levels.length - 1)) * 100;
+                return (
+                  <tr class="lvl-row">
+                    <td class="lvl-tag">{l.lvl}</td>
+                    <td class="lvl-name">{l.name}</td>
+                    <td class="lvl-auto">
+                      <span class="lvl-bar"><span class="lvl-fill" style={`width:${pct}%`} /></span>
+                      <span class="lvl-pct mono">{pct}%</span>
+                    </td>
+                    <td class="lvl-desc">{l.when}</td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
 
         <div class="badge-block">
           <div class="badge-label">Display your level</div>

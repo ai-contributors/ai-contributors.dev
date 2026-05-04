@@ -4,3 +4,5 @@ set -eu
 pnpm lint
 pnpm format:check
 pnpm secret-scan
+pnpm test
+pnpm coverage:check

@@ -6,6 +6,12 @@ import specSource from '../data/spec-source.generated.json';
 import '../styles/design-tokens.css';
 import '../styles/start-page.css';
 
+// Site is served under a base path (e.g. /ai-contributor-spec/). Always
+// resolve internal links against import.meta.env.BASE_URL so they keep
+// working in dev and on Pages.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (path: string) => `${base}${path}`;
+
 const { pillars, levels, version } = specData as {
   pillars: Array<{ id: string; num: string; icon: string; name: string; range: string; description: string }>;
   levels: Array<{ lvl: string; name: string; when: string }>;
@@ -29,7 +35,7 @@ const skills = [
     id: 'ai-contributor-audit',
     title: 'Audit',
     desc: 'Runs the full audit pipeline. Collects evidence, stamps initial findings, hosts auditor judgments, validates the final report.',
-    href: '/skills/audit/',
+    href: url('/skills/audit/'),
     external: false,
   },
   {
@@ -57,7 +63,7 @@ const resources = [
     title: 'Audit prompt',
     desc: 'A self-contained prompt you paste into any coding agent. Produces audit.md and evidence.json without installing the skill.',
     meta: 'no skills required',
-    href: '/audit/prompt/',
+    href: url('/audit/prompt/'),
   },
   {
     kind: 'Guide',
@@ -65,7 +71,7 @@ const resources = [
     title: 'TypeScript + pnpm',
     desc: 'Clause-by-clause walk-through for TypeScript repos using pnpm. What to put in AGENTS.md, what CI must do, and what passes at L0–L3.',
     meta: 'pnpm ≥ 9 · Node ≥ 20',
-    href: '/guide/typescript-pnpm/',
+    href: url('/guide/typescript-pnpm/'),
   },
 ];
 
@@ -107,7 +113,7 @@ const invokeSnippet = `# from any agent that supports skills
       name="description"
       content="Guardrails for repositories where AI reads, writes, reviews, or releases code. Seven pillars and five levels — from baseline hygiene to fully autonomous AI contributors."
     />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href={url('/favicon.svg')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -131,7 +137,7 @@ const invokeSnippet = `# from any agent that supports skills
             <a href="#levels">Levels</a>
             <a href="#pillars">Pillars</a>
             <a href="#resources">Resources</a>
-            <a href="/specification/">Spec</a>
+            <a href={url('/specification/')}>Spec</a>
             <a
               href="https://github.com/ai-contributors/ai-contributor-spec"
               class="ghost-link"
@@ -157,7 +163,7 @@ const invokeSnippet = `# from any agent that supports skills
               baseline hygiene to fully autonomous AI contributors.
             </p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="/specification/">Read the spec</a>
+              <a class="btn btn-primary" href={url('/specification/')}>Read the spec</a>
               <a class="btn btn-ghost" href="#install">
                 <span class="mono">$ npx skills add ai-contributor-audit</span>
               </a>
@@ -396,7 +402,7 @@ const invokeSnippet = `# from any agent that supports skills
         <div class="pillars-grid">
           {
             pillars.map((p, i) => (
-              <a class="pillar" href={`/specification/#p-${p.id}`}>
+              <a class="pillar" href={url(`/specification/#p-${p.id}`)}>
                 <div class="pillar-head">
                   <span class="pillar-k mono">{p.range}</span>
                   <span class="pillar-icon" aria-hidden="true">
@@ -461,7 +467,7 @@ const invokeSnippet = `# from any agent that supports skills
           <div class="footer-cols">
             <div>
               <div class="footer-h">Spec</div>
-              <a href="/specification/">Full specification</a>
+              <a href={url('/specification/')}>Full specification</a>
               <a href="#install">Install</a>
               <a href="#audit">Audit loop</a>
               <a href="#levels">Levels</a>

@@ -14,6 +14,8 @@ interface Props {
 
 const { title, deck, crumb, upstreamPath, meta } = Astro.props;
 const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob/${specSource.sha}/${upstreamPath}`;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (path: string) => `${base}${path}`;
 ---
 
 <!doctype html>
@@ -22,7 +24,7 @@ const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} · ai-contributors / spec</title>
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href={url('/favicon.svg')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,7 +35,7 @@ const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob
   <body class="spec-canvas doc-body">
     <header class="doc-topbar">
       <div class="doc-topbar-inner">
-        <a class="doc-brand" href="/" aria-label="ai-contributors / spec">
+        <a class="doc-brand" href={url('/')} aria-label="ai-contributors / spec">
           <Logo size={26} />
           <span class="doc-brand-name">ai-contributors</span>
           <span class="doc-brand-slash">/</span>
@@ -44,7 +46,7 @@ const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob
           {crumb}
         </span>
         <div class="doc-topbar-right">
-          <a href="/specification/">Spec</a>
+          <a href={url('/specification/')}>Spec</a>
           <a href={upstreamUrl} rel="noopener">Source ↗</a>
         </div>
       </div>
@@ -76,8 +78,8 @@ const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob
       </article>
 
       <footer class="doc-foot">
-        <a href="/">← back to start</a>
-        <a href="/specification/">Read the spec</a>
+        <a href={url('/')}>← back to start</a>
+        <a href={url('/specification/')}>Read the spec</a>
         <span class="right">
           rendered from <a href={upstreamUrl} rel="noopener">{upstreamPath}</a>
         </span>

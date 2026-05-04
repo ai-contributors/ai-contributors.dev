@@ -52,6 +52,9 @@ function isNumeric(s: string) {
   return /^[\d—–-]+$/.test(s.replace(/\s/g, ''));
 }
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (path: string) => `${base}${path}`;
+
 function highlightWeight(t: string): string {
   // Render upper-case weight terms in bold; preserve any backticked code spans.
   const escaped = t
@@ -78,7 +81,7 @@ function highlightWeight(t: string): string {
       name="description"
       content="The full AI Contributor specification — 29 clauses across 7 pillars, with MUST / MUST when applicable / SHOULD / MAY rules and stable AIC- IDs."
     />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href={url('/favicon.svg')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -90,7 +93,7 @@ function highlightWeight(t: string): string {
     <a id="_top"></a>
     <header class="spec-topbar">
       <div class="spec-topbar-inner">
-        <a class="brand" href="/" aria-label="ai-contributors / spec">
+        <a class="brand" href={url('/')} aria-label="ai-contributors / spec">
           <Logo size={28} />
           <span class="brand-name">ai-contributors</span>
           <span class="brand-slash">/</span>
@@ -380,7 +383,7 @@ function highlightWeight(t: string): string {
 
         <footer class="spec-foot">
           <div>end of specification · {version} · pinned to {specSource.shortSha}</div>
-          <a href="/" class="back-link">← back to start page</a>
+          <a href={url('/')} class="back-link">← back to start page</a>
         </footer>
       </div>
     </main>

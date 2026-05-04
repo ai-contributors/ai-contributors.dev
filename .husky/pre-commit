@@ -1,6 +1,19 @@
 #!/bin/sh
+# Mirror the static-quality gates that CI's `build` job runs (see
+# .github/workflows/deploy.yml). Anything that would fail in CI should
+# fail here first — CI runs are slow and shared, the local hook is
+# fast feedback. Ordered fastest → slowest so failures surface early.
+#
+# Excluded by design:
+#   - validate:spec / prepare:spec — write generated files; noisy in
+#     a hook. prepare:spec already runs as predev.
+#   - build / lhci:assert — heavier; belong in a pre-push hook (TODO).
 set -eu
 
+pnpm test
+pnpm coverage:check
 pnpm lint
-pnpm format:check
 pnpm secret-scan
+pnpm deps:check
+pnpm format:check
+pnpm check

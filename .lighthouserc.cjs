@@ -5,7 +5,14 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: './.lhci-dist',
-      url: [normalizedBase, `${normalizedBase}levels/`],
+      url: [
+        normalizedBase,
+        `${normalizedBase}specification/`,
+        `${normalizedBase}audit/model/`,
+        `${normalizedBase}audit/prompt/`,
+        `${normalizedBase}guide/typescript-pnpm/`,
+        `${normalizedBase}skills/audit/`,
+      ],
       numberOfRuns: 1,
       settings: {
         chromeFlags: '--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage',

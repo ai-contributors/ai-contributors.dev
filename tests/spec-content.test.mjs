@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -25,9 +25,12 @@ async function makeSpecRoot() {
   return root;
 }
 
-test('source manifest lists the audit skill README and SKILL files', () => {
-  assert.ok(getRequiredSourcePaths().includes('skills/ai-contributor-audit/README.md'));
-  assert.ok(getRequiredSourcePaths().includes('skills/ai-contributor-audit/SKILL.md'));
+test('source manifest lists the upstream files consumed by custom Astro pages', () => {
+  const paths = getRequiredSourcePaths();
+  assert.ok(paths.includes('AI-CONTRIBUTOR-AUDIT-MODEL.md'));
+  assert.ok(paths.includes('AI-CONTRIBUTOR-AUDIT-PROMPT.md'));
+  assert.ok(paths.includes('AI-CONTRIBUTOR-GUIDE.md'));
+  assert.ok(paths.includes('skills/ai-contributor-audit/README.md'));
 });
 
 test('generated docs directory is visible to Astro content sync', () => {
@@ -52,7 +55,7 @@ test('assertSpecSource reports all missing required files', async () => {
     (error) => {
       assert.match(error.message, /Missing required spec source files/);
       assert.match(error.message, /AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
-      assert.match(error.message, /skills\/ai-contributor-audit\/SKILL\.md/);
+      assert.match(error.message, /skills\/ai-contributor-audit\/README\.md/);
       return true;
     },
   );
@@ -97,33 +100,25 @@ test('ensureSpecSourceReady initializes missing submodule source', async () => {
   await rm(repoRoot, { recursive: true, force: true });
 });
 
-test('generateDocs creates Starlight route files with custom slugs', async () => {
+test('generateDocs writes no Starlight routes (custom Astro pages now own all rendering)', async () => {
   const root = await makeSpecRoot();
   const outDir = await mkdtemp(path.join(tmpdir(), 'generated-docs-'));
   const result = await generateDocs({ root, outDir });
-  const auditModel = await readFile(path.join(outDir, 'audit-model.md'), 'utf8');
-  const auditSkill = await readFile(path.join(outDir, 'skills-audit-skill.md'), 'utf8');
 
-  assert.equal(result.generated.length, SOURCE_ROUTES.length);
-  assert.match(auditModel, /title: Audit Evidence Model/);
-  assert.match(auditModel, /slug: audit\/model/);
-  assert.match(auditModel, /Source body for AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
-  assert.match(auditSkill, /slug: skills\/audit\/skill/);
+  assert.equal(SOURCE_ROUTES.length, 0);
+  assert.equal(result.generated.length, 0);
 
   await rm(root, { recursive: true, force: true });
   await rm(outDir, { recursive: true, force: true });
 });
 
-test('generateDocs updates expected files before removing stale files', async () => {
+test('generateDocs sweeps stale files even when no routes are configured', async () => {
   const root = await makeSpecRoot();
   const outDir = await mkdtemp(path.join(tmpdir(), 'generated-docs-'));
-  await writeFile(path.join(outDir, 'audit-model.md'), 'old audit model', 'utf8');
   await writeFile(path.join(outDir, 'stale.md'), 'stale route', 'utf8');
 
   await generateDocs({ root, outDir });
 
-  const auditModel = await readFile(path.join(outDir, 'audit-model.md'), 'utf8');
-  assert.match(auditModel, /Source body for AI-CONTRIBUTOR-AUDIT-MODEL\.md/);
   assert.equal(existsSync(path.join(outDir, 'stale.md')), false);
 
   await rm(root, { recursive: true, force: true });

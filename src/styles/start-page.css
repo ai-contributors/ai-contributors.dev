@@ -420,11 +420,27 @@ hr.rule {
   flex-direction: column;
 }
 .skill {
-  padding: 18px 22px;
   border-bottom: 1px solid var(--line-2);
 }
 .skill:last-child {
   border-bottom: none;
+}
+body.spec-canvas a.skill-link,
+.skill-link {
+  display: block;
+  padding: 18px 22px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 120ms ease;
+}
+.skill-link:hover {
+  background: var(--hover);
+  text-decoration: none;
+}
+.skill-ext {
+  margin-left: auto;
+  color: var(--mute);
+  font-size: 12px;
 }
 .skill-head {
   display: flex;
@@ -768,6 +784,75 @@ body.spec-canvas a.resource-link,
   }
   .resource-title {
     font-size: 26px;
+  }
+}
+
+/* Badge embed */
+.badge-block {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 56px;
+}
+.badge-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding-top: 8px;
+}
+.badge-generator {
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.badge-generator label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+.badge-generator select {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+.badge-generator textarea {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  resize: vertical;
+  width: 100%;
+}
+.badge-generator button {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 8px 14px;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  color: var(--ink);
+  align-self: flex-start;
+  cursor: pointer;
+}
+.badge-generator button:hover {
+  background: var(--ink);
+  color: var(--paper-2);
+}
+@media (max-width: 720px) {
+  .badge-block {
+    grid-template-columns: 1fr;
   }
 }
 

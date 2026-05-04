@@ -11,59 +11,18 @@ export const SPEC_ROOT = path.join(repoRoot, 'external/ai-contributor-spec');
 export const GENERATED_DOCS_ROOT = path.join(repoRoot, 'src/content/docs/generated-spec');
 export const SPEC_METADATA_PATH = path.join(repoRoot, 'src/data/spec-source.generated.json');
 
-export const SOURCE_ROUTES = [
-  {
-    source: 'AI-CONTRIBUTOR-AUDIT-MODEL.md',
-    file: 'audit-model.md',
-    slug: 'audit/model',
-    title: 'Audit Evidence Model',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-AUDIT-PROMPT.md',
-    file: 'audit-prompt.md',
-    slug: 'audit/prompt',
-    title: 'No-Skill Audit Prompt',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-GUIDE.md',
-    file: 'guide-typescript-pnpm.md',
-    slug: 'guide/typescript-pnpm',
-    title: 'TypeScript + pnpm + GitHub Adoption',
-  },
-  {
-    source: 'CHANGELOG.md',
-    file: 'changelog.md',
-    slug: 'changelog',
-    title: 'Changelog',
-  },
-  {
-    source: 'skills/ai-contributor-audit/README.md',
-    file: 'skills-audit.md',
-    slug: 'skills/audit',
-    title: 'ai-contributor-audit',
-  },
-  {
-    source: 'skills/ai-contributor-audit/SKILL.md',
-    file: 'skills-audit-skill.md',
-    slug: 'skills/audit/skill',
-    title: 'ai-contributor-audit Skill',
-  },
-  {
-    source: 'skills/ai-contributor-audit-fix/SKILL.md',
-    file: 'skills-audit-fix.md',
-    slug: 'skills/audit-fix',
-    title: 'ai-contributor-audit-fix',
-  },
-  {
-    source: 'skills/ai-contributor-audit-profile/SKILL.md',
-    file: 'skills-audit-profile.md',
-    slug: 'skills/audit-profile',
-    title: 'ai-contributor-audit-profile',
-  },
+export const SOURCE_ROUTES = [];
+
+// Upstream files consumed by custom Astro long-form pages (not Starlight routes).
+export const ADDITIONAL_REQUIRED_SOURCES = [
+  'AI-CONTRIBUTOR-AUDIT-MODEL.md',
+  'AI-CONTRIBUTOR-AUDIT-PROMPT.md',
+  'AI-CONTRIBUTOR-GUIDE.md',
+  'skills/ai-contributor-audit/README.md',
 ];
 
 export function getRequiredSourcePaths() {
-  return SOURCE_ROUTES.map((route) => route.source);
+  return [...SOURCE_ROUTES.map((route) => route.source), ...ADDITIONAL_REQUIRED_SOURCES];
 }
 
 export async function assertSpecSource({ root = SPEC_ROOT } = {}) {

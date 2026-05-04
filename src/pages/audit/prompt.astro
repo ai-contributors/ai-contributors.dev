@@ -1,0 +1,11 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import { renderUpstreamMd } from '../../lib/render-upstream-md';
+
+const upstreamPath = 'AI-CONTRIBUTOR-AUDIT-PROMPT.md';
+const { html, title } = renderUpstreamMd(upstreamPath);
+---
+
+<DocLayout title={title} crumb="audit · no-skill prompt" upstreamPath={upstreamPath}>
+  <Fragment set:html={html} />
+</DocLayout>

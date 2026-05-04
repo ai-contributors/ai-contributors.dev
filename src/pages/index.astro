@@ -1,5 +1,6 @@
 ---
 import Logo from '../components/Logo.astro';
+import BadgeGenerator from '../components/BadgeGenerator.astro';
 import specData from '../data/spec-data.generated.json';
 import specSource from '../data/spec-source.generated.json';
 import '../styles/design-tokens.css';
@@ -11,24 +12,33 @@ const { pillars, levels, version } = specData as {
   version: string;
 };
 
+const upstreamSkill = (name: string) =>
+  `https://github.com/ai-contributors/ai-contributor-spec/blob/${specSource.sha}/skills/${name}/SKILL.md`;
+
 const skills = [
   {
     tag: 'optional',
     id: 'ai-contributor-audit-profile',
     title: 'Profile',
     desc: "Describes the repo so the audit knows what it's looking at — stack, surfaces, deployment shape.",
+    href: upstreamSkill('ai-contributor-audit-profile'),
+    external: true,
   },
   {
     tag: 'required',
     id: 'ai-contributor-audit',
     title: 'Audit',
     desc: 'Runs the full audit pipeline. Collects evidence, stamps initial findings, hosts auditor judgments, validates the final report.',
+    href: '/skills/audit/',
+    external: false,
   },
   {
     tag: 'optional',
     id: 'ai-contributor-audit-fix',
     title: 'Fix',
     desc: 'Applies suggested improvements from the audit. Loops back into the audit skill to re-score.',
+    href: upstreamSkill('ai-contributor-audit-fix'),
+    external: true,
   },
 ];
 
@@ -218,14 +228,21 @@ const invokeSnippet = `# from any agent that supports skills
             {
               skills.map((s) => (
                 <li class="skill">
-                  <div class="skill-head">
-                    <span class={`skill-tag${s.tag === 'required' ? ' is-req' : ''}`}>
-                      {s.tag}
-                    </span>
-                    <span class="skill-id">{s.id}</span>
-                  </div>
-                  <div class="skill-t">{s.title}</div>
-                  <div class="skill-d">{s.desc}</div>
+                  <a
+                    class="skill-link"
+                    href={s.href}
+                    {...(s.external ? { rel: 'noopener', target: '_blank' } : {})}
+                  >
+                    <div class="skill-head">
+                      <span class={`skill-tag${s.tag === 'required' ? ' is-req' : ''}`}>
+                        {s.tag}
+                      </span>
+                      <span class="skill-id">{s.id}</span>
+                      {s.external && <span class="skill-ext mono">↗</span>}
+                    </div>
+                    <div class="skill-t">{s.title}</div>
+                    <div class="skill-d">{s.desc}</div>
+                  </a>
                 </li>
               ))
             }
@@ -342,6 +359,11 @@ const invokeSnippet = `# from any agent that supports skills
               );
             })
           }
+        </div>
+
+        <div class="badge-block">
+          <div class="badge-label">Display your level</div>
+          <BadgeGenerator />
         </div>
       </section>
 

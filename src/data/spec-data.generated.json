@@ -1767,36 +1767,152 @@
       "Level 4 adds **3** autonomous-runner MUST when applicable rows plus **76** SHOULD rows"
     ],
     "byScope": {
-      "headers": ["Scope", "Rows"],
+      "headers": [
+        "Scope",
+        "Rows"
+      ],
       "rows": [
-        ["MUST", "34"],
-        ["MUST when applicable", "57"],
-        ["SHOULD", "76"],
-        ["MAY", "40"],
-        ["Total", "207"]
+        [
+          "MUST",
+          "34"
+        ],
+        [
+          "MUST when applicable",
+          "57"
+        ],
+        [
+          "SHOULD",
+          "76"
+        ],
+        [
+          "MAY",
+          "40"
+        ],
+        [
+          "Total",
+          "207"
+        ]
       ]
     },
     "byPillar": {
-      "headers": ["Pillar", "Total", "MUST", "MwA", "SHOULD", "MAY"],
+      "headers": [
+        "Pillar",
+        "Total",
+        "MUST",
+        "MwA",
+        "SHOULD",
+        "MAY"
+      ],
       "rows": [
-        ["1 · 🏗️ Engineering Foundation", "26", "11", "1", "10", "4"],
-        ["2 · 🛡️ Security", "34", "5", "9", "12", "8"],
-        ["3 · 🎯 Quality & Reliability", "29", "3", "6", "14", "6"],
-        ["4 · 🚀 Release", "13", "2", "3", "5", "3"],
-        ["5 · 🤖 AI Agents", "39", "3", "13", "14", "9"],
-        ["6 · ⚠️ AI Risk", "26", "2", "14", "7", "3"],
-        ["7 · 🧭 Oversight", "40", "8", "11", "14", "7"]
+        [
+          "1 · 🏗️ Engineering Foundation",
+          "26",
+          "11",
+          "1",
+          "10",
+          "4"
+        ],
+        [
+          "2 · 🛡️ Security",
+          "34",
+          "5",
+          "9",
+          "12",
+          "8"
+        ],
+        [
+          "3 · 🎯 Quality & Reliability",
+          "29",
+          "3",
+          "6",
+          "14",
+          "6"
+        ],
+        [
+          "4 · 🚀 Release",
+          "13",
+          "2",
+          "3",
+          "5",
+          "3"
+        ],
+        [
+          "5 · 🤖 AI Agents",
+          "39",
+          "3",
+          "13",
+          "14",
+          "9"
+        ],
+        [
+          "6 · ⚠️ AI Risk",
+          "26",
+          "2",
+          "14",
+          "7",
+          "3"
+        ],
+        [
+          "7 · 🧭 Oversight",
+          "40",
+          "8",
+          "11",
+          "14",
+          "7"
+        ]
       ]
     },
     "byLevel": {
-      "headers": ["Level", "Rows", "MUST", "MwA", "SHOULD"],
+      "headers": [
+        "Level",
+        "Rows",
+        "MUST",
+        "MwA",
+        "SHOULD"
+      ],
       "rows": [
-        ["L0 — Baseline Hygiene", "6", "5", "1", "0"],
-        ["L1 — Hardened", "40", "22", "18", "0"],
-        ["L2 — AI Assisted", "28", "7", "21", "0"],
-        ["L3 — AI Authored", "14", "0", "14", "0"],
-        ["L4 — AI Autonomous", "79", "0", "3", "76"],
-        ["— (`MAY` — never required)", "40", "—", "—", "—"]
+        [
+          "L0 — Baseline Hygiene",
+          "6",
+          "5",
+          "1",
+          "0"
+        ],
+        [
+          "L1 — Hardened",
+          "40",
+          "22",
+          "18",
+          "0"
+        ],
+        [
+          "L2 — AI Assisted",
+          "28",
+          "7",
+          "21",
+          "0"
+        ],
+        [
+          "L3 — AI Authored",
+          "14",
+          "0",
+          "14",
+          "0"
+        ],
+        [
+          "L4 — AI Autonomous",
+          "79",
+          "0",
+          "3",
+          "76"
+        ],
+        [
+          "— (`MAY` — never required)",
+          "40",
+          "—",
+          "—",
+          "—"
+        ]
       ]
     },
     "cumulative": {
@@ -1806,11 +1922,31 @@
         "New rows over previous level"
       ],
       "rows": [
-        ["L0", "6", "—"],
-        ["L1", "46", "+40"],
-        ["L2", "74", "+28"],
-        ["L3", "88", "+14"],
-        ["L4", "91 (plus 76 `SHOULD` rows resolved)", "+3 `MUST`/`MwA`, +76 `SHOULD`"]
+        [
+          "L0",
+          "6",
+          "—"
+        ],
+        [
+          "L1",
+          "46",
+          "+40"
+        ],
+        [
+          "L2",
+          "74",
+          "+28"
+        ],
+        [
+          "L3",
+          "88",
+          "+14"
+        ],
+        [
+          "L4",
+          "91 (plus 76 `SHOULD` rows resolved)",
+          "+3 `MUST`/`MwA`, +76 `SHOULD`"
+        ]
       ]
     }
   }

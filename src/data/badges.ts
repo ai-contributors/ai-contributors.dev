@@ -4,40 +4,16 @@ export interface BadgeLevel {
   id: BadgeLevelId;
   name: string;
   color: string;
-  description: string;
 }
 
+// Names mirror the upstream spec's "Which level do you need?" table.
+// Colors are this site's UX choice (shields.io color names).
 export const BADGE_LEVELS: BadgeLevel[] = [
-  {
-    id: 'L0',
-    name: 'Unassessed',
-    color: 'lightgrey',
-    description: 'No AI Contributor claim.',
-  },
-  {
-    id: 'L1',
-    name: 'AI Assisted',
-    color: 'blue',
-    description: 'AI assists with local tasks under human control.',
-  },
-  {
-    id: 'L2',
-    name: 'AI Reviewed',
-    color: 'green',
-    description: 'AI participates in reviewable checks and evidence.',
-  },
-  {
-    id: 'L3',
-    name: 'AI Authored',
-    color: 'blueviolet',
-    description: 'AI completes delegated code tasks for human review.',
-  },
-  {
-    id: 'L4',
-    name: 'AI Governed',
-    color: 'brightgreen',
-    description: 'AI contribution is governed through stronger automation and oversight.',
-  },
+  { id: 'L0', name: 'Baseline Hygiene', color: 'lightgrey' },
+  { id: 'L1', name: 'Hardened', color: 'blue' },
+  { id: 'L2', name: 'AI Assisted', color: 'green' },
+  { id: 'L3', name: 'AI Authored', color: 'blueviolet' },
+  { id: 'L4', name: 'AI Autonomous', color: 'brightgreen' },
 ];
 
 function findLevel(levelId: string) {
@@ -56,5 +32,5 @@ export function badgeUrlForLevel(levelId: string): string {
 
 export function badgeMarkdownForLevel(levelId: string): string {
   const level = findLevel(levelId);
-  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/ai-contributor-spec/levels/)`;
+  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/ai-contributor-spec/)`;
 }

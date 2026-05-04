@@ -10,10 +10,10 @@ test('badge data covers L0 through L4', () => {
   );
 });
 
-test('badge markdown uses shields.io URLs and links to ai-contributors.dev levels', () => {
+test('badge markdown uses shields.io URLs and links to the spec home', () => {
   assert.equal(
     badgeMarkdownForLevel('L3'),
-    '[![AI Contributor: L3 AI Authored](https://img.shields.io/badge/AI%20Contributor-L3%20AI%20Authored-blueviolet)](https://ai-contributors.dev/ai-contributor-spec/levels/)',
+    '[![AI Contributor: L3 AI Authored](https://img.shields.io/badge/AI%20Contributor-L3%20AI%20Authored-blueviolet)](https://ai-contributors.dev/ai-contributor-spec/)',
   );
 });
 

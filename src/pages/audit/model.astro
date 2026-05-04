@@ -1,0 +1,11 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import { renderUpstreamMd } from '../../lib/render-upstream-md';
+
+const upstreamPath = 'AI-CONTRIBUTOR-AUDIT-MODEL.md';
+const { html, title } = renderUpstreamMd(upstreamPath);
+---
+
+<DocLayout title={title} crumb="audit · evidence model" upstreamPath={upstreamPath}>
+  <Fragment set:html={html} />
+</DocLayout>

@@ -1,0 +1,349 @@
+/* Long-form document pages (audit prompt, audit model, language guides, skill READMEs).
+   Inherits tokens from design-tokens.css; adds doc-specific layout.
+   From the claude.ai/design handoff. */
+
+body.spec-canvas.doc-body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Doc top bar */
+.doc-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
+}
+.doc-topbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.doc-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.doc-brand-name {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.doc-brand-slash {
+  color: var(--mute);
+}
+.doc-brand-doc {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.doc-crumb {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mute);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+.doc-crumb-sep {
+  margin: 0 8px;
+  color: var(--line);
+}
+.doc-topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+body.spec-canvas .doc-topbar-right a {
+  color: var(--ink);
+  text-decoration: none;
+}
+body.spec-canvas .doc-topbar-right a:hover {
+  text-decoration: underline;
+}
+
+/* Doc shell */
+.doc-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 32px 96px;
+}
+
+.doc-hero {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 32px;
+  margin-bottom: 48px;
+}
+.doc-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 14px;
+}
+.doc-eyebrow .pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 2px 8px;
+  margin-right: 8px;
+  background: var(--paper-2);
+}
+.doc-title {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  text-wrap: balance;
+}
+.doc-deck {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin: 0;
+  text-wrap: pretty;
+  max-width: 60ch;
+}
+.doc-meta {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+.doc-meta strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Doc body typography (rendered from upstream markdown) */
+.doc-content h1 {
+  display: none; /* the source's H1 is replaced by .doc-title */
+}
+.doc-content h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 64px 0 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+.doc-content h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 16px;
+}
+.doc-content h3 {
+  font-family: var(--sans);
+  font-size: 17px;
+  letter-spacing: 0.005em;
+  font-weight: 700;
+  margin: 32px 0 10px;
+}
+.doc-content h4 {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 24px 0 8px;
+}
+.doc-content p {
+  margin: 0 0 16px;
+  text-wrap: pretty;
+  max-width: 68ch;
+}
+.doc-content ul,
+.doc-content ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+  max-width: 68ch;
+}
+.doc-content li {
+  margin-bottom: 6px;
+  text-wrap: pretty;
+}
+.doc-content li::marker {
+  color: var(--mute);
+}
+.doc-content blockquote {
+  border-left: 2px solid var(--ink);
+  margin: 0 0 18px;
+  padding: 4px 0 4px 16px;
+  color: var(--ink-2);
+  max-width: 68ch;
+}
+.doc-content blockquote p {
+  margin-bottom: 8px;
+}
+.doc-content code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  padding: 1px 6px;
+}
+body.spec-canvas .doc-content a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--line);
+}
+body.spec-canvas .doc-content a:hover {
+  text-decoration-color: var(--ink);
+}
+.doc-content pre {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 22px 26px;
+  margin: 22px 0;
+  overflow-x: auto;
+  white-space: pre;
+  border: 1px solid var(--ink);
+}
+.doc-content pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0 28px;
+  font-size: 14px;
+}
+.doc-content th,
+.doc-content td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-2);
+  vertical-align: top;
+}
+.doc-content thead th {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border-bottom: 1px solid var(--ink);
+}
+.doc-content td code {
+  font-size: 0.88em;
+}
+.doc-content hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 32px 0;
+}
+.doc-content sup {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  padding: 1px 5px;
+  margin-left: 4px;
+  vertical-align: 2px;
+}
+.doc-content sup code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+/* Footer block */
+.doc-foot {
+  margin-top: 96px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+body.spec-canvas .doc-foot a {
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  padding: 8px 14px;
+}
+body.spec-canvas .doc-foot a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.doc-foot .right {
+  margin-left: auto;
+}
+
+@media (max-width: 720px) {
+  .doc-shell {
+    padding: 36px 22px 72px;
+  }
+  .doc-title {
+    font-size: 36px;
+  }
+  .doc-deck {
+    font-size: 18px;
+  }
+  .doc-content h2 {
+    font-size: 24px;
+  }
+  .doc-content pre {
+    padding: 16px 18px;
+    font-size: 12px;
+  }
+  .doc-topbar-inner {
+    padding: 12px 18px;
+    gap: 10px;
+  }
+  .doc-crumb {
+    display: none;
+  }
+}
+
+@media print {
+  .doc-topbar,
+  .doc-foot {
+    display: none;
+  }
+  .doc-shell {
+    max-width: 100%;
+    padding: 0;
+  }
+  .doc-content pre {
+    background: var(--paper-2);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    max-height: none;
+  }
+}

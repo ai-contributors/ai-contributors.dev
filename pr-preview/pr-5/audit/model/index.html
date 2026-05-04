@@ -1,0 +1,583 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AI Contributor Audit Model · ai-contributors / spec docs</title><link rel="icon" href="/pr-preview/pr-5/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"><style>:root{--ink: #0a0a0a;--ink-2: #2a2a2a;--mute: #595959;--line: #d9d9d9;--line-2: #ececec;--paper: #fafafa;--paper-2: #ffffff;--hover: #f3f3f3;--mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;--serif: "Instrument Serif", "Iowan Old Style", "Apple Garamond", Georgia, serif;--sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;--logo-light: #cfcfcf;--logo-dark: #8a8a8a;--logo-ink: #0a0a0a;--logo-letter: #ffffff}[data-invert="1"]{--ink: #f5f5f5;--ink-2: #d0d0d0;--mute: #8a8a8a;--line: #2a2a2a;--line-2: #1d1d1d;--paper: #0a0a0a;--paper-2: #050505;--hover: #141414;--logo-light: #3a3a3a;--logo-dark: #5e5e5e;--logo-ink: #f5f5f5;--logo-letter: #0a0a0a}html:has(body.spec-canvas){scroll-behavior:smooth;scroll-padding-top:80px}@media(prefers-reduced-motion:reduce){html:has(body.spec-canvas){scroll-behavior:auto}}body.spec-canvas{margin:0;padding:0;font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:16px;line-height:1.55}body.spec-canvas *,body.spec-canvas *:before,body.spec-canvas *:after{box-sizing:border-box}body.spec-canvas a{color:inherit;text-decoration:none}body.spec-canvas a:hover{text-decoration:underline;text-underline-offset:3px}.mono{font-family:var(--mono);font-feature-settings:"ss01","cv02"}
+</style>
+<link rel="stylesheet" href="/pr-preview/pr-5/_astro/DocsLayout.B2MSIRMf.css"></head> <body class="dx-body"> <header class="dx-topbar"> <a class="dx-topbar-brand" href="/pr-preview/pr-5/docs/" aria-label="ai-contributors / spec docs home"> <svg viewBox="0 0 120 120" width="22" height="22" role="img" aria-label="ai-contributors"> <g> <circle cx="12" cy="12" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="44" cy="12" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="76" cy="12" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="108" cy="12" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="12" cy="44" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="44" cy="44" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="76" cy="44" r="11" fill="var(--logo-ink)"></circle> <text x="76" y="44.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)">
+ai
+</text>  </g><g> <circle cx="108" cy="44" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="12" cy="76" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="44" cy="76" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="76" cy="76" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="108" cy="76" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="12" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="12" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> S </text> </g><g> <circle cx="44" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="44" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> P </text> </g><g> <circle cx="76" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="76" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> E </text> </g><g> <circle cx="108" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="108" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> C </text> </g> </svg> <span class="dx-topbar-brand-name">ai-contributors</span> <span class="dx-topbar-brand-slash">/</span> <span class="dx-topbar-brand-doc">spec</span> </a> <div class="dx-topbar-right"> <button class="dx-menu-btn" data-menu-toggle aria-label="Toggle navigation">≡ Nav</button> <nav class="dx-crumbs" aria-label="Breadcrumb"> <a href="/pr-preview/pr-5/docs/">Docs</a> <span class="dx-crumb-sep">›</span> <span class="dx-crumb-cur">Audit · Evidence model</span> </nav> <div class="dx-topbar-actions"> <button type="button" class="dx-search-trigger" data-search-open aria-label="Open search"> <span class="dx-search-icon" aria-hidden="true">⌕</span> <span class="dx-search-label">Search docs</span> <kbd>⌘K</kbd> </button> <a class="dx-topbar-link" href="https://github.com/ai-contributors/ai-contributor-spec" rel="noopener">GitHub ↗</a> </div> </div> </header> <div class="dx-shell"> <aside class="dx-sidebar" data-sidebar aria-label="Documentation navigation"> <details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Start</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/docs/" class> <span>Overview</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Specification</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/specification/" class> <span>Full specification</span>  </a> </li><li> <a href="/pr-preview/pr-5/specification/#coverage" class> <span>Coverage matrix</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Audit</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/audit/model/" class="is-current"> <span>Audit evidence model</span>  </a> </li><li> <a href="/pr-preview/pr-5/audit/prompt/" class> <span>No-install prompt</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Guides</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/guide/typescript-pnpm/" class> <span>TypeScript + pnpm</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Skills</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/skills/audit/" class> <span>ai-contributor-audit</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Reference</summary> <ul class="dx-sidebar-list"> <li> <a href="https://github.com/ai-contributors/ai-contributor-spec" class rel="noopener" target="_blank"> <span>Spec repo on GitHub</span> <span class="dx-tag is-ext">↗</span> </a> </li> </ul> </details> <div class="dx-sidebar-foot"> <div class="dx-rev"> <span>spec</span><span class="dot">·</span><span>v0.1</span><span class="dot">·</span><span>9d6e067</span> </div> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> </div> </aside> <div class="dx-main"> <article class="dx-article"> <header class="dx-article-head"> <div class="dx-eyebrow"> <span class="pill">Docs</span> <span>Audit › Evidence model</span> </div> <h1 class="dx-h1">AI Contributor Audit Model</h1>   </header>  <p>This document explains the audit model behind the AI Contributor Specification.
+It is non-normative: the specification defines the rules, while this document
+explains how audits should produce evidence that is reproducible enough to
+review.</p>
+<h2 id="goal">Goal</h2>
+<p>An AI Contributor audit should make five things explicit:</p>
+<ol>
+<li>The repository state being audited.</li>
+<li>The specification and tooling version used for the audit.</li>
+<li>The evidence collected from that repository state.</li>
+<li>The status derived from that evidence.</li>
+<li>The judgment that remains for a human reviewer.</li>
+</ol>
+<p>The goal is not full automation. The goal is a repeatable audit trail where
+automated facts, derived conclusions, and human judgment are separated clearly.</p>
+<h2 id="plain-language-summary">Plain-language summary</h2>
+<p>An audit should answer: which commit was checked, which version of the rules was
+used, what evidence was collected, what status follows from that evidence, and
+what a human still needs to judge.</p>
+<p>The checklist is not trusted because an agent filled it. It is trusted only when
+each status points back to evidence that another reviewer can inspect.</p>
+<h2 id="core-principles">Core Principles</h2>
+<h3 id="pin-the-target">Pin The Target</h3>
+<p>The audit is tied to <code>audited_commit</code>, not to a caller&#39;s current worktree.</p>
+<p>The collector should inspect a clean extraction of the audited commit. Dirty
+local files may be recorded for traceability, but they must not affect the
+audit unless the auditor explicitly chooses a working-tree audit mode.</p>
+<h3 id="pin-the-policy">Pin The Policy</h3>
+<p>The audit is also tied to <code>spec_source</code>, the immutable source of the
+specification, checklist, audit-log template, validator, and collector used for
+that run.</p>
+<p>Audits should not depend on a mutable branch name. If a branch is used as the
+human input, it must first be resolved to a full commit SHA and that SHA must be
+recorded.</p>
+<h3 id="collect-before-judging">Collect Before Judging</h3>
+<p>Evidence collection happens before checklist rendering.</p>
+<p>The durable machine-readable artifact is <code>.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>. The checklist and
+audit log are human-readable projections of that evidence plus any additional
+manual evidence and judgment.</p>
+<h3 id="separate-measurement-from-policy">Separate Measurement From Policy</h3>
+<p>Collectors and probes measure observable facts. They do not define the policy.</p>
+<p>The policy lives in the specification and checklist. A probe may say that branch
+protection requires pull requests, or that a lockfile installs with frozen
+dependencies. The checklist decides whether those facts satisfy a rule.</p>
+<h3 id="prefer-small-probes">Prefer Small Probes</h3>
+<p>Small facts are easier to reproduce than broad conclusions.</p>
+<p>Instead of one opaque &quot;repository is protected&quot; result, a collector should
+prefer smaller observations such as:</p>
+<ul>
+<li>default branch detected</li>
+<li>branch-protection endpoint readable</li>
+<li>pull requests required</li>
+<li>status checks required</li>
+<li>bypass actors present</li>
+<li>token tier used for hosted API evidence</li>
+</ul>
+<p>Checklist status can then be derived from those smaller facts where the
+predicate is crisp.</p>
+<h3 id="keep-judgment-first-class">Keep Judgment First-Class</h3>
+<p>Not every rule should be automated.</p>
+<p>Some statuses can be derived mechanically. Others require human review because
+the evidence is semantic, contextual, or policy-dependent. In those cases the
+collector should record evidence and set the collector-side
+<code>judgment_required</code> flag, rather than pretending that the answer is
+deterministic.</p>
+<h2 id="evidence-flow">Evidence Flow</h2>
+<p>The audit flow is:</p>
+<pre><code class="language-text">spec_source + audited_commit
+  -&gt; bootstrap          (materializes the pinned runbook before the audit)
+  -&gt; audit-run          (umbrella command for the normal cycle)
+      -&gt; audit-collect  (writes .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json)
+      -&gt; audit-stamp    (writes derivable content into checklist + audit-log)
+      -&gt; auditor        (fills judgment-required rows)
+      -&gt; audit-stamp    (refreshes sections derived from row statuses)
+      -&gt; audit-validate (read-only structural checks)
+</code></pre>
+<p>The conceptual flow is the same when run phase by phase:</p>
+<pre><code class="language-text">spec_source + audited_commit
+  -&gt; audit-collect
+  -&gt; audit-stamp
+  -&gt; auditor            (fills judgment-required rows)
+  -&gt; audit-stamp
+  -&gt; audit-validate
+</code></pre>
+<h2 id="artifact-and-field-ownership">Artifact And Field Ownership</h2>
+<p>The audit artifacts have different jobs. No single rendered Markdown file is
+the whole source of truth.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact or script</th>
+<th>Role</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bootstrap.ts</code></td>
+<td>Materializes the audit runbook from the pinned <code>spec_source</code> before collection starts.</td>
+<td>Runbook bootstrap</td>
+</tr>
+<tr>
+<td><code>AI-CONTRIBUTOR-RUNBOOK-MANIFEST.json</code></td>
+<td>Records the exact runbook source and files materialized by bootstrap.</td>
+<td>Runbook bootstrap</td>
+</tr>
+<tr>
+<td><code>audit-run.ts</code></td>
+<td>Orchestrates collect, initial stamp, edit pause, final stamp, and validate.</td>
+<td>Runner</td>
+</tr>
+<tr>
+<td><code>audit-collect.ts</code></td>
+<td>Gathers repository and hosted-setting evidence from the pinned <code>audited_commit</code>.</td>
+<td>Collector</td>
+</tr>
+<tr>
+<td><code>.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code></td>
+<td>Machine-readable source for collector-derived facts, command results, derived statuses, and collector-side verification gaps.</td>
+<td>Collector</td>
+</tr>
+<tr>
+<td><code>audit-summary.ts</code></td>
+<td>Read-only one-shot summary of an existing evidence JSON file.</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td><code>audit-stamp.ts</code></td>
+<td>Writes every derivable field into the rendered audit artifacts. Idempotent.</td>
+<td>Stamper</td>
+</tr>
+<tr>
+<td><code>.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></td>
+<td>Human-readable conformance and scoring surface; contains stamped rows plus auditor judgment rows.</td>
+<td>Stamper + auditor</td>
+</tr>
+<tr>
+<td><code>.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></td>
+<td>Command and manual evidence trace; contains stamped collector rows plus auditor-run evidence rows.</td>
+<td>Stamper + auditor</td>
+</tr>
+<tr>
+<td><code>AI-CONTRIBUTOR-AUDIT.md</code></td>
+<td>Root-level projection of the checklist conformance summary and backlog.</td>
+<td>Stamper</td>
+</tr>
+<tr>
+<td><code>audit-validate.ts</code></td>
+<td>Read-only structural consistency checks over the rendered artifacts.</td>
+<td>Validator</td>
+</tr>
+</tbody></table>
+<p>The frontmatter fields are owned as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field or content</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>spec_version</code></td>
+<td>Template and release process. Bump only with the specification version.</td>
+</tr>
+<tr>
+<td><code>spec_source</code>, <code>audited_commit</code>, <code>auditor</code>, <code>runner_agent</code>, <code>runner_model</code></td>
+<td>Supplied once by stamp flags, environment, evidence, manifest, or pinned runbook path; stamped identically into the checklist and audit log.</td>
+</tr>
+<tr>
+<td><code>assessment_started_at</code>, <code>assessment_completed_at</code>, <code>assessment_duration</code>, <code>validator_version</code>, <code>collector_version</code>, <code>conformance_level</code></td>
+<td>Stamped automatically by <code>audit-stamp.ts</code>.</td>
+</tr>
+<tr>
+<td>Collector-derived checklist <code>A</code> / <code>Status</code> / <code>Comment</code>, stamped audit-log collector rows, verification-gap stamped rows, conformance summary <code>Status</code>, root summary, and backlog derived columns</td>
+<td>Stamped automatically by <code>audit-stamp.ts</code>.</td>
+</tr>
+<tr>
+<td>Judgment-required checklist <code>Status</code> / <code>Comment</code>, manual audit-log rows, conformance summary <code>Notes</code>, backlog <code>Next action</code> / <code>Owner</code> / <code>Target date</code>, and manual verification-gap rows</td>
+<td>Auditor-owned.</td>
+</tr>
+<tr>
+<td><code>Date reached</code></td>
+<td>Hybrid: auditor enters it when a level is first claimed as reached; the stamper preserves it while reached and clears it when the level drops.</td>
+</tr>
+</tbody></table>
+<p>The validator checks whether the rendered audit is internally consistent. It
+does not rerun the audit, does not write to files, and does not decide whether
+an arbitrary claim is true.</p>
+<h2 id="conceptual-split">Conceptual Split</h2>
+<p>The audit has four layers, each with a distinct responsibility:</p>
+<ol>
+<li><strong>Collector</strong> — observable facts and deterministic thresholds.</li>
+<li><strong>Stamper</strong> — mechanical writes of derivable content into the rendered artifacts.</li>
+<li><strong>Auditor</strong> (human or agent) — applicability, meaning, and explanation for rules that need judgment.</li>
+<li><strong>Validator</strong> — structural integrity of the rendered artifacts.</li>
+</ol>
+<h3 id="when-to-stamp-when-to-validate">When to stamp, when to validate</h3>
+<p>Stamp when the rendered artifact&#39;s content is fully derivable from canonical
+inputs. <code>AI-CONTRIBUTOR-COVERAGE.md</code> is the canonical example: every field
+flows from <code>AI-CONTRIBUTOR-SPECIFICATION.md</code> and the checklist, and the doc is
+regenerated by <code>npm run generate:coverage</code>.</p>
+<p>Validate when the artifact contains fields that cannot be derived —
+human paraphrases, deliberate groupings, owner-confirmed answers —
+alongside derivable fields. Stamping a partly-derivable artifact would
+either drop the human-authored fields or produce a partly-stamped Markdown
+file that is harder to edit than a fully hand-written or fully generated
+one. <code>.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code> is the canonical
+example: conformance level and pillar membership are derivable from the
+spec&#39;s section structure, but the rule-name grouping (which IDs cluster
+under &quot;Build Origin Records&quot; vs sit alone) and the short description are
+deliberate human paraphrase. The checklist is therefore validated by
+<code>check:checklist-pillars</code>, <code>check:row-scope-vs-spec</code>, and
+<code>check:normative-ids</code>, not stamped.</p>
+<p>This is a deliberate asymmetry, not a missing stamper. A future refactor
+that proposes to generate the checklist from the spec should first answer
+where the human-authored fields will live; if they move into a sidecar
+data file, the trade-off should be reconsidered.</p>
+<p>The collector records what exists, what commands produced, what hosted APIs
+returned, and which statuses can be derived without judgment.</p>
+<p>The stamper turns collector output and current checklist state into rendered
+checklist and audit-log content. It writes timestamps, mechanical frontmatter
+(<code>spec_source</code>, <code>audited_commit</code>, auditor identity fields), version fields,
+derived row statuses and comments, the conformance summary, the conformance
+level, the backlog, drift rows, judgment-required navigation hints,
+verification-gap rows for collector-flagged gaps, audit-log evidence rows for
+collector-derived rules, stamped-block checksum sentinels, and cross-file
+equality fields. Anything the stamper writes is, by definition, not the
+auditor&#39;s judgment.</p>
+<p>The auditor decides whether a repository ships an artifact, whether a policy
+is meaningful, whether a boundary is actually covered, and how to describe
+remaining verification gaps. The auditor may be a human or an agent, but it
+classifies, connects, and explains evidence that is visible in the repository,
+collector output, hosted-setting snapshots, or audit log — never invents.</p>
+<p>The validator checks that the filled checklist and audit log are structurally
+consistent, tied to current-run evidence, and free of known anti-patterns such
+as blank statuses or unlogged command citations. It does not write, does not
+call external APIs, and does not decide whether cited evidence is semantically
+convincing.</p>
+<p>Rules with stable, observable thresholds are collector-derived and stamped.
+Rules whose evaluation depends on meaning or context are auditor judgment. The
+split keeps every judgment anchored in recorded evidence.</p>
+<h2 id="role-of-llms-in-the-audit">Role of LLMs in the Audit</h2>
+<p>Scripts own facts and derivable content. LLMs interpret evidence and draft a
+reviewable explanation for the rules that need judgment. Humans approve the
+result.</p>
+<p>Scripts are the right place for facts:</p>
+<ul>
+<li>files exist or are missing</li>
+<li>commands pass or fail</li>
+<li>lockfiles validate</li>
+<li>hosted APIs return specific settings</li>
+<li>generated tables are current</li>
+<li>checklist and audit-log structure is consistent</li>
+</ul>
+<p>LLMs are useful where audit evidence requires interpretation:</p>
+<ul>
+<li>connecting repository-specific evidence and controls to checklist rows the collector leaves for judgment</li>
+<li>reading policy documents and judging whether they are specific enough</li>
+<li>explaining why evidence supports <code>Warning</code> instead of <code>Fulfilled</code></li>
+<li>turning gaps into useful backlog actions</li>
+<li>recognizing equivalent controls that do not match the default stack</li>
+<li>reviewing <code>Not relevant</code> claims for weak assumptions</li>
+<li>summarizing hosted or API evidence for human reviewers</li>
+</ul>
+<p>The LLM must not be the source of truth. It should classify, connect, and
+explain current-run evidence only. If evidence is missing, indirect, or unclear,
+the correct output is <code>Warning</code>, <code>Alarm</code>, <code>Not relevant</code> with a cited reason, or
+<code>judgment_required</code> in collector output.</p>
+<h2 id="determinism-boundary">Determinism Boundary</h2>
+<p>Repository-local evidence can be close to deterministic when the target commit,
+tooling source, and execution environment are pinned.</p>
+<p>Examples:</p>
+<ul>
+<li>tracked files</li>
+<li>lockfiles</li>
+<li>static configuration</li>
+<li>local scripts</li>
+<li>type-check or lint commands with pinned dependencies</li>
+</ul>
+<p>Hosted or external evidence cannot be fully reproduced from Git alone.</p>
+<p>Examples:</p>
+<ul>
+<li>branch protection</li>
+<li>repository rulesets</li>
+<li>hosted secret scanning settings</li>
+<li>dependency-alert state</li>
+<li>CI provider settings</li>
+<li>organization or team membership</li>
+</ul>
+<p>For external evidence, the audit should record a snapshot:</p>
+<ul>
+<li>timestamp</li>
+<li>provider</li>
+<li>endpoint or command</li>
+<li>actor or token tier</li>
+<li>output excerpt or structured result</li>
+<li>whether access was complete, partial, or unavailable</li>
+</ul>
+<p>The snapshot is evidence for the audit time. It is not a guarantee that the
+external setting will remain unchanged.</p>
+<h2 id="applicability">Applicability</h2>
+<p>Technology-neutral audits depend on explicit applicability.</p>
+<p>The collector should first detect repository capabilities, then run relevant
+probes:</p>
+<pre><code class="language-text">detect stack and provider
+  -&gt; decide applicability
+  -&gt; run matching probes
+  -&gt; derive status when possible
+  -&gt; mark judgment_required when not possible
+</code></pre>
+<p>A missing TypeScript configuration should not automatically fail a repository
+that does not use TypeScript. A missing GitHub ruleset should not automatically
+fail a repository hosted somewhere else. The audit must distinguish between:</p>
+<ul>
+<li>applicable and fulfilled</li>
+<li>applicable and not fulfilled</li>
+<li>not applicable</li>
+<li>unknown because the collector lacks access or support</li>
+<li>judgment required because the rule depends on meaning or context</li>
+</ul>
+<h2 id="derived-statuses">Derived Statuses</h2>
+<p>A derived status is appropriate when the rule has a clear condition and the
+collector has enough evidence to evaluate it.</p>
+<p>Good candidates:</p>
+<ul>
+<li>lockfile integrity</li>
+<li>strict type-checking for a detected typed stack</li>
+<li>branch protection when hosted settings are readable</li>
+<li>required CI checks when provider settings are readable</li>
+<li>objective file/config presence checks where presence itself satisfies the
+rule</li>
+</ul>
+<p>Poor candidates:</p>
+<ul>
+<li>whether instructions are clear enough for a new agent</li>
+<li>whether a committed policy or instruction file is specific enough</li>
+<li>whether a fallback plan is credible</li>
+<li>whether a human review process is meaningful in practice</li>
+<li>whether a threat model covers the right risks</li>
+</ul>
+<p>For judgment-heavy rules, the collector should gather evidence and explain why
+the auditor must decide.</p>
+<h2 id="validator-boundary">Validator Boundary</h2>
+<p>The validator should enforce file consistency, not semantic truth.</p>
+<p>It should check:</p>
+<ul>
+<li>matching frontmatter across audit files</li>
+<li>valid status values</li>
+<li>required comments</li>
+<li>no stale placeholders</li>
+<li>audit-log rows are structured</li>
+<li>command citations resolve to current audit-log rows</li>
+<li>collector-derived <code>Fulfilled</code> rows cite <code>.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code></li>
+<li>conformance summary matches checklist rows</li>
+</ul>
+<p>It should not:</p>
+<ul>
+<li>call external APIs</li>
+<li>rerun build or test commands</li>
+<li>decide whether prose evidence is convincing</li>
+<li>infer repository policy from unstructured comments</li>
+<li>silently change an audit result</li>
+</ul>
+<p>This boundary keeps validation deterministic and cheap.</p>
+<h2 id="technology-neutrality">Technology Neutrality</h2>
+<p>The core model should be independent of language, package manager, CI system,
+repository host, and AI provider.</p>
+<p>That means the core collector should be organized around adapters:</p>
+<pre><code class="language-text">core collector
+  repo inventory
+  git facts
+  file probes
+  ecosystem adapters
+  provider adapters
+  optional external tools
+</code></pre>
+<p>Adapters may be specific. The schema should stay generic.</p>
+<p>For example, a TypeScript adapter can parse <code>tsconfig.json</code>, but the evidence
+schema should describe the result as a toolchain-specific strictness probe, not
+as a universal assumption that every repository has TypeScript.</p>
+<h2 id="optional-external-tools">Optional External Tools</h2>
+<p>External tools can be useful, but they should not be required for the core audit
+unless the project deliberately accepts that dependency.</p>
+<p>When an external tool is used, record:</p>
+<ul>
+<li>tool name</li>
+<li>version or commit</li>
+<li>binary or container digest when available</li>
+<li>command</li>
+<li>exit code</li>
+<li>output excerpt or artifact path</li>
+<li>rules that consumed the result</li>
+</ul>
+<p>External tools should provide supporting evidence. The audit should still make
+its own rule mapping explicit.</p>
+<h2 id="operating-rules">Operating Rules</h2>
+<p>Auditors and agents follow these rules:</p>
+<ol>
+<li>Start from pinned <code>spec_source</code> and <code>audited_commit</code>; let the stamper record mechanical frontmatter from evidence, the bootstrap manifest, flags, or environment variables.</li>
+<li>Run the collector before any rendering. <code>.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code> is the source of truth for collector-derived findings.</li>
+<li>Run the stamper to populate every machine-derivable field. Do not hand-edit content the stamper owns.</li>
+<li>Fill judgment-required rows from current-run evidence. Use audit-log rows for commands and manual evidence not captured by the collector.</li>
+<li>Re-run the stamper after judgment edits so derived sections (summary, backlog, drift, judgment hints, verification gaps) reflect the final evidence and row statuses.</li>
+<li>Do not copy prior filled audit content into a new run.</li>
+<li>Cite current-run evidence in every non-blank checklist row.</li>
+<li>Mark unsupported or ambiguous cases as <code>judgment_required</code> or <code>Warning</code> rather than inventing certainty.</li>
+<li>Record hosted evidence as a timestamped snapshot with token/access context.</li>
+<li>Keep provider- and stack-specific logic inside adapters.</li>
+<li>Let the validator check consistency, not truth.</li>
+</ol>
+<h2 id="north-star">North Star</h2>
+<p>A deterministic audit is not one where every answer is automated.</p>
+<p>A deterministic audit is one where the target, policy, evidence, derivation, and
+remaining judgment are pinned and explicit enough that another reviewer can
+reconstruct how the audit reached each row.</p>
+  <nav class="dx-pagination" aria-label="Pagination"> <a class="dx-pag" href="/pr-preview/pr-5/specification/"> <span class="dx-pag-kind">← Previous</span> <span class="dx-pag-title">Full specification</span> </a> <a class="dx-pag dx-pag-next" href="/pr-preview/pr-5/audit/prompt/"> <span class="dx-pag-kind">Next →</span> <span class="dx-pag-title">No-install prompt</span> </a> </nav> </article> <aside class="dx-toc" aria-label="On this page"> <h5 class="dx-toc-h">On this page</h5> <ul class="dx-toc-list" data-toc> <li> <a href="#goal" class data-toc-link="goal"> Goal </a> </li><li> <a href="#plain-language-summary" class data-toc-link="plain-language-summary"> Plain-language summary </a> </li><li> <a href="#core-principles" class data-toc-link="core-principles"> Core Principles </a> </li><li> <a href="#pin-the-target" class="dx-toc-h3" data-toc-link="pin-the-target"> Pin The Target </a> </li><li> <a href="#pin-the-policy" class="dx-toc-h3" data-toc-link="pin-the-policy"> Pin The Policy </a> </li><li> <a href="#collect-before-judging" class="dx-toc-h3" data-toc-link="collect-before-judging"> Collect Before Judging </a> </li><li> <a href="#separate-measurement-from-policy" class="dx-toc-h3" data-toc-link="separate-measurement-from-policy"> Separate Measurement From Policy </a> </li><li> <a href="#prefer-small-probes" class="dx-toc-h3" data-toc-link="prefer-small-probes"> Prefer Small Probes </a> </li><li> <a href="#keep-judgment-first-class" class="dx-toc-h3" data-toc-link="keep-judgment-first-class"> Keep Judgment First-Class </a> </li><li> <a href="#evidence-flow" class data-toc-link="evidence-flow"> Evidence Flow </a> </li><li> <a href="#artifact-and-field-ownership" class data-toc-link="artifact-and-field-ownership"> Artifact And Field Ownership </a> </li><li> <a href="#conceptual-split" class data-toc-link="conceptual-split"> Conceptual Split </a> </li><li> <a href="#when-to-stamp-when-to-validate" class="dx-toc-h3" data-toc-link="when-to-stamp-when-to-validate"> When to stamp, when to validate </a> </li><li> <a href="#role-of-llms-in-the-audit" class data-toc-link="role-of-llms-in-the-audit"> Role of LLMs in the Audit </a> </li><li> <a href="#determinism-boundary" class data-toc-link="determinism-boundary"> Determinism Boundary </a> </li><li> <a href="#applicability" class data-toc-link="applicability"> Applicability </a> </li><li> <a href="#derived-statuses" class data-toc-link="derived-statuses"> Derived Statuses </a> </li><li> <a href="#validator-boundary" class data-toc-link="validator-boundary"> Validator Boundary </a> </li><li> <a href="#technology-neutrality" class data-toc-link="technology-neutrality"> Technology Neutrality </a> </li><li> <a href="#optional-external-tools" class data-toc-link="optional-external-tools"> Optional External Tools </a> </li><li> <a href="#operating-rules" class data-toc-link="operating-rules"> Operating Rules </a> </li><li> <a href="#north-star" class data-toc-link="north-star"> North Star </a> </li> </ul> <div class="dx-toc-foot"> <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/9d6e0676353315f6c0f86e5ed09468f6ac2286e9/AI-CONTRIBUTOR-AUDIT-MODEL.md" rel="noopener">
+Edit on GitHub ↗
+</a> </div> </aside> </div> </div> <div class="dx-search-overlay" data-search-overlay role="dialog" aria-modal="true"> <div class="dx-search-modal"> <div class="dx-search-input-row"> <span class="dx-search-prefix">⌕</span> <input class="dx-search-input" data-search-input type="search" placeholder="Search documentation…" autocomplete="off"> <button type="button" class="dx-search-close" data-search-close>Esc</button> </div> <div class="dx-search-results" data-search-results> <div class="dx-search-empty">Type to search the docs.</div> </div> <div class="dx-search-foot"> <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span> <span><kbd>↵</kbd> open</span> <span><kbd>Esc</kbd> close</span> <span class="right">Indexed locally</span> </div> </div> </div> <script type="application/json" data-search-index>[{"kind":"Start","title":"Overview","url":"/pr-preview/pr-5/docs/"},{"kind":"Specification","title":"Full specification","url":"/pr-preview/pr-5/specification/"},{"kind":"Specification","title":"Coverage matrix","url":"/pr-preview/pr-5/specification/#coverage"},{"kind":"Audit","title":"Audit evidence model","url":"/pr-preview/pr-5/audit/model/"},{"kind":"Audit","title":"No-install prompt","url":"/pr-preview/pr-5/audit/prompt/"},{"kind":"Guides","title":"TypeScript + pnpm","url":"/pr-preview/pr-5/guide/typescript-pnpm/"},{"kind":"Skills","title":"ai-contributor-audit","url":"/pr-preview/pr-5/skills/audit/"}]</script> <script>
+      // ----- mobile sidebar toggle -----
+      const sidebar = document.querySelector('[data-sidebar]');
+      const menuBtn = document.querySelector('[data-menu-toggle]');
+      menuBtn?.addEventListener('click', () => sidebar?.classList.toggle('is-open'));
+      document.addEventListener('click', (e) => {
+        if (!sidebar?.classList.contains('is-open')) return;
+        if (sidebar.contains(e.target) || menuBtn?.contains(e.target)) return;
+        sidebar.classList.remove('is-open');
+      });
+
+      // ----- TOC scrollspy -----
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+      if (tocLinks.length) {
+        const headings = tocLinks
+          .map((a) => {
+            const node = document.getElementById(a.dataset.tocLink);
+            return node ? { node, link: a } : null;
+          })
+          .filter(Boolean);
+        const spy = () => {
+          if (!headings.length) return;
+          let current = headings[0];
+          for (const h of headings) {
+            if (h.node.getBoundingClientRect().top - 80 <= 0) current = h;
+            else break;
+          }
+          tocLinks.forEach((a) => a.classList.remove('is-active'));
+          current.link.classList.add('is-active');
+        };
+        spy();
+        let pending = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (pending) return;
+            pending = true;
+            requestAnimationFrame(() => {
+              pending = false;
+              spy();
+            });
+          },
+          { passive: true },
+        );
+      }
+
+      // ----- search modal -----
+      const overlay = document.querySelector('[data-search-overlay]');
+      const input = document.querySelector('[data-search-input]');
+      const results = document.querySelector('[data-search-results]');
+      const indexRaw = document.querySelector('[data-search-index]')?.textContent || '[]';
+      const index = JSON.parse(indexRaw);
+
+      const open = () => {
+        overlay?.classList.add('is-open');
+        setTimeout(() => {
+          input?.focus();
+          input?.select?.();
+        }, 30);
+        render('');
+      };
+      const close = () => {
+        overlay?.classList.remove('is-open');
+        if (input) input.value = '';
+      };
+      document.querySelector('[data-search-open]')?.addEventListener('click', open);
+      document.querySelector('[data-search-close]')?.addEventListener('click', close);
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const meta = e.metaKey || e.ctrlKey;
+        if (meta && (e.key === 'k' || e.key === 'K')) {
+          e.preventDefault();
+          if (overlay?.classList.contains('is-open')) close();
+          else open();
+          return;
+        }
+        if (!overlay?.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          moveFocus(1);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          moveFocus(-1);
+        } else if (e.key === 'Enter') {
+          const hit = results?.querySelector('.dx-search-hit.is-focused');
+          if (hit) {
+            e.preventDefault();
+            window.location.href = hit.getAttribute('href');
+          }
+        }
+      });
+
+      const moveFocus = (delta) => {
+        const hits = Array.from(results?.querySelectorAll('.dx-search-hit') || []);
+        if (!hits.length) return;
+        let idx = hits.findIndex((h) => h.classList.contains('is-focused'));
+        hits.forEach((h) => h.classList.remove('is-focused'));
+        idx = (idx + delta + hits.length) % hits.length;
+        if (idx < 0) idx = 0;
+        hits[idx].classList.add('is-focused');
+        hits[idx].scrollIntoView({ block: 'nearest' });
+      };
+
+      const render = (query) => {
+        if (!results) return;
+        results.innerHTML = '';
+        const q = (query || '').trim().toLowerCase();
+        const groups = {};
+        const order = [];
+        for (const entry of index) {
+          if (q && !entry.title.toLowerCase().includes(q) && !entry.kind.toLowerCase().includes(q))
+            continue;
+          if (!groups[entry.kind]) {
+            groups[entry.kind] = [];
+            order.push(entry.kind);
+          }
+          groups[entry.kind].push(entry);
+        }
+        if (order.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'dx-search-empty';
+          empty.textContent = q ? `No matches for "${query}".` : 'No entries.';
+          results.appendChild(empty);
+          return;
+        }
+        for (const kind of order) {
+          const grp = document.createElement('div');
+          grp.className = 'dx-search-group';
+          const h = document.createElement('div');
+          h.className = 'dx-search-group-h';
+          h.textContent = kind;
+          grp.appendChild(h);
+          for (const entry of groups[kind]) {
+            const hit = document.createElement('a');
+            hit.className = 'dx-search-hit';
+            hit.href = entry.url;
+            const title = document.createElement('div');
+            title.className = 'dx-search-hit-title';
+            const kindBadge = document.createElement('span');
+            kindBadge.className = 'dx-search-hit-kind';
+            kindBadge.textContent = 'page';
+            title.appendChild(kindBadge);
+            title.appendChild(document.createTextNode(entry.title));
+            hit.appendChild(title);
+            const trail = document.createElement('div');
+            trail.className = 'dx-search-hit-trail';
+            trail.textContent = entry.url;
+            hit.appendChild(trail);
+            grp.appendChild(hit);
+          }
+          results.appendChild(grp);
+        }
+        results.querySelector('.dx-search-hit')?.classList.add('is-focused');
+      };
+
+      input?.addEventListener('input', () => render(input.value));
+    </script> </body> </html>

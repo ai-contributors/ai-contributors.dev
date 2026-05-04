@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AI Contributor Audit Skill · ai-contributors / spec docs</title><link rel="icon" href="/pr-preview/pr-5/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"><style>:root{--ink: #0a0a0a;--ink-2: #2a2a2a;--mute: #595959;--line: #d9d9d9;--line-2: #ececec;--paper: #fafafa;--paper-2: #ffffff;--hover: #f3f3f3;--mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;--serif: "Instrument Serif", "Iowan Old Style", "Apple Garamond", Georgia, serif;--sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;--logo-light: #cfcfcf;--logo-dark: #8a8a8a;--logo-ink: #0a0a0a;--logo-letter: #ffffff}[data-invert="1"]{--ink: #f5f5f5;--ink-2: #d0d0d0;--mute: #8a8a8a;--line: #2a2a2a;--line-2: #1d1d1d;--paper: #0a0a0a;--paper-2: #050505;--hover: #141414;--logo-light: #3a3a3a;--logo-dark: #5e5e5e;--logo-ink: #f5f5f5;--logo-letter: #0a0a0a}html:has(body.spec-canvas){scroll-behavior:smooth;scroll-padding-top:80px}@media(prefers-reduced-motion:reduce){html:has(body.spec-canvas){scroll-behavior:auto}}body.spec-canvas{margin:0;padding:0;font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:16px;line-height:1.55}body.spec-canvas *,body.spec-canvas *:before,body.spec-canvas *:after{box-sizing:border-box}body.spec-canvas a{color:inherit;text-decoration:none}body.spec-canvas a:hover{text-decoration:underline;text-underline-offset:3px}.mono{font-family:var(--mono);font-feature-settings:"ss01","cv02"}
+</style>
+<link rel="stylesheet" href="/pr-preview/pr-5/_astro/DocsLayout.B2MSIRMf.css"></head> <body class="dx-body"> <header class="dx-topbar"> <a class="dx-topbar-brand" href="/pr-preview/pr-5/docs/" aria-label="ai-contributors / spec docs home"> <svg viewBox="0 0 120 120" width="22" height="22" role="img" aria-label="ai-contributors"> <g> <circle cx="12" cy="12" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="44" cy="12" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="76" cy="12" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="108" cy="12" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="12" cy="44" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="44" cy="44" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="76" cy="44" r="11" fill="var(--logo-ink)"></circle> <text x="76" y="44.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)">
+ai
+</text>  </g><g> <circle cx="108" cy="44" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="12" cy="76" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="44" cy="76" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="76" cy="76" r="11" fill="var(--logo-light)"></circle>   </g><g> <circle cx="108" cy="76" r="11" fill="var(--logo-dark)"></circle>   </g><g> <circle cx="12" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="12" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> S </text> </g><g> <circle cx="44" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="44" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> P </text> </g><g> <circle cx="76" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="76" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> E </text> </g><g> <circle cx="108" cy="108" r="11" fill="var(--logo-ink)"></circle>  <text x="108" y="108.5" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="var(--logo-letter)"> C </text> </g> </svg> <span class="dx-topbar-brand-name">ai-contributors</span> <span class="dx-topbar-brand-slash">/</span> <span class="dx-topbar-brand-doc">spec</span> </a> <div class="dx-topbar-right"> <button class="dx-menu-btn" data-menu-toggle aria-label="Toggle navigation">≡ Nav</button> <nav class="dx-crumbs" aria-label="Breadcrumb"> <a href="/pr-preview/pr-5/docs/">Docs</a> <span class="dx-crumb-sep">›</span> <span class="dx-crumb-cur">Skills · ai-contributor-audit</span> </nav> <div class="dx-topbar-actions"> <button type="button" class="dx-search-trigger" data-search-open aria-label="Open search"> <span class="dx-search-icon" aria-hidden="true">⌕</span> <span class="dx-search-label">Search docs</span> <kbd>⌘K</kbd> </button> <a class="dx-topbar-link" href="https://github.com/ai-contributors/ai-contributor-spec" rel="noopener">GitHub ↗</a> </div> </div> </header> <div class="dx-shell"> <aside class="dx-sidebar" data-sidebar aria-label="Documentation navigation"> <details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Start</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/docs/" class> <span>Overview</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Specification</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/specification/" class> <span>Full specification</span>  </a> </li><li> <a href="/pr-preview/pr-5/specification/#coverage" class> <span>Coverage matrix</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Audit</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/audit/model/" class> <span>Audit evidence model</span>  </a> </li><li> <a href="/pr-preview/pr-5/audit/prompt/" class> <span>No-install prompt</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Guides</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/guide/typescript-pnpm/" class> <span>TypeScript + pnpm</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Skills</summary> <ul class="dx-sidebar-list"> <li> <a href="/pr-preview/pr-5/skills/audit/" class="is-current"> <span>ai-contributor-audit</span>  </a> </li> </ul> </details><details class="dx-sidebar-section" open> <summary class="dx-sidebar-summary">Reference</summary> <ul class="dx-sidebar-list"> <li> <a href="https://github.com/ai-contributors/ai-contributor-spec" class rel="noopener" target="_blank"> <span>Spec repo on GitHub</span> <span class="dx-tag is-ext">↗</span> </a> </li> </ul> </details> <div class="dx-sidebar-foot"> <div class="dx-rev"> <span>spec</span><span class="dot">·</span><span>v0.1</span><span class="dot">·</span><span>9d6e067</span> </div> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> </div> </aside> <div class="dx-main"> <article class="dx-article"> <header class="dx-article-head"> <div class="dx-eyebrow"> <span class="pill">Docs</span> <span>Skills › ai-contributor-audit</span> </div> <h1 class="dx-h1">AI Contributor Audit Skill</h1>   </header>  <p>Install:</p>
+<pre><code class="language-sh">npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit-profile ai-contributor-audit ai-contributor-audit-fix
+</code></pre>
+<p>This skill audits a repository against the AI Contributor Specification and writes the reviewable audit artifacts:</p>
+<ul>
+<li><code>AI-CONTRIBUTOR-AUDIT.md</code></li>
+<li><code>.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></li>
+<li><code>.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></li>
+<li><code>.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code></li>
+<li><code>.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code></li>
+</ul>
+<p>Use it when you want an agent to run or repeat a conformance audit, refresh evidence, or score a repository against the current specification.</p>
+<p>The skill includes its audit collector, stamper, and validator in <code>scripts/</code>. It fetches the specification, checklist template, audit-log template, and audit-profile template from the same pinned source revision. It records the audited commit and produces evidence reviewers can challenge.</p>
+<h2 id="low-barrier-run">Low-barrier run</h2>
+<ol>
+<li>Install the audit profile, audit, and fix skills.</li>
+<li>Run the <code>ai-contributor-audit-profile</code> skill, or prepare the profile
+manually, then have the owner confirm
+<code>.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code>.</li>
+<li>Ask the agent to audit the repository against the AI Contributor Specification.</li>
+<li>Have a human or named accountable owner review <code>AI-CONTRIBUTOR-AUDIT.md</code> plus the full files in <code>.ai-contributor-audit/</code>.</li>
+<li>Fix <code>Alarm</code> rows first, then <code>Warning</code> rows.</li>
+<li>Commit the audit files only after a human has checked the evidence.</li>
+</ol>
+<p>The audit reads the profile as pre-audit owner-confirmed input. The profile skill should inspect the repository, draft applicability answers with evidence, and ask the owner to confirm or correct them before writing durable answers. If the audit discovers a missing or contradictory owner fact, update the profile in a profile step and rerun the audit; do not rely on chat-only answers as durable evidence.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><code>git</code>, Node.js, and <code>npm</code> / <code>npx</code> available.</li>
+<li>Network access to fetch the pinned specification and runbook tooling.</li>
+<li>The target repository checked out locally.</li>
+<li>Package tools installed where applicable, such as <code>pnpm</code> or <code>npm</code>.</li>
+<li><code>gh</code> authenticated as an account that can read the target GitHub repository
+for hosted checks.</li>
+</ul>
+<p>Without GitHub CLI access, the audit still runs, but hosted controls may remain
+<code>Warning</code> / verification gaps.</p>
+<h2 id="recommended-install">Recommended install</h2>
+<p>Project install:</p>
+<pre><code class="language-sh">npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit-profile ai-contributor-audit ai-contributor-audit-fix
+</code></pre>
+<p>Global install:</p>
+<pre><code class="language-sh">npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit-profile ai-contributor-audit ai-contributor-audit-fix -g
+</code></pre>
+<p>Refresh an already installed audit skill outside an audit run:</p>
+<pre><code class="language-sh">npx skills update ai-contributor-audit
+</code></pre>
+<p>Do not auto-update during an audit. The audit skill and specification are coupled, and silent updates would hurt reproducibility. Actual audits should materialize the runbook from a pinned release tag or full commit SHA.</p>
+<p>To inspect without installing:</p>
+<pre><code class="language-sh">npx skills add ai-contributors/ai-contributor-spec --list
+</code></pre>
+<h2 id="safety-notes">Safety Notes</h2>
+<ul>
+<li>Review the filled checklist and audit log before committing them.</li>
+<li>Treat agent-generated audit results as reviewable artifacts, not human/accountable-owner acceptance.</li>
+<li>Use read-only repository/API credentials for hosted settings verification.</li>
+<li>Record write-capable tokens as evidence caveats for hosted settings.</li>
+</ul>
+  <nav class="dx-pagination" aria-label="Pagination"> <a class="dx-pag" href="/pr-preview/pr-5/guide/typescript-pnpm/"> <span class="dx-pag-kind">← Previous</span> <span class="dx-pag-title">TypeScript + pnpm</span> </a> <span class="dx-pag dx-pag-next dx-pag-disabled"> <span class="dx-pag-kind">Next →</span> <span class="dx-pag-title">End of docs</span> </span> </nav> </article> <aside class="dx-toc" aria-label="On this page"> <h5 class="dx-toc-h">On this page</h5> <ul class="dx-toc-list" data-toc> <li> <a href="#low-barrier-run" class data-toc-link="low-barrier-run"> Low-barrier run </a> </li><li> <a href="#prerequisites" class data-toc-link="prerequisites"> Prerequisites </a> </li><li> <a href="#recommended-install" class data-toc-link="recommended-install"> Recommended install </a> </li><li> <a href="#safety-notes" class data-toc-link="safety-notes"> Safety Notes </a> </li> </ul> <div class="dx-toc-foot"> <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/9d6e0676353315f6c0f86e5ed09468f6ac2286e9/skills/ai-contributor-audit/README.md" rel="noopener">
+Edit on GitHub ↗
+</a> </div> </aside> </div> </div> <div class="dx-search-overlay" data-search-overlay role="dialog" aria-modal="true"> <div class="dx-search-modal"> <div class="dx-search-input-row"> <span class="dx-search-prefix">⌕</span> <input class="dx-search-input" data-search-input type="search" placeholder="Search documentation…" autocomplete="off"> <button type="button" class="dx-search-close" data-search-close>Esc</button> </div> <div class="dx-search-results" data-search-results> <div class="dx-search-empty">Type to search the docs.</div> </div> <div class="dx-search-foot"> <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span> <span><kbd>↵</kbd> open</span> <span><kbd>Esc</kbd> close</span> <span class="right">Indexed locally</span> </div> </div> </div> <script type="application/json" data-search-index>[{"kind":"Start","title":"Overview","url":"/pr-preview/pr-5/docs/"},{"kind":"Specification","title":"Full specification","url":"/pr-preview/pr-5/specification/"},{"kind":"Specification","title":"Coverage matrix","url":"/pr-preview/pr-5/specification/#coverage"},{"kind":"Audit","title":"Audit evidence model","url":"/pr-preview/pr-5/audit/model/"},{"kind":"Audit","title":"No-install prompt","url":"/pr-preview/pr-5/audit/prompt/"},{"kind":"Guides","title":"TypeScript + pnpm","url":"/pr-preview/pr-5/guide/typescript-pnpm/"},{"kind":"Skills","title":"ai-contributor-audit","url":"/pr-preview/pr-5/skills/audit/"}]</script> <script>
+      // ----- mobile sidebar toggle -----
+      const sidebar = document.querySelector('[data-sidebar]');
+      const menuBtn = document.querySelector('[data-menu-toggle]');
+      menuBtn?.addEventListener('click', () => sidebar?.classList.toggle('is-open'));
+      document.addEventListener('click', (e) => {
+        if (!sidebar?.classList.contains('is-open')) return;
+        if (sidebar.contains(e.target) || menuBtn?.contains(e.target)) return;
+        sidebar.classList.remove('is-open');
+      });
+
+      // ----- TOC scrollspy -----
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+      if (tocLinks.length) {
+        const headings = tocLinks
+          .map((a) => {
+            const node = document.getElementById(a.dataset.tocLink);
+            return node ? { node, link: a } : null;
+          })
+          .filter(Boolean);
+        const spy = () => {
+          if (!headings.length) return;
+          let current = headings[0];
+          for (const h of headings) {
+            if (h.node.getBoundingClientRect().top - 80 <= 0) current = h;
+            else break;
+          }
+          tocLinks.forEach((a) => a.classList.remove('is-active'));
+          current.link.classList.add('is-active');
+        };
+        spy();
+        let pending = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (pending) return;
+            pending = true;
+            requestAnimationFrame(() => {
+              pending = false;
+              spy();
+            });
+          },
+          { passive: true },
+        );
+      }
+
+      // ----- search modal -----
+      const overlay = document.querySelector('[data-search-overlay]');
+      const input = document.querySelector('[data-search-input]');
+      const results = document.querySelector('[data-search-results]');
+      const indexRaw = document.querySelector('[data-search-index]')?.textContent || '[]';
+      const index = JSON.parse(indexRaw);
+
+      const open = () => {
+        overlay?.classList.add('is-open');
+        setTimeout(() => {
+          input?.focus();
+          input?.select?.();
+        }, 30);
+        render('');
+      };
+      const close = () => {
+        overlay?.classList.remove('is-open');
+        if (input) input.value = '';
+      };
+      document.querySelector('[data-search-open]')?.addEventListener('click', open);
+      document.querySelector('[data-search-close]')?.addEventListener('click', close);
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const meta = e.metaKey || e.ctrlKey;
+        if (meta && (e.key === 'k' || e.key === 'K')) {
+          e.preventDefault();
+          if (overlay?.classList.contains('is-open')) close();
+          else open();
+          return;
+        }
+        if (!overlay?.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          moveFocus(1);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          moveFocus(-1);
+        } else if (e.key === 'Enter') {
+          const hit = results?.querySelector('.dx-search-hit.is-focused');
+          if (hit) {
+            e.preventDefault();
+            window.location.href = hit.getAttribute('href');
+          }
+        }
+      });
+
+      const moveFocus = (delta) => {
+        const hits = Array.from(results?.querySelectorAll('.dx-search-hit') || []);
+        if (!hits.length) return;
+        let idx = hits.findIndex((h) => h.classList.contains('is-focused'));
+        hits.forEach((h) => h.classList.remove('is-focused'));
+        idx = (idx + delta + hits.length) % hits.length;
+        if (idx < 0) idx = 0;
+        hits[idx].classList.add('is-focused');
+        hits[idx].scrollIntoView({ block: 'nearest' });
+      };
+
+      const render = (query) => {
+        if (!results) return;
+        results.innerHTML = '';
+        const q = (query || '').trim().toLowerCase();
+        const groups = {};
+        const order = [];
+        for (const entry of index) {
+          if (q && !entry.title.toLowerCase().includes(q) && !entry.kind.toLowerCase().includes(q))
+            continue;
+          if (!groups[entry.kind]) {
+            groups[entry.kind] = [];
+            order.push(entry.kind);
+          }
+          groups[entry.kind].push(entry);
+        }
+        if (order.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'dx-search-empty';
+          empty.textContent = q ? `No matches for "${query}".` : 'No entries.';
+          results.appendChild(empty);
+          return;
+        }
+        for (const kind of order) {
+          const grp = document.createElement('div');
+          grp.className = 'dx-search-group';
+          const h = document.createElement('div');
+          h.className = 'dx-search-group-h';
+          h.textContent = kind;
+          grp.appendChild(h);
+          for (const entry of groups[kind]) {
+            const hit = document.createElement('a');
+            hit.className = 'dx-search-hit';
+            hit.href = entry.url;
+            const title = document.createElement('div');
+            title.className = 'dx-search-hit-title';
+            const kindBadge = document.createElement('span');
+            kindBadge.className = 'dx-search-hit-kind';
+            kindBadge.textContent = 'page';
+            title.appendChild(kindBadge);
+            title.appendChild(document.createTextNode(entry.title));
+            hit.appendChild(title);
+            const trail = document.createElement('div');
+            trail.className = 'dx-search-hit-trail';
+            trail.textContent = entry.url;
+            hit.appendChild(trail);
+            grp.appendChild(hit);
+          }
+          results.appendChild(grp);
+        }
+        results.querySelector('.dx-search-hit')?.classList.add('is-focused');
+      };
+
+      input?.addEventListener('input', () => render(input.value));
+    </script> </body> </html>

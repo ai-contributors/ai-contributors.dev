@@ -9,6 +9,7 @@
     "pnpm": "10.33.2"
   },
   "scripts": {
+    "prepare": "husky",
     "predev": "pnpm prepare:spec",
     "dev": "astro dev",
     "setup:spec": "node scripts/setup-spec-source.mjs",
@@ -47,6 +48,7 @@
     "dependency-cruiser": "^17.4.0",
     "eslint": "^10.3.0",
     "globals": "^17.6.0",
+    "husky": "^9.1.7",
     "madge": "^8.0.0",
     "prettier": "^3.8.3",
     "secretlint": "^12.3.1",

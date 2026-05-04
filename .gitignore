@@ -23,3 +23,8 @@ id_rsa*
 .superpowers/
 
 *.log
+
+# LHCI / Chromium temp profiles (Windows path leaks into WSL)
+C:\\Users\\*
+lighthouse.[0-9]*
+.lighthouseci/

@@ -7,6 +7,12 @@ dist/
 .worktrees/
 .env.example
 .husky/
+pnpm-lock.yaml
+
+# LHCI Chrome profile dirs leaked from WSL Chromium (Windows path
+# components survive as a single filename starting with "C:\Users\…").
+**/*lighthouse.*/**
+**/*lighthouse.*
 
 external/
 src/content/docs/generated-spec/

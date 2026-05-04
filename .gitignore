@@ -23,3 +23,10 @@ id_rsa*
 .superpowers/
 
 *.log
+
+# LHCI / Chrome temp profiles. WSL Chromium writes its profile to
+# %LOCALAPPDATA%\lighthouse.NNN, which lands in the repo as a single
+# top-level directory whose name literally starts with "C:\Users\".
+C:\\Users\\*
+lighthouse.[0-9]*
+.lighthouseci/

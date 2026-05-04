@@ -1,0 +1,183 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import specData from '../../data/spec-data.generated.json';
+import specSource from '../../data/spec-source.generated.json';
+
+const { pillars, clauses, levels, version } = specData as {
+  pillars: unknown[];
+  clauses: unknown[];
+  levels: unknown[];
+  version: string;
+};
+
+const today = new Date().toISOString().slice(0, 10);
+
+const overview = [
+  {
+    kind: 'Specification',
+    title: 'Full specification',
+    desc: '29 clauses across 7 pillars. The normative document — every MUST, MUST·when, SHOULD, MAY.',
+    foot: `spec rev ${version}`,
+    href: '/specification/',
+  },
+  {
+    kind: 'Audit',
+    title: 'No-install prompt',
+    desc: 'Drop into any tool-using agent. Produces audit.md and evidence.json with no install step.',
+    foot: 'audit · prompt',
+    href: '/audit/prompt/',
+  },
+  {
+    kind: 'Audit',
+    title: 'Evidence model',
+    desc: 'How a deterministic AI Contributor audit produces reviewable evidence and a stable score.',
+    foot: 'audit · model',
+    href: '/audit/model/',
+  },
+  {
+    kind: 'Guide',
+    title: 'TypeScript + pnpm',
+    desc: 'Clause-by-clause for TS repos using pnpm. AGENTS.md, CI, and what passes at L0–L3.',
+    foot: 'stack guide',
+    href: '/guide/typescript-pnpm/',
+  },
+  {
+    kind: 'Skill',
+    title: 'ai-contributor-audit',
+    desc: 'The audit skill README — what it does, how to invoke it, what it produces.',
+    foot: 'skill README',
+    href: '/skills/audit/',
+  },
+];
+
+const toc = [
+  { text: 'What these docs cover', anchor: 'what-this-is' },
+  { text: 'At a glance', anchor: 'at-a-glance' },
+  { text: 'How to read these docs', anchor: 'how-to-read' },
+  { text: 'Versioning & stability', anchor: 'versioning' },
+  { text: 'Contributing', anchor: 'contributing' },
+];
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (p: string) => `${base}${p}`;
+---
+
+<DocsLayout
+  title="The AI Contributor Specification."
+  pageKey="overview"
+  crumb="Overview"
+  eyebrow="Start › Overview"
+  deck="A vendor-neutral specification for what an AI-friendly codebase looks like — what humans owe agents, what agents owe humans, and how a third party audits the contract. These docs are the reference; the marketing site is elsewhere."
+  meta={[
+    { label: 'Spec rev', value: version },
+    { label: 'Docs rev', value: today },
+    { label: 'License', value: 'CC BY 4.0' },
+  ]}
+  toc={toc}
+>
+  <h2 id="what-this-is"><span class="num">§ 01</span>What these docs cover</h2>
+  <p>
+    This site is the technical entry point for adopters. It does not argue for the spec — that's
+    the <a href={url('/')}>landing page</a>'s job. It assumes you've decided to read the spec, and
+    points you at the right surface for the question you have.
+  </p>
+
+  <div class="dx-aside">
+    <div class="label">Note</div>
+    <p style="margin:0;color:var(--ink-2)">
+      The normative artifact is the <a href={url('/specification/')}>specification</a>. Everything
+      in these docs renders content from <a
+        href="https://github.com/ai-contributors/ai-contributor-spec"
+        rel="noopener">ai-contributors/ai-contributor-spec</a
+      >; this site does not own any normative text.
+    </p>
+  </div>
+
+  <div class="dx-overview-grid">
+    {
+      overview.map((tile) => (
+        <a class="dx-overview-tile" href={url(tile.href)}>
+          <span class="dx-overview-kind">{tile.kind}</span>
+          <span class="dx-overview-title">{tile.title}</span>
+          <p class="dx-overview-desc">{tile.desc}</p>
+          <span class="dx-overview-foot">
+            <span>{tile.foot}</span>
+            <span class="arr">→</span>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+
+  <h2 id="at-a-glance"><span class="num">§ 02</span>At a glance</h2>
+  <p>
+    The spec is small on purpose. One normative document, one ladder of conformance levels, one
+    canonical loop for verifying conformance.
+  </p>
+
+  <div class="dx-strip">
+    <div class="dx-strip-cell">
+      <span class="dx-strip-k">Pillars</span>
+      <span class="dx-strip-v">{pillars.length}</span>
+    </div>
+    <div class="dx-strip-cell">
+      <span class="dx-strip-k">Clauses</span>
+      <span class="dx-strip-v">{clauses.length}</span>
+    </div>
+    <div class="dx-strip-cell">
+      <span class="dx-strip-k">Levels</span>
+      <span class="dx-strip-v">{levels.length} <small>L0–L4</small></span>
+    </div>
+    <div class="dx-strip-cell">
+      <span class="dx-strip-k">Spec rev</span>
+      <span class="dx-strip-v">{version}</span>
+    </div>
+  </div>
+
+  <h2 id="how-to-read"><span class="num">§ 03</span>How to read these docs</h2>
+  <p>Pick the entry that matches what you're trying to do.</p>
+  <ul>
+    <li>
+      <strong>Auditing a repo right now.</strong> Open the <a href={url('/audit/prompt/')}
+        >no-install prompt</a
+      >, paste it into your agent, point it at the working tree.
+    </li>
+    <li>
+      <strong>Adopting on a new repo.</strong> Read the <a href={url('/guide/typescript-pnpm/')}
+        >TypeScript + pnpm guide</a
+      > if your stack matches; otherwise read the <a href={url('/specification/')}
+        >specification</a
+      > directly and translate.
+    </li>
+    <li>
+      <strong>Understanding the audit machinery.</strong> The <a href={url('/audit/model/')}
+        >evidence model</a
+      > explains how findings are produced and what makes the result deterministic.
+    </li>
+    <li>
+      <strong>Building tooling against the spec.</strong> The <a
+        href="https://github.com/ai-contributors/ai-contributor-spec"
+        rel="noopener">repository</a
+      > is the source of truth. Pin a spec rev; everything in this site renders from a pinned
+      submodule (currently {specSource.shortSha}).
+    </li>
+  </ul>
+
+  <h2 id="versioning"><span class="num">§ 04</span>Versioning &amp; stability</h2>
+  <p>
+    The site renders an immutable copy of the upstream spec, pinned by SHA. The current pin is <a
+      href={specSource.commitUrl}
+      rel="noopener"><code>{specSource.shortSha}</code></a
+    > on tag <a href={specSource.tagUrl} rel="noopener"><code>{specSource.tag}</code></a>. To trust
+    a particular reading, pin to that revision; to follow upstream, the site rebuilds when the
+    submodule pointer moves.
+  </p>
+
+  <h2 id="contributing"><span class="num">§ 05</span>Contributing</h2>
+  <p>
+    Issues, pull requests, and audits of real repos belong in <a
+      href="https://github.com/ai-contributors/ai-contributor-spec"
+      rel="noopener">ai-contributors/ai-contributor-spec</a
+    >. This site only renders. Wording, restructuring, and new sections all belong upstream.
+  </p>
+</DocsLayout>

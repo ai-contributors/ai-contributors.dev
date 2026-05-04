@@ -7,6 +7,7 @@ module.exports = {
       staticDistDir: './.lhci-dist',
       url: [
         normalizedBase,
+        `${normalizedBase}docs/`,
         `${normalizedBase}specification/`,
         `${normalizedBase}audit/model/`,
         `${normalizedBase}audit/prompt/`,

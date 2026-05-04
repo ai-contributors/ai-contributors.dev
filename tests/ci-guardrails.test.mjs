@@ -16,6 +16,7 @@ test('Lighthouse CI measures the active deployed base path', () => {
   assert.equal(config.ci.collect.staticDistDir, './.lhci-dist');
   assert.deepEqual(config.ci.collect.url, [
     '/pr-preview/pr-3/',
+    '/pr-preview/pr-3/docs/',
     '/pr-preview/pr-3/specification/',
     '/pr-preview/pr-3/audit/model/',
     '/pr-preview/pr-3/audit/prompt/',

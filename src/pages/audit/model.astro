@@ -1,11 +1,20 @@
 ---
-import DocLayout from '../../layouts/DocLayout.astro';
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import specSource from '../../data/spec-source.generated.json';
 import { renderUpstreamMd } from '../../lib/render-upstream-md';
 
 const upstreamPath = 'AI-CONTRIBUTOR-AUDIT-MODEL.md';
-const { html, title } = renderUpstreamMd(upstreamPath);
+const { html, title, toc } = renderUpstreamMd(upstreamPath);
+const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob/${specSource.sha}/${upstreamPath}`;
 ---
 
-<DocLayout title={title} crumb="audit · evidence model" upstreamPath={upstreamPath}>
+<DocsLayout
+  title={title}
+  pageKey="audit-model"
+  crumb="Audit · Evidence model"
+  eyebrow="Audit › Evidence model"
+  toc={toc}
+  upstreamUrl={upstreamUrl}
+>
   <Fragment set:html={html} />
-</DocLayout>
+</DocsLayout>

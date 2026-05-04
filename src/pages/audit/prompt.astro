@@ -1,11 +1,20 @@
 ---
-import DocLayout from '../../layouts/DocLayout.astro';
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import specSource from '../../data/spec-source.generated.json';
 import { renderUpstreamMd } from '../../lib/render-upstream-md';
 
 const upstreamPath = 'AI-CONTRIBUTOR-AUDIT-PROMPT.md';
-const { html, title } = renderUpstreamMd(upstreamPath);
+const { html, title, toc } = renderUpstreamMd(upstreamPath);
+const upstreamUrl = `https://github.com/ai-contributors/ai-contributor-spec/blob/${specSource.sha}/${upstreamPath}`;
 ---
 
-<DocLayout title={title} crumb="audit · no-skill prompt" upstreamPath={upstreamPath}>
+<DocsLayout
+  title={title}
+  pageKey="audit-prompt"
+  crumb="Audit · No-install prompt"
+  eyebrow="Audit › No-install prompt"
+  toc={toc}
+  upstreamUrl={upstreamUrl}
+>
   <Fragment set:html={html} />
-</DocLayout>
+</DocsLayout>

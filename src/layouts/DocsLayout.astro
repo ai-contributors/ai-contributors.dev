@@ -1,0 +1,416 @@
+---
+import Logo from '../components/Logo.astro';
+import specSource from '../data/spec-source.generated.json';
+import { DOCS_NAV, getPrevNext } from '../lib/docs-nav';
+import '../styles/design-tokens.css';
+import '../styles/docs-chrome.css';
+
+interface TocEntry {
+  text: string;
+  anchor: string;
+  depth?: 2 | 3;
+}
+
+interface Props {
+  title: string;
+  pageKey: string;
+  crumb: string;
+  eyebrow?: string;
+  deck?: string;
+  meta?: Array<{ label: string; value: string }>;
+  toc?: TocEntry[];
+  showPagination?: boolean;
+  upstreamUrl?: string;
+}
+
+const {
+  title,
+  pageKey,
+  crumb,
+  eyebrow,
+  deck,
+  meta,
+  toc = [],
+  showPagination = true,
+  upstreamUrl,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (path: string) =>
+  path.startsWith('http') || path.startsWith('#') ? path : `${base}${path}`;
+
+const { prev, next } = getPrevNext(pageKey);
+
+// Search index — flat list across DOCS_NAV. Keep stubs out (only what we render).
+const searchIndex = DOCS_NAV.flatMap((g) =>
+  g.items
+    .filter((i) => !i.external)
+    .map((i) => ({
+      kind: g.label,
+      title: i.label,
+      url: url(i.href),
+    })),
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · ai-contributors / spec docs</title>
+    <link rel="icon" href={url('/favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="dx-body">
+    <header class="dx-topbar">
+      <a class="dx-topbar-brand" href={url('/docs/')} aria-label="ai-contributors / spec docs home">
+        <Logo size={22} />
+        <span class="dx-topbar-brand-name">ai-contributors</span>
+        <span class="dx-topbar-brand-slash">/</span>
+        <span class="dx-topbar-brand-doc">spec</span>
+      </a>
+      <div class="dx-topbar-right">
+        <button class="dx-menu-btn" data-menu-toggle aria-label="Toggle navigation">≡ Nav</button>
+        <nav class="dx-crumbs" aria-label="Breadcrumb">
+          <a href={url('/docs/')}>Docs</a>
+          <span class="dx-crumb-sep">›</span>
+          <span class="dx-crumb-cur">{crumb}</span>
+        </nav>
+        <div class="dx-topbar-actions">
+          <button type="button" class="dx-search-trigger" data-search-open aria-label="Open search">
+            <span class="dx-search-icon" aria-hidden="true">⌕</span>
+            <span class="dx-search-label">Search docs</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <a
+            class="dx-topbar-link"
+            href="https://github.com/ai-contributors/ai-contributor-spec"
+            rel="noopener">GitHub ↗</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div class="dx-shell">
+      <aside class="dx-sidebar" data-sidebar aria-label="Documentation navigation">
+        {
+          DOCS_NAV.map((group) => (
+            <details class="dx-sidebar-section" open>
+              <summary class="dx-sidebar-summary">{group.label}</summary>
+              <ul class="dx-sidebar-list">
+                {group.items.map((item) => (
+                  <li>
+                    <a
+                      href={url(item.href)}
+                      class={item.key === pageKey ? 'is-current' : ''}
+                      {...(item.external ? { rel: 'noopener', target: '_blank' } : {})}
+                    >
+                      <span>{item.label}</span>
+                      {item.external && <span class="dx-tag is-ext">↗</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))
+        }
+        <div class="dx-sidebar-foot">
+          <div class="dx-rev">
+            <span>spec</span><span class="dot">·</span><span>{specSource.tag}</span><span
+              class="dot">·</span
+            ><span>{specSource.shortSha}</span>
+          </div>
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            rel="noopener noreferrer">CC BY 4.0</a
+          >
+        </div>
+      </aside>
+
+      <div class={`dx-main${toc.length === 0 ? ' is-no-toc' : ''}`}>
+        <article class="dx-article">
+          <header class="dx-article-head">
+            <div class="dx-eyebrow">
+              <span class="pill">Docs</span>
+              {eyebrow && <span>{eyebrow}</span>}
+            </div>
+            <h1 class="dx-h1">{title}</h1>
+            {deck && <p class="dx-deck">{deck}</p>}
+            {
+              meta && meta.length > 0 && (
+                <div class="dx-meta">
+                  {meta.map((m) => (
+                    <span>
+                      {m.label} <strong>{m.value}</strong>
+                    </span>
+                  ))}
+                </div>
+              )
+            }
+          </header>
+
+          <slot />
+
+          {
+            showPagination && (prev || next) && (
+              <nav class="dx-pagination" aria-label="Pagination">
+                {prev ? (
+                  <a class="dx-pag" href={url(prev.href)}>
+                    <span class="dx-pag-kind">← Previous</span>
+                    <span class="dx-pag-title">{prev.label}</span>
+                  </a>
+                ) : (
+                  <span class="dx-pag dx-pag-disabled">
+                    <span class="dx-pag-kind">← Previous</span>
+                    <span class="dx-pag-title">Start of docs</span>
+                  </span>
+                )}
+                {next ? (
+                  <a class="dx-pag dx-pag-next" href={url(next.href)}>
+                    <span class="dx-pag-kind">Next →</span>
+                    <span class="dx-pag-title">{next.label}</span>
+                  </a>
+                ) : (
+                  <span class="dx-pag dx-pag-next dx-pag-disabled">
+                    <span class="dx-pag-kind">Next →</span>
+                    <span class="dx-pag-title">End of docs</span>
+                  </span>
+                )}
+              </nav>
+            )
+          }
+        </article>
+
+        {
+          toc.length > 0 && (
+            <aside class="dx-toc" aria-label="On this page">
+              <h5 class="dx-toc-h">On this page</h5>
+              <ul class="dx-toc-list" data-toc>
+                {toc.map((t) => (
+                  <li>
+                    <a
+                      href={`#${t.anchor}`}
+                      class={t.depth === 3 ? 'dx-toc-h3' : ''}
+                      data-toc-link={t.anchor}
+                    >
+                      {t.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {upstreamUrl && (
+                <div class="dx-toc-foot">
+                  <a href={upstreamUrl} rel="noopener">
+                    Edit on GitHub ↗
+                  </a>
+                </div>
+              )}
+            </aside>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="dx-search-overlay" data-search-overlay role="dialog" aria-modal="true">
+      <div class="dx-search-modal">
+        <div class="dx-search-input-row">
+          <span class="dx-search-prefix">⌕</span>
+          <input
+            class="dx-search-input"
+            data-search-input
+            type="search"
+            placeholder="Search documentation…"
+            autocomplete="off"
+          />
+          <button type="button" class="dx-search-close" data-search-close>Esc</button>
+        </div>
+        <div class="dx-search-results" data-search-results>
+          <div class="dx-search-empty">Type to search the docs.</div>
+        </div>
+        <div class="dx-search-foot">
+          <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+          <span><kbd>↵</kbd> open</span>
+          <span><kbd>Esc</kbd> close</span>
+          <span class="right">Indexed locally</span>
+        </div>
+      </div>
+    </div>
+
+    <script
+      is:inline
+      type="application/json"
+      data-search-index
+      set:html={JSON.stringify(searchIndex)}
+    />
+    <script is:inline>
+      // ----- mobile sidebar toggle -----
+      const sidebar = document.querySelector('[data-sidebar]');
+      const menuBtn = document.querySelector('[data-menu-toggle]');
+      menuBtn?.addEventListener('click', () => sidebar?.classList.toggle('is-open'));
+      document.addEventListener('click', (e) => {
+        if (!sidebar?.classList.contains('is-open')) return;
+        if (sidebar.contains(e.target) || menuBtn?.contains(e.target)) return;
+        sidebar.classList.remove('is-open');
+      });
+
+      // ----- TOC scrollspy -----
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+      if (tocLinks.length) {
+        const headings = tocLinks
+          .map((a) => {
+            const node = document.getElementById(a.dataset.tocLink);
+            return node ? { node, link: a } : null;
+          })
+          .filter(Boolean);
+        const spy = () => {
+          if (!headings.length) return;
+          let current = headings[0];
+          for (const h of headings) {
+            if (h.node.getBoundingClientRect().top - 80 <= 0) current = h;
+            else break;
+          }
+          tocLinks.forEach((a) => a.classList.remove('is-active'));
+          current.link.classList.add('is-active');
+        };
+        spy();
+        let pending = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (pending) return;
+            pending = true;
+            requestAnimationFrame(() => {
+              pending = false;
+              spy();
+            });
+          },
+          { passive: true },
+        );
+      }
+
+      // ----- search modal -----
+      const overlay = document.querySelector('[data-search-overlay]');
+      const input = document.querySelector('[data-search-input]');
+      const results = document.querySelector('[data-search-results]');
+      const indexRaw = document.querySelector('[data-search-index]')?.textContent || '[]';
+      const index = JSON.parse(indexRaw);
+
+      const open = () => {
+        overlay?.classList.add('is-open');
+        setTimeout(() => {
+          input?.focus();
+          input?.select?.();
+        }, 30);
+        render('');
+      };
+      const close = () => {
+        overlay?.classList.remove('is-open');
+        if (input) input.value = '';
+      };
+      document.querySelector('[data-search-open]')?.addEventListener('click', open);
+      document.querySelector('[data-search-close]')?.addEventListener('click', close);
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const meta = e.metaKey || e.ctrlKey;
+        if (meta && (e.key === 'k' || e.key === 'K')) {
+          e.preventDefault();
+          if (overlay?.classList.contains('is-open')) close();
+          else open();
+          return;
+        }
+        if (!overlay?.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          moveFocus(1);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          moveFocus(-1);
+        } else if (e.key === 'Enter') {
+          const hit = results?.querySelector('.dx-search-hit.is-focused');
+          if (hit) {
+            e.preventDefault();
+            window.location.href = hit.getAttribute('href');
+          }
+        }
+      });
+
+      const moveFocus = (delta) => {
+        const hits = Array.from(results?.querySelectorAll('.dx-search-hit') || []);
+        if (!hits.length) return;
+        let idx = hits.findIndex((h) => h.classList.contains('is-focused'));
+        hits.forEach((h) => h.classList.remove('is-focused'));
+        idx = (idx + delta + hits.length) % hits.length;
+        if (idx < 0) idx = 0;
+        hits[idx].classList.add('is-focused');
+        hits[idx].scrollIntoView({ block: 'nearest' });
+      };
+
+      const render = (query) => {
+        if (!results) return;
+        results.innerHTML = '';
+        const q = (query || '').trim().toLowerCase();
+        const groups = {};
+        const order = [];
+        for (const entry of index) {
+          if (q && !entry.title.toLowerCase().includes(q) && !entry.kind.toLowerCase().includes(q))
+            continue;
+          if (!groups[entry.kind]) {
+            groups[entry.kind] = [];
+            order.push(entry.kind);
+          }
+          groups[entry.kind].push(entry);
+        }
+        if (order.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'dx-search-empty';
+          empty.textContent = q ? `No matches for "${query}".` : 'No entries.';
+          results.appendChild(empty);
+          return;
+        }
+        for (const kind of order) {
+          const grp = document.createElement('div');
+          grp.className = 'dx-search-group';
+          const h = document.createElement('div');
+          h.className = 'dx-search-group-h';
+          h.textContent = kind;
+          grp.appendChild(h);
+          for (const entry of groups[kind]) {
+            const hit = document.createElement('a');
+            hit.className = 'dx-search-hit';
+            hit.href = entry.url;
+            const title = document.createElement('div');
+            title.className = 'dx-search-hit-title';
+            const kindBadge = document.createElement('span');
+            kindBadge.className = 'dx-search-hit-kind';
+            kindBadge.textContent = 'page';
+            title.appendChild(kindBadge);
+            title.appendChild(document.createTextNode(entry.title));
+            hit.appendChild(title);
+            const trail = document.createElement('div');
+            trail.className = 'dx-search-hit-trail';
+            trail.textContent = entry.url;
+            hit.appendChild(trail);
+            grp.appendChild(hit);
+          }
+          results.appendChild(grp);
+        }
+        results.querySelector('.dx-search-hit')?.classList.add('is-focused');
+      };
+
+      input?.addEventListener('input', () => render(input.value));
+    </script>
+  </body>
+</html>

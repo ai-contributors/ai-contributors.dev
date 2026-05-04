@@ -1,0 +1,40 @@
+#!/bin/sh
+# Pre-push verification — heavy gates that don't belong in pre-commit.
+# Mirrors CI's Build + Lighthouse steps so a push only fires when the
+# branch has a high chance of passing CI end-to-end.
+#
+# pre-commit already covers test / lint / type-check / coverage / format /
+# deps / secret-scan, so by the time we reach this hook the code has
+# passed the cheap checks. This hook re-verifies what CI verifies after
+# those: a clean build + Lighthouse assertions on every served route.
+#
+# Skip with `git push --no-verify` if you genuinely need to (e.g. pushing
+# a branch you've already validated, or the Chrome/Chromium binary is not
+# available on this machine).
+set -eu
+
+pnpm prepare:spec
+pnpm build
+
+# lhci:assert needs a Chrome/Chromium binary. Auto-detect rather than
+# requiring CHROME_PATH to be set in every shell. CI provides Chrome on
+# the runner; locally we look for whatever's installed.
+if [ -z "${CHROME_PATH:-}" ]; then
+  for candidate in chromium-browser chromium google-chrome google-chrome-stable chrome; do
+    detected=$(command -v "$candidate" 2>/dev/null || true)
+    if [ -n "$detected" ]; then
+      CHROME_PATH=$detected
+      export CHROME_PATH
+      break
+    fi
+  done
+fi
+
+if [ -z "${CHROME_PATH:-}" ]; then
+  echo "pre-push: no Chrome/Chromium binary found; skipping lhci:assert." >&2
+  echo "          install chromium-browser (or set CHROME_PATH) to enforce" >&2
+  echo "          the same Lighthouse budgets that CI checks." >&2
+  exit 0
+fi
+
+pnpm lhci:assert

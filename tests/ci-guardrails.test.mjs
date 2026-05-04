@@ -14,7 +14,14 @@ test('Lighthouse CI measures the active deployed base path', () => {
   const config = require('../.lighthouserc.cjs');
 
   assert.equal(config.ci.collect.staticDistDir, './.lhci-dist');
-  assert.deepEqual(config.ci.collect.url, ['/pr-preview/pr-3/', '/pr-preview/pr-3/levels/']);
+  assert.deepEqual(config.ci.collect.url, [
+    '/pr-preview/pr-3/',
+    '/pr-preview/pr-3/specification/',
+    '/pr-preview/pr-3/audit/model/',
+    '/pr-preview/pr-3/audit/prompt/',
+    '/pr-preview/pr-3/guide/typescript-pnpm/',
+    '/pr-preview/pr-3/skills/audit/',
+  ]);
 });
 
 test('spec validation and generation stay strict about missing submodules', async () => {

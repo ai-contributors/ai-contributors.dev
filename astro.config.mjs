@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import remarkCustomHeadingId from 'remark-custom-heading-id';
 import remarkDirective from 'remark-directive';
 
+import rehypeExternalLinks from './src/lib/markdown/external-links.ts';
 import remarkPromptDirective from './src/lib/markdown/prompt-toolbar.ts';
 import { STARLIGHT_SIDEBAR } from './src/lib/starlight-sidebar.generated.ts';
 import { CUSTOM_DOMAIN, PRODUCTION_BASE } from './scripts/pages-routing.mjs';
@@ -41,5 +42,6 @@ export default defineConfig({
     // toolbar markup. remark-custom-heading-id runs before rehype-slug
     // so an explicit id wins over the auto-slug.
     remarkPlugins: [remarkCustomHeadingId, remarkDirective, remarkPromptDirective],
+    rehypePlugins: [rehypeExternalLinks],
   },
 });

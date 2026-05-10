@@ -1,10 +1,9 @@
 ---
 // Replaces Starlight's dropdown theme picker with the same icon+label
-// button used on the bespoke marketing/spec pages. Uses Starlight's
+// button used on the bespoke marketing/spec pages. Uses the site-owned
 // shared storage (`localStorage['theme-mode']`) and html attribute
-// (`data-theme`) so
-// switching theme on a Starlight page stays in sync with the bespoke
-// pages (and vice versa) within the same browser.
+// (`data-theme`) so switching theme on a Starlight page stays in sync
+// with the bespoke pages (and vice versa) within the same browser.
 ---
 
 <button
@@ -25,7 +24,6 @@
     if (!buttons.length) return;
 
     function isDark() {
-      // Starlight is the authority on Starlight pages; data-theme wins.
       const t = root.getAttribute('data-theme');
       if (t === 'dark') return true;
       if (t === 'light') return false;

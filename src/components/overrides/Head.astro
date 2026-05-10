@@ -13,6 +13,17 @@ const PAGEFIND_UI_CSS = `${BASE}pagefind/pagefind-ui.css`;
 ---
 
 <Default />
+<script is:inline>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script>
 <link rel="prefetch" href={PAGEFIND_UI_JS} as="script" crossorigin />
 <link rel="prefetch" href={PAGEFIND_UI_CSS} as="style" />
 {/* ClientRouter for Starlight routes. The marketing homepage and 404 use
@@ -36,17 +47,12 @@ const PAGEFIND_UI_CSS = `${BASE}pagefind/pagefind-ui.css`;
 
   // ClientRouter applies the destination page's <html> attributes after
   // each swap, which overwrites the user-toggled theme with Starlight's
-  // SSR default (`data-theme="dark"`). Reapply the stored choice on
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
   // every transition so the theme survives navigation.
   document.addEventListener('astro:after-swap', () => {
     try {
-      const saved =
-        localStorage.getItem('starlight-theme') || localStorage.getItem('theme');
-      if (saved === 'light' || saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', saved);
-        if (saved === 'dark') document.documentElement.setAttribute('data-invert', '1');
-        else document.documentElement.removeAttribute('data-invert');
-      }
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
     } catch (_) {}
 
     // The docs sidebar uses transition:persist to avoid flicker between

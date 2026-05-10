@@ -1,11 +1,10 @@
 ---
 // Replaces Starlight's dropdown theme picker with the same icon+label
 // button used on the bespoke marketing/spec pages. Uses Starlight's
-// own storage (`localStorage['starlight-theme']`) and html attribute
-// (`data-theme`) so Starlight CSS keeps responding correctly. Also
-// mirrors the bespoke `localStorage['theme']` + `data-invert` so
+// shared storage (`localStorage['theme-mode']`) and html attribute
+// (`data-theme`) so
 // switching theme on a Starlight page stays in sync with the bespoke
-// pages (and vice-versa) within the same browser.
+// pages (and vice versa) within the same browser.
 ---
 
 <button
@@ -30,8 +29,7 @@
       const t = root.getAttribute('data-theme');
       if (t === 'dark') return true;
       if (t === 'light') return false;
-      // Fall back to the bespoke flag if Starlight has not initialised yet.
-      return root.getAttribute('data-invert') === '1';
+      return false;
     }
 
     function syncButtons() {
@@ -44,16 +42,9 @@
     }
 
     function setTheme(next) {
-      // Starlight chrome
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('starlight-theme', next);
-      } catch (_) {}
-      // Bespoke pages: data-invert flag + 'theme' key.
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
-      try {
-        localStorage.setItem('theme', next);
+        localStorage.setItem('theme-mode', next);
       } catch (_) {}
 
       syncButtons();
@@ -80,13 +71,11 @@
       });
     });
 
-    // React to other tabs / other stack toggling theme via either key.
+    // React to other tabs toggling the shared site theme.
     window.addEventListener('storage', (e) => {
-      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      if (e.key !== 'theme-mode') return;
       const next = e.newValue === 'dark' ? 'dark' : 'light';
       root.setAttribute('data-theme', next);
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       syncButtons();
     });
   })();

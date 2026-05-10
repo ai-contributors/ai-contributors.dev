@@ -22,16 +22,13 @@ const { title, description } = Astro.props;
         the two layouts are mutually exclusive, so neither double-mounts. */}
     <ClientRouter />
     <script is:inline>
-      // Apply theme before paint to avoid FOUC. Reads the bespoke key
-      // ('theme') first, falls back to Starlight's ('starlight-theme')
-      // so the choice persists when the visitor arrives here from a
-      // Starlight page that was set in the same browser session.
-      // src/components/ThemeToggle.astro and the Starlight ThemeSelect
-      // override write both keys at runtime.
+      // Apply theme before paint to avoid FOUC. `theme-mode` is the
+      // single persisted site theme key; missing or invalid values use
+      // the light theme.
       (function () {
         try {
-          var theme = localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
-          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
+          var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {}
       })();
     </script>
@@ -41,12 +38,8 @@ const { title, description } = Astro.props;
       // page's <html> attributes which can clobber the toggled theme.
       document.addEventListener('astro:after-swap', () => {
         try {
-          var theme =
-            localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
-          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
-          else document.documentElement.removeAttribute('data-invert');
-          if (theme === 'light' || theme === 'dark')
-            document.documentElement.setAttribute('data-theme', theme);
+          var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {}
       });
     </script>

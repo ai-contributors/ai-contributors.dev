@@ -1,5 +1,5 @@
 ---
-// Site-wide light/dark toggle. Reads/writes localStorage 'theme'.
+// Site-wide light/dark toggle. Reads/writes localStorage 'theme-mode'.
 // The FOUC-safe initial application happens in BaseLayout's <script
 // is:inline> in <head>; this component handles user-driven changes and
 // keeps the button's aria-pressed state honest.
@@ -22,7 +22,7 @@
     if (!buttons.length) return;
 
     function isDark() {
-      return root.getAttribute('data-invert') === '1';
+      return root.getAttribute('data-theme') === 'dark';
     }
     function syncButtons() {
       const dark = isDark();
@@ -34,16 +34,12 @@
     }
 
     function setTheme(next) {
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       // Mirror Starlight's flag + key so navigating from the bespoke
       // /, /specification surfaces into a /docs/** Starlight page keeps
-      // the same theme. The Starlight ThemeSelect override mirrors in
-      // the other direction.
+      // the same theme.
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('theme', next);
-        localStorage.setItem('starlight-theme', next);
+        localStorage.setItem('theme-mode', next);
       } catch (_) {}
       syncButtons();
     }
@@ -56,10 +52,8 @@
     });
 
     window.addEventListener('storage', (e) => {
-      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      if (e.key !== 'theme-mode') return;
       const next = e.newValue === 'dark' ? 'dark' : 'light';
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       root.setAttribute('data-theme', next);
       syncButtons();
     });

@@ -85,7 +85,7 @@ li.rule:target {
   --w-may: #8e8e8e;
   --lvl-bg: #f3f3f3;
 }
-[data-invert='1'] {
+:root[data-theme='dark'] {
   --w-must: #f5f5f5;
   --w-should: #c0c0c0;
   --w-may: #8a8a8a;
@@ -405,19 +405,19 @@ html .lvl-l4 {
   border-color: #f87171;
   color: #b91c1c;
 }
-[data-invert='1'] .lvl-l0 {
+:root[data-theme='dark'] .lvl-l0 {
   color: #d1d5db;
 }
-[data-invert='1'] .lvl-l1 {
+:root[data-theme='dark'] .lvl-l1 {
   color: #7dd3fc;
 }
-[data-invert='1'] .lvl-l2 {
+:root[data-theme='dark'] .lvl-l2 {
   color: #86efac;
 }
-[data-invert='1'] .lvl-l3 {
+:root[data-theme='dark'] .lvl-l3 {
   color: #fcd34d;
 }
-[data-invert='1'] .lvl-l4 {
+:root[data-theme='dark'] .lvl-l4 {
   color: #fca5a5;
 }
 

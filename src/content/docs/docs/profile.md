@@ -63,7 +63,7 @@ owner reconfirmation.
 Two paths, both produce the same file:
 
 - **Skill-driven.** Run the
-  [`ai-contributor-audit-profile`](../skills/ai-contributor-audit-profile/SKILL.md)
+  [`ai-contributor-audit-profile`](../skill-profile/)
   skill in a tool-using agent. The skill walks the canonical questions,
   drafts answers from repo evidence, and presents a rendered diff
   against the existing profile for owner confirmation.
@@ -74,11 +74,11 @@ Two paths, both produce the same file:
 
 ## Related references
 
-- [`AI-CONTRIBUTOR-AUDIT-MODEL.md`](../AI-CONTRIBUTOR-AUDIT-MODEL.md) —
+- [`AI-CONTRIBUTOR-AUDIT-MODEL.md`](../audit-overview/) —
   where the profile fits in the audit loop.
-- [`skills/ai-contributor-audit-profile/SKILL.md`](../skills/ai-contributor-audit-profile/SKILL.md)
+- [`skills/ai-contributor-audit-profile/SKILL.md`](../skill-profile/)
   — the agent-facing runbook, including guardrails and validator
   commands.
-- [`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](../AI-CONTRIBUTOR-AUDIT-PROMPT.md)
+- [`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](../../audit/prompt/)
   — the no-install prompt path that does not require the skills
   package.

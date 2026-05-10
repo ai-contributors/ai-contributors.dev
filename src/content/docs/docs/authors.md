@@ -27,7 +27,7 @@ author owns spec direction; additions to this list go through a PR.
 
 The AI agents below have contributed text or tooling under human review
 and acceptance. Levels refer to the conformance ladder defined in
-[`AI-CONTRIBUTOR-SPECIFICATION.md`](AI-CONTRIBUTOR-SPECIFICATION.md):
+[`AI-CONTRIBUTOR-SPECIFICATION.md`](../../specification/):
 every contribution from these agents is reviewed and accepted by a human
 author before merge — i.e. operates at **L2 (AI Assisted)** for this repo.
 
@@ -47,7 +47,7 @@ contributes; old entries stay for historical attribution.
 ## House rules for AI contributions
 
 Every AI-assisted PR follows the rules below. They mirror the §26
-obligations in the spec; [`CONTRIBUTING.md`](CONTRIBUTING.md) has the full
+obligations in the spec; [`CONTRIBUTING.md`](../contributing/) has the full
 process.
 
 1. **Disclosure on every commit.** Materially AI-authored commits carry a

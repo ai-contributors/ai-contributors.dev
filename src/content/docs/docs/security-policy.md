@@ -69,7 +69,7 @@ them, but it is not our advisory to coordinate.
 ## Supported versions
 
 This repository follows the spec versioning declared in
-[`AI-CONTRIBUTOR-SPECIFICATION.md`](AI-CONTRIBUTOR-SPECIFICATION.md).
+[`AI-CONTRIBUTOR-SPECIFICATION.md`](../../specification/).
 Security fixes land on `main` and the most recent `vN.N` release tag.
 
 In practice that means: report against any release tag, but the fix you

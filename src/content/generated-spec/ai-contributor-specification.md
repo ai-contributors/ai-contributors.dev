@@ -13,7 +13,7 @@ If you are new to the specification, read it in this order:
 1. [Conformance levels](#conformance-levels), to choose the AI workflow you want to allow.
 2. [Normative language](#normative-language), to understand `MUST`, `MUST when applicable`, `SHOULD`, and `MAY`.
 3. [Definitions](#definitions), when a term such as "agent", "material action", or "untrusted source" appears.
-4. The clauses for your target level, using [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) as the practical scoring view.
+4. The clauses for your target level, using [`AI-CONTRIBUTOR-CHECKLIST.md`](../docs/stamped-audit/) as the practical scoring view.
 
 The checklist is easier to fill than this document is to read end to end. Use this document when a checklist row is unclear, when you need the exact rule ID, or when you are changing the policy.
 
@@ -41,7 +41,7 @@ Adopt the document as-is or as a starting point for an organization-specific pol
 - `MAY` means optional or context-dependent.
 - `MUST when applicable` means required only if the trigger applies. Examples include a UI, public releases, cloud deployments, or security-sensitive data. Each row states its own trigger. Example: §12 (Accessibility) applies only if the repository ships a UI; a backend-only API repository does not have to satisfy it.
 
-A bullet labelled `MUST` in this document `MAY` map to a `MUST when applicable` row in [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) when the bullet's sentence carries an embedded applicability clause. Examples: "Multi-package repositories `MUST`…" (§1 `AIC-deterministic-build-order`) and "Data integrity constraints `MUST` exist where the persistence layer supports them" (§7 `AIC-data-integrity-constraints`). The trigger is the bullet's own clause, the obligation is unchanged, and the row is treated as `MUST when applicable` by the validator's strict closure (`Not relevant` requires the trigger to be absent, with evidence). Bullets with no embedded trigger are mapped as `MUST`.
+A bullet labelled `MUST` in this document `MAY` map to a `MUST when applicable` row in [`AI-CONTRIBUTOR-CHECKLIST.md`](../docs/stamped-audit/) when the bullet's sentence carries an embedded applicability clause. Examples: "Multi-package repositories `MUST`…" (§1 `AIC-deterministic-build-order`) and "Data integrity constraints `MUST` exist where the persistence layer supports them" (§7 `AIC-data-integrity-constraints`). The trigger is the bullet's own clause, the obligation is unchanged, and the row is treated as `MUST when applicable` by the validator's strict closure (`Not relevant` requires the trigger to be absent, with evidence). Bullets with no embedded trigger are mapped as `MUST`.
 
 A repository should not claim reliable AI-assisted delivery against this specification unless all unconditional `MUST` items and all relevant `MUST when applicable` items are satisfied.
 
@@ -49,7 +49,7 @@ A repository should not claim reliable AI-assisted delivery against this specifi
 
 Every requirement bullet in this document carries a stable identifier of the form `AIC-<slug>` — for example `AIC-secret-vcs-exclude`. **`AIC`** means **AI Contributor**. The `<slug>` is `[a-z0-9][a-z0-9-]*` and is chosen to describe the rule.
 
-The IDs connect this specification, [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md), and [`AI-CONTRIBUTOR-AUDIT-LOG.md`](.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md). They survive section renumbering and bullet reordering. When citing a rule, prefer the ID over the section number.
+The IDs connect this specification, [`AI-CONTRIBUTOR-CHECKLIST.md`](../docs/stamped-audit/), and [`AI-CONTRIBUTOR-AUDIT-LOG.md`](../docs/stamped-audit/). They survive section renumbering and bullet reordering. When citing a rule, prefer the ID over the section number.
 
 ---
 
@@ -95,7 +95,7 @@ Terms used throughout this document. Where this document references these terms,
 
 ## Quick conformance checklist
 
-For a per-clause audit checklist covering every `MUST`, `MUST when applicable`, `SHOULD`, and `MAY` item in this document, see [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md). Conformance level definitions are in the [Conformance levels](#conformance-levels) section at the end of this document.
+For a per-clause audit checklist covering every `MUST`, `MUST when applicable`, `SHOULD`, and `MAY` item in this document, see [`AI-CONTRIBUTOR-CHECKLIST.md`](../docs/stamped-audit/). Conformance level definitions are in the [Conformance levels](#conformance-levels) section at the end of this document.
 
 ---
 

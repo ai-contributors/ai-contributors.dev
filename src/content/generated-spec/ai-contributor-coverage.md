@@ -8,7 +8,7 @@ This generated projection is rendered from `tools/spec-authoring/templates/AI-CO
 
 Use this file for planning, not for scoring. It tells you how many checklist rows exist at each level and pillar so you can estimate effort before an audit.
 
-For a conformance claim, use [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md). If this file and the checklist disagree, rerun the catalog-backed generators; both files are projections of `AI-CONTRIBUTOR-RULE-CATALOG.json`.
+For a conformance claim, use [`AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/). If this file and the checklist disagree, rerun the catalog-backed generators; both files are projections of `AI-CONTRIBUTOR-RULE-CATALOG.json`.
 
 ## At a glance
 

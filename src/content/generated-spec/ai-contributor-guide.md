@@ -29,7 +29,7 @@ You do not need to understand every clause before starting. Follow the steps, ke
 
 ## Before you start
 
-- **Scope.** This guide is for GitHub + TypeScript + web. The specification itself is vendor-neutral. See [`CONTRIBUTING.md`](CONTRIBUTING.md) if you want to add a guide for another stack.
+- **Scope.** This guide is for GitHub + TypeScript + web. The specification itself is vendor-neutral. See [`CONTRIBUTING.md`](../contributing/) if you want to add a guide for another stack.
 - **Repository target.** Adopt this in one repository at a time. It works for solo projects, team repositories, multi-team repositories, and monorepos. The checklist stays the same; owners, approval paths, package instructions, workspace commands, and CODEOWNERS coverage scale with the repository.
 - **How to read each step.** Every step has **Do**, **Why**, **How**, **Verify**, **Scored as**, and **Spec reference**. **Scored as** names the checklist rows an auditor will look for.
 - **Verify is a self-check.** The **Verify** commands tell you whether the step works as a developer. The audit collector may run narrower commands and may still mark a row `Warning` if it cannot find committed evidence. Treat **Verify** as a handoff check, not as a replacement for the audit.
@@ -57,18 +57,18 @@ _Completes Level 0 — Baseline Hygiene. This is the minimum baseline. Level 1 b
 **Why:** AI agents often create changes that work only in one local setup. They add new tooling without warning, and without pinning you cannot tell agent regressions from environment drift.
 
 **How (TypeScript + pnpm + GitHub):**
-- Pin `packageManager` and `engines` in [`examples/typescript-pnpm/template/package.json`](examples/typescript-pnpm/template/package.json)
-- Pin the Node version in [`examples/typescript-pnpm/template/.nvmrc`](examples/typescript-pnpm/template/.nvmrc)
-- Pin the toolchain in CI: [`examples/typescript-pnpm/template/.github/workflows/ci.yml`](examples/typescript-pnpm/template/.github/workflows/ci.yml)
+- Pin `packageManager` and `engines` in [`examples/typescript-pnpm/template/package.json`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/package.json)
+- Pin the Node version in [`examples/typescript-pnpm/template/.nvmrc`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.nvmrc)
+- Pin the toolchain in CI: [`examples/typescript-pnpm/template/.github/workflows/ci.yml`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.github/workflows/ci.yml)
 - Install with `pnpm install --frozen-lockfile` in every CI job
 
 **Verify (contributor):** `rm -rf node_modules && pnpm install --frozen-lockfile && pnpm build` succeeds from a fresh clone.
 
-**Verify (auditor will run):** `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` (per [`audit-collect.ts` `ruleLockfileIntegrity`](skills/ai-contributor-audit/scripts/audit-collect.ts)). This proves the lockfile resolves without running scripts. The auditor does not run `pnpm build`; toolchain pinning is scored separately from `.nvmrc` and `packageManager`.
+**Verify (auditor will run):** `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` (per [`audit-collect.ts` `ruleLockfileIntegrity`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/audit-collect.ts)). This proves the lockfile resolves without running scripts. The auditor does not run `pnpm build`; toolchain pinning is scored separately from `.nvmrc` and `packageManager`.
 
-**Scored as:** `Clean Setup`, `Lockfile Integrity`, `Pinned Toolchain`, `Platform Targets` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Clean Setup`, `Lockfile Integrity`, `Pinned Toolchain`, `Platform Targets` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §1 — Reproducible environment](AI-CONTRIBUTOR-SPECIFICATION.md#1-reproducible-environment)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §1 — Reproducible environment](../../specification/#c1)
 
 ### Step 0.2: Automated formatting
 
@@ -77,16 +77,16 @@ _Completes Level 0 — Baseline Hygiene. This is the minimum baseline. Level 1 b
 **Why:** Consistent formatting keeps diffs reviewable. AI-generated code often changes whitespace and quote style. Automated formatting removes that noise.
 
 **How (TypeScript + pnpm + GitHub):**
-- Prettier config: [`examples/typescript-pnpm/template/.prettierrc`](examples/typescript-pnpm/template/.prettierrc)
+- Prettier config: [`examples/typescript-pnpm/template/.prettierrc`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.prettierrc)
 - Wire it into the pre-commit hook (Husky) and CI; `pnpm format:check` is the merge gate.
 
 **Verify (contributor):** `pnpm format:check` passes on a fresh clone. Introduce inconsistent whitespace and confirm the gate fails.
 
 **Verify (auditor will check):** the auditor looks for formatter config plus a CI or pre-commit step that runs it. A config file alone is a `Warning`. Wire the formatter into both your pre-commit hook and a CI job before handoff.
 
-**Scored as:** `Formatting` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Formatting` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §2 — Static correctness](AI-CONTRIBUTOR-SPECIFICATION.md#2-static-correctness)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §2 — Static correctness](../../specification/#c2)
 
 ### Step 0.3: Secrets and credentials
 
@@ -95,15 +95,15 @@ _Completes Level 0 — Baseline Hygiene. This is the minimum baseline. Level 1 b
 **Why:** Committed secrets stay in git history forever, even after a force-push. AI agents scaffold `.env` files routinely and may not know your exclusion rules. `.gitignore` makes that mistake impossible.
 
 **How (TypeScript + pnpm + GitHub):**
-- Use this `.gitignore`: [`examples/typescript-pnpm/template/.gitignore`](examples/typescript-pnpm/template/.gitignore)
-- Use this `.env.example` pattern: [`examples/typescript-pnpm/template/.env.example`](examples/typescript-pnpm/template/.env.example)
+- Use this `.gitignore`: [`examples/typescript-pnpm/template/.gitignore`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.gitignore)
+- Use this `.env.example` pattern: [`examples/typescript-pnpm/template/.env.example`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.env.example)
 - Document credential handling in `AGENTS.md` or `CONTRIBUTING.md`: where contributors and automation get tokens, which env vars are required, and how to rotate credentials.
 
 **Verify:** `git ls-files | grep -E '(^|/)\.env$'` returns nothing.
 
-**Scored as:** `Secret Hygiene`, `Env Template`, `Credential Documentation` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Secret Hygiene`, `Env Template`, `Credential Documentation` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §5 — Secrets and credentials](AI-CONTRIBUTOR-SPECIFICATION.md#5-secrets-and-credentials)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §5 — Secrets and credentials](../../specification/#c5)
 
 ### Phase 0 checkpoint
 
@@ -141,16 +141,16 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
   - **`AGENTS.md`:** `## Authority and scope` · `## Forbidden actions` · `## Approved AI providers and MCP servers` · `## Data handling` · `## Reliability and observability` · `## Skills, prompts, and audit trail`
   - **`GUARDRAILS.md`:** `## Status and scope` · `## What is automated vs manual` · `## Provider and model allowlist` · `## MCP server allowlist` · `## Data classification and AI permissions` · `## Authorship and prompt audit` · `## Incident response and policy ownership`
 
-  The names borrow from existing terminology (allowlist, data classification, incident response) and avoid neologisms. A small repo can keep everything in `AGENTS.md` (the spec is format-agnostic on §24); the split is the recommended pattern once any single section grows past about 30 lines or needs a different reviewer than the rest. Worked examples ship in [`examples/typescript-pnpm/template/AGENTS.md`](examples/typescript-pnpm/template/AGENTS.md) and [`examples/typescript-pnpm/template/GUARDRAILS.md`](examples/typescript-pnpm/template/GUARDRAILS.md).
-- See [`examples/typescript-pnpm/hints-typescript-pnpm.md` §17](examples/typescript-pnpm/hints-typescript-pnpm.md#17-ai-operating-model) for a worked example.
+  The names borrow from existing terminology (allowlist, data classification, incident response) and avoid neologisms. A small repo can keep everything in `AGENTS.md` (the spec is format-agnostic on §24); the split is the recommended pattern once any single section grows past about 30 lines or needs a different reviewer than the rest. Worked examples ship in [`examples/typescript-pnpm/template/AGENTS.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/AGENTS.md) and [`examples/typescript-pnpm/template/GUARDRAILS.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/GUARDRAILS.md).
+- See [`examples/typescript-pnpm/hints-typescript-pnpm.md` §17](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#17-ai-operating-model) for a worked example.
 
 **Tradeoff:** Claude Code auto-loads `CLAUDE.md` from the working directory. Recent versions also read `AGENTS.md`. Keeping the one-line `CLAUDE.md` pointer preserves auto-load behavior across tool versions. The cost is trivial and it keeps all instruction files aligned.
 
 **Verify:** `ls AGENTS.md` succeeds. Every tool-specific instruction file at the repo root is three lines or fewer and contains only a pointer to `AGENTS.md`. Following only `AGENTS.md` on a fresh clone, a new contributor can run every canonical command and obtain the credentials they need.
 
-**Scored as:** `Single AI Source`, `AI Instructions`, `AI Boundaries` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Single AI Source`, `AI Instructions`, `AI Boundaries` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §17 — AI operating model](AI-CONTRIBUTOR-SPECIFICATION.md#17-ai-operating-model)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §17 — AI operating model](../../specification/#c17)
 
 ### Step 1.2: Branch protection and human review
 
@@ -166,11 +166,11 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **Verify (contributor):** A direct push to `main` from a local branch is rejected with "protected branch." A PR opened and approved only by a bot account cannot be merged.
 
-**Verify (auditor will check):** branch protection is a hosted setting; the auditor calls the GitHub API (`gh api repos/<owner>/<repo>/branches/<default>/protection`) per [`audit-collect.ts` `ruleBranchProtection`](skills/ai-contributor-audit/scripts/audit-collect.ts) and records `derived_status` from the response. Without a token that has admin:repo scope the row demotes to `Warning` — the auditor's evidence is the API response, not your local push attempt. Disclose the token tier (`gh auth status`) in the audit log so the demotion is auditable.
+**Verify (auditor will check):** branch protection is a hosted setting; the auditor calls the GitHub API (`gh api repos/<owner>/<repo>/branches/<default>/protection`) per [`audit-collect.ts` `ruleBranchProtection`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/audit-collect.ts) and records `derived_status` from the response. Without a token that has admin:repo scope the row demotes to `Warning` — the auditor's evidence is the API response, not your local push attempt. Disclose the token tier (`gh auth status`) in the audit log so the demotion is auditable.
 
-**Scored as:** `Branch Protection`, `Human Review Required`, `CODEOWNERS` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Branch Protection`, `Human Review Required`, `CODEOWNERS` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](AI-CONTRIBUTOR-SPECIFICATION.md#16-branch-protection-ownership-and-release-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](../../specification/#c16)
 
 ### Step 1.3: Static correctness — typing, lint, and dead code
 
@@ -179,15 +179,15 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 **Why:** When AI writes code that compiles but does something subtly different from what you asked for, the type checker and lint rules are your first line of defense. An escape hatch like `any` hides exactly the bugs AI is most likely to introduce.
 
 **How (TypeScript + pnpm + GitHub):**
-- Strict TypeScript: [`examples/typescript-pnpm/template/tsconfig.base.json`](examples/typescript-pnpm/template/tsconfig.base.json)
-- Flat ESLint config with correctness rules: [`examples/typescript-pnpm/template/eslint.config.js`](examples/typescript-pnpm/template/eslint.config.js)
+- Strict TypeScript: [`examples/typescript-pnpm/template/tsconfig.base.json`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/tsconfig.base.json)
+- Flat ESLint config with correctness rules: [`examples/typescript-pnpm/template/eslint.config.js`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/eslint.config.js)
 - Forbid `any` unless explicitly justified. Treat unused imports and dead code as errors, not warnings.
 
 **Verify:** `pnpm type-check && pnpm lint` both pass. Introduce `let x: any = 1` and confirm lint fails.
 
-**Scored as:** `Strict Types`, `Lint Rules`, `Dependency Hygiene`, `Debug Statement Hygiene` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Strict Types`, `Lint Rules`, `Dependency Hygiene`, `Debug Statement Hygiene` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §2 — Static correctness](AI-CONTRIBUTOR-SPECIFICATION.md#2-static-correctness)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §2 — Static correctness](../../specification/#c2)
 
 ### Step 1.4: Architecture boundaries
 
@@ -196,14 +196,14 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 **Why:** AI will import anything it can resolve. Without automated boundary checks, AI-generated code slowly erodes the architecture no matter how many humans review.
 
 **How (TypeScript + pnpm + GitHub):**
-- pnpm workspaces define package boundaries: [`examples/typescript-pnpm/template/pnpm-workspace.yaml`](examples/typescript-pnpm/template/pnpm-workspace.yaml) and [`examples/typescript-pnpm/template/packages/core`](examples/typescript-pnpm/template/packages/core)
-- For per-layer rules inside a package, use `eslint-plugin-import` `no-restricted-paths` or equivalent. See [`hints-typescript-pnpm.md` §3](examples/typescript-pnpm/hints-typescript-pnpm.md#3-architecture-boundaries).
+- pnpm workspaces define package boundaries: [`examples/typescript-pnpm/template/pnpm-workspace.yaml`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/pnpm-workspace.yaml) and [`examples/typescript-pnpm/template/packages/core`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/packages/core)
+- For per-layer rules inside a package, use `eslint-plugin-import` `no-restricted-paths` or equivalent. See [`hints-typescript-pnpm.md` §3](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#3-architecture-boundaries).
 
 **Verify:** `pnpm lint` fails when a deliberate cross-boundary import is introduced.
 
-**Scored as:** `Architecture Boundaries` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Architecture Boundaries` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §3 — Architecture boundaries](AI-CONTRIBUTOR-SPECIFICATION.md#3-architecture-boundaries)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §3 — Architecture boundaries](../../specification/#c3)
 
 ### Step 1.5: Pre-commit hook and CI gates
 
@@ -213,18 +213,18 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **How (TypeScript + pnpm + GitHub):**
 - Pre-commit hook: install Husky (`pnpm add -D husky && pnpm exec husky init`) and put `pnpm type-check && pnpm lint` in `.husky/pre-commit`. Keep it fast (under a few seconds) so it isn't bypassed.
-- GitHub Actions workflow: [`examples/typescript-pnpm/template/.github/workflows/ci.yml`](examples/typescript-pnpm/template/.github/workflows/ci.yml)
+- GitHub Actions workflow: [`examples/typescript-pnpm/template/.github/workflows/ci.yml`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/.github/workflows/ci.yml)
 - On GitHub: **Settings → Branches →** `main` rule → check "Require status checks" → add the CI jobs as required.
 - **Set the workflow-level token default to least privilege.** Add `permissions:\n  contents: read` at the top level of every workflow file in `.github/workflows/` (the bundled `examples/typescript-pnpm/template/.github/workflows/ci.yml` already does this). Grant broader scopes only as per-job overrides where a specific job needs them. Step 3.2 builds on this default; without it, `GITHUB_TOKEN` defaults to the repository-wide write scope.
 - **Fast-iteration path (separate from the merge gate).** Expose a scoped command path so agents and humans can validate intermediate work cheaply: `pnpm test --changed` for scoped tests, `pnpm lint --cache` for incremental lint, and `pnpm --filter <pkg> test` when a monorepo makes full-suite runs slow. This is for the iteration loop. The pre-commit hook and CI gates above remain the authoritative merge gate.
 
 **Verify (contributor):** A deliberate type error fails the pre-commit hook locally. The same error, if pushed with `--no-verify`, still blocks the PR from merging via the required status check. For every declarative limit in the repo (coverage thresholds, Lighthouse budgets, bundle-size caps, timeout values referenced by workflow scripts), confirm there's a CI step that evaluates it. Configs without an evaluator are documentation, not a gate.
 
-**Verify (auditor will check):** the auditor reads `.husky/pre-commit` (and equivalents like `lefthook.yml`, `.pre-commit-config.yaml`) plus workflow files in `.github/workflows/`. `Pre-Commit` is `Fulfilled` only when the hook script names ≥ 2 of {lint, type-check, test, secret-scan} (per [`audit-collect.ts` `rulePreCommit`](skills/ai-contributor-audit/scripts/audit-collect.ts)) — a hook that just runs `pnpm format` is `Warning`. `Threshold Enforcement` requires that every declared threshold (coverage, bundle size, perf) be referenced in a workflow step that actually evaluates it. If the threshold lives only in `vitest.config.ts` and no CI job reads it, the row stays `Warning`.
+**Verify (auditor will check):** the auditor reads `.husky/pre-commit` (and equivalents like `lefthook.yml`, `.pre-commit-config.yaml`) plus workflow files in `.github/workflows/`. `Pre-Commit` is `Fulfilled` only when the hook script names ≥ 2 of {lint, type-check, test, secret-scan} (per [`audit-collect.ts` `rulePreCommit`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/audit-collect.ts)) — a hook that just runs `pnpm format` is `Warning`. `Threshold Enforcement` requires that every declared threshold (coverage, bundle size, perf) be referenced in a workflow step that actually evaluates it. If the threshold lives only in `vitest.config.ts` and no CI job reads it, the row stays `Warning`.
 
-**Scored as:** `Pre-Commit`, `CI Gates`, `Threshold Enforcement`, `Gate Enforcement`, `Fast Iteration Path`, `Machine vs Manual Guardrails` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Pre-Commit`, `CI Gates`, `Threshold Enforcement`, `Gate Enforcement`, `Fast Iteration Path`, `Machine vs Manual Guardrails` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §4 — Pre-commit and CI gates](AI-CONTRIBUTOR-SPECIFICATION.md#4-pre-commit-and-ci-gates), [`AI-CONTRIBUTOR-SPECIFICATION.md` §8 — CI/CD workflow hardening](AI-CONTRIBUTOR-SPECIFICATION.md#8-cicd-workflow-hardening)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §4 — Pre-commit and CI gates](../../specification/#c4), [`AI-CONTRIBUTOR-SPECIFICATION.md` §8 — CI/CD workflow hardening](../../specification/#c8)
 
 ### Step 1.6: Auth boundary and runtime validation
 
@@ -235,14 +235,14 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 **Why:** AI will implement "is the user an admin?" by reading a client-side flag. Server-side enforcement is the difference between "looks right in code review" and "actually secure." Runtime validation catches the invariants the type system can't.
 
 **How (TypeScript + pnpm + GitHub):**
-- Zod validator pattern for env vars: [`examples/typescript-pnpm/template/config/env.ts`](examples/typescript-pnpm/template/config/env.ts)
-- See [`hints-typescript-pnpm.md` §10](examples/typescript-pnpm/hints-typescript-pnpm.md#10-runtime-validation-and-invariants) for request-body, config, and feature-flag validators.
+- Zod validator pattern for env vars: [`examples/typescript-pnpm/template/config/env.ts`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/config/env.ts)
+- See [`hints-typescript-pnpm.md` §10](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#10-runtime-validation-and-invariants) for request-body, config, and feature-flag validators.
 
 **Verify:** Remove a required env var, then run the app. It fails to boot with an actionable diagnostic that names the missing var.
 
-**Scored as:** `Real Auth Boundary`, `Runtime Validation`, `Boundary Schema Validation`, `Credential Leakage Checks`, `Data Integrity Constraints`, `Invariants` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Real Auth Boundary`, `Runtime Validation`, `Boundary Schema Validation`, `Credential Leakage Checks`, `Data Integrity Constraints`, `Invariants` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §7 — Authorization and trusted boundaries](AI-CONTRIBUTOR-SPECIFICATION.md#7-authorization-and-trusted-boundaries), [`AI-CONTRIBUTOR-SPECIFICATION.md` §10 — Runtime validation and invariants](AI-CONTRIBUTOR-SPECIFICATION.md#10-runtime-validation-and-invariants)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §7 — Authorization and trusted boundaries](../../specification/#c7), [`AI-CONTRIBUTOR-SPECIFICATION.md` §10 — Runtime validation and invariants](../../specification/#c10)
 
 ### Step 1.7: Test layers and failure handling
 
@@ -251,18 +251,18 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 **Why:** Unit tests alone give AI a false green. It writes code that passes isolated mocks but breaks against real integrations. Mixing test layers catches what the other misses. Explicit failure handling prevents AI from swallowing errors with `try/catch (_) {}`.
 
 **How (TypeScript + pnpm + GitHub):**
-- Vitest for unit + integration: [`examples/typescript-pnpm/template/packages/core/src/index.test.ts`](examples/typescript-pnpm/template/packages/core/src/index.test.ts)
+- Vitest for unit + integration: [`examples/typescript-pnpm/template/packages/core/src/index.test.ts`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/packages/core/src/index.test.ts)
 - Playwright for end-to-end tests if the project has a UI.
-- See [`hints-typescript-pnpm.md` §11](examples/typescript-pnpm/hints-typescript-pnpm.md#11-testing-strategy) and [§13](examples/typescript-pnpm/hints-typescript-pnpm.md#13-failure-handling-and-observability) for logger redaction patterns.
-- If you enable coverage, set a threshold in `vitest.config.ts` (see [`hints-typescript-pnpm.md` §11](examples/typescript-pnpm/hints-typescript-pnpm.md#11-testing-strategy)) and treat the number as a floor, not a target, per `AI-CONTRIBUTOR-SPECIFICATION.md` §11.
+- See [`hints-typescript-pnpm.md` §11](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#11-testing-strategy) and [§13](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#13-failure-handling-and-observability) for logger redaction patterns.
+- If you enable coverage, set a threshold in `vitest.config.ts` (see [`hints-typescript-pnpm.md` §11](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#11-testing-strategy)) and treat the number as a floor, not a target, per `AI-CONTRIBUTOR-SPECIFICATION.md` §11.
 
 **Verify (contributor):** `pnpm test` runs both unit and integration suites. A test that only passes with mocked I/O fails when the mock is removed. In addition, every threshold, budget, or limit declared in test, perf, or size config is actually evaluated in the CI job that runs those checks. Declared-but-unenforced limits drift over time. Treat them as reference material, not enforcement.
 
 **Verify (auditor will check):** the auditor does not execute `pnpm test`. It looks for a CI workflow step that runs the test command, plus declared coverage thresholds in `vitest.config.ts` / equivalent. "Tests passed locally" cannot be evidenced from committed files; the auditor records `Fulfilled` only when a CI job runs the suite (executable evidence) and the row's Comment cites that job. If your test setup runs only locally, the row will be `Warning` — wire the tests into CI before claiming `Fulfilled`.
 
-**Scored as:** `Test Layers`, `Coverage Floor`, `Failure Handling`, `Observability`, `Code-Test Independence Check` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Test Layers`, `Coverage Floor`, `Failure Handling`, `Observability`, `Code-Test Independence Check` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §11 — Testing strategy](AI-CONTRIBUTOR-SPECIFICATION.md#11-testing-strategy), [`AI-CONTRIBUTOR-SPECIFICATION.md` §13 — Failure handling and observability](AI-CONTRIBUTOR-SPECIFICATION.md#13-failure-handling-and-observability)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §11 — Testing strategy](../../specification/#c11), [`AI-CONTRIBUTOR-SPECIFICATION.md` §13 — Failure handling and observability](../../specification/#c13)
 
 ### Step 1.8: AI data classification and redaction
 
@@ -272,14 +272,14 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **How (TypeScript + pnpm + GitHub):**
 - In `AGENTS.md` / `CLAUDE.md`, add a **"Data classification"** section listing each class you handle and whether it is permitted in AI contexts. Call out secrets and regulated data as "never in an AI context unless the provider has explicit approval for that class."
-- Reuse the logger redactor from Step 1.7 for AI surfaces. Wrap every place your code sends a prompt, receives a tool output, or persists an AI error. See [`hints-typescript-pnpm.md` §22](examples/typescript-pnpm/hints-typescript-pnpm.md#22-data-protection-and-privacy).
+- Reuse the logger redactor from Step 1.7 for AI surfaces. Wrap every place your code sends a prompt, receives a tool output, or persists an AI error. See [`hints-typescript-pnpm.md` §22](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#22-data-protection-and-privacy).
 - For fixtures and scratch data used with AI, confirm they are scrubbed of real secrets and PII before an agent ever reads them. If you lack scrubbed fixtures, generate synthetic ones rather than give real data to a model.
 
 **Verify:** Sampling recent AI-agent sessions, no secret, credential, or PII appears in prompts, transcripts, tool outputs, or error reports. A test that passes a fake recognized secret through an AI flow confirms the redaction fires before the prompt leaves your process.
 
-**Scored as:** `AI Data Classification`, `AI Provider Allowlist` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `AI Data Classification`, `AI Provider Allowlist` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §22 — Data protection and privacy](AI-CONTRIBUTOR-SPECIFICATION.md#22-data-protection-and-privacy)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §22 — Data protection and privacy](../../specification/#c22)
 
 ### Step 1.9: Guardrail documentation, ownership, and human approval
 
@@ -289,13 +289,13 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **How (TypeScript + pnpm + GitHub):**
 - Extend the file from Step 1.1 with three sections: **"Forbidden without confirmation"** (baseline: every destructive, security-sensitive, or release-affecting action per `AI-CONTRIBUTOR-SPECIFICATION.md` Definitions), **"Sensitive path ownership"** (a table: path → named owner), and **"Guardrails"** (a table: tool / enforced where / how failure is surfaced).
-- For path ownership on GitHub, a `CODEOWNERS` file is the simplest option for most teams. See [`hints-typescript-pnpm.md` §17](examples/typescript-pnpm/hints-typescript-pnpm.md#17-ai-operating-model).
+- For path ownership on GitHub, a `CODEOWNERS` file is the simplest option for most teams. See [`hints-typescript-pnpm.md` §17](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#17-ai-operating-model).
 
 **Verify:** An AI agent asked to `rm -rf` the repo or run `git push --force` stops and asks for confirmation instead of executing. A PR touching auth code is automatically assigned to or blocked on its named owner.
 
-**Scored as:** `Authoritative Guardrail Doc`, `Human Approval`, `Risk-Matched Controls`, `Classifier-Only Controls Excluded` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Authoritative Guardrail Doc`, `Human Approval`, `Risk-Matched Controls`, `Classifier-Only Controls Excluded` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](AI-CONTRIBUTOR-SPECIFICATION.md#16-branch-protection-ownership-and-release-governance), [`AI-CONTRIBUTOR-SPECIFICATION.md` §23 — Human approval and manual checkpoints](AI-CONTRIBUTOR-SPECIFICATION.md#23-human-approval-and-manual-checkpoints), [`AI-CONTRIBUTOR-SPECIFICATION.md` §24 — Guardrail documentation and evidence](AI-CONTRIBUTOR-SPECIFICATION.md#24-guardrail-documentation-and-evidence)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](../../specification/#c16), [`AI-CONTRIBUTOR-SPECIFICATION.md` §23 — Human approval and manual checkpoints](../../specification/#c23), [`AI-CONTRIBUTOR-SPECIFICATION.md` §24 — Guardrail documentation and evidence](../../specification/#c24)
 
 ### Step 1.10: Policy governance, AI-output licensing, and authorship traceability
 
@@ -312,9 +312,9 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **Verify:** The adopted `AI-CONTRIBUTOR-SPECIFICATION.md` has a non-placeholder owner and a concrete review cadence. A PR editing `AI-CONTRIBUTOR-SPECIFICATION.md` or `AGENTS.md` is blocked until that owner reviews. `CONTRIBUTING.md` (or `LICENSING.md`) states the AI-output licensing position and names the authorship-traceability mechanism. `git log --grep` (or the chosen label filter) can list materially AI-authored commits.
 
-**Scored as:** `Policy Ownership`, `Policy Evidence Links`, `AI Output Licensing`, `AI Authorship Traceability`, `Licensing-Disclosure Alignment` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Policy Ownership`, `Policy Evidence Links`, `AI Output Licensing`, `AI Authorship Traceability`, `Licensing-Disclosure Alignment` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §25 — Policy governance](AI-CONTRIBUTOR-SPECIFICATION.md#25-policy-governance), [`AI-CONTRIBUTOR-SPECIFICATION.md` §26 — AI-generated content: licensing and attribution](AI-CONTRIBUTOR-SPECIFICATION.md#26-ai-generated-content-licensing-and-attribution)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §25 — Policy governance](../../specification/#c25), [`AI-CONTRIBUTOR-SPECIFICATION.md` §26 — AI-generated content: licensing and attribution](../../specification/#c26)
 
 ### Step 1.11: PR and task templates
 
@@ -329,9 +329,9 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **Verify:** Opening a new PR auto-populates the What / Why / How-validated template. Opening a new task issue auto-populates the Input / Expected-output / Constraints / Definition-of-done template. An agent handed an issue in this shape produces a PR whose `## How validated` section directly mirrors the issue's `## Definition of done`.
 
-**Scored as:** `AI Task Templates`, `AI Workflow Standardization` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `AI Task Templates`, `AI Workflow Standardization` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §17 — AI operating model](AI-CONTRIBUTOR-SPECIFICATION.md#17-ai-operating-model), [`AI-CONTRIBUTOR-SPECIFICATION.md` §20 — Agents and delegation governance](AI-CONTRIBUTOR-SPECIFICATION.md#20-agents-and-delegation-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §17 — AI operating model](../../specification/#c17), [`AI-CONTRIBUTOR-SPECIFICATION.md` §20 — Agents and delegation governance](../../specification/#c20)
 
 ### Step 1.12: Enable secret scanning and push protection
 
@@ -346,17 +346,17 @@ _Earns Level 1 (Hardened). With AI instructions, AI-output licensing, authorship
 
 **Verify (contributor):** Create a feature branch, commit a fake but recognized secret (e.g. `AKIAIOSFODNN7EXAMPLE`), then run `git push origin <branch>`. The push is rejected, either by GitHub push protection or by the local secretlint / gitleaks hook.
 
-**Verify (auditor will check):** secret scanning and push protection are hosted settings; the auditor calls the GitHub API (`security_and_analysis.secret_scanning.status`, `security_and_analysis.secret_scanning_push_protection.status`) per [`audit-collect.ts` `ruleSecretScanning` / `rulePushProtection`](skills/ai-contributor-audit/scripts/audit-collect.ts). A token without admin:repo scope cannot read these fields; the rows demote to `Warning`. Disclose the token tier in the audit log.
+**Verify (auditor will check):** secret scanning and push protection are hosted settings; the auditor calls the GitHub API (`security_and_analysis.secret_scanning.status`, `security_and_analysis.secret_scanning_push_protection.status`) per [`audit-collect.ts` `ruleSecretScanning` / `rulePushProtection`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/audit-collect.ts). A token without admin:repo scope cannot read these fields; the rows demote to `Warning`. Disclose the token tier in the audit log.
 
-**Scored as:** `Secret Scanning`, `Push Protection` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Secret Scanning`, `Push Protection` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §5 — Secrets and credentials](AI-CONTRIBUTOR-SPECIFICATION.md#5-secrets-and-credentials)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §5 — Secrets and credentials](../../specification/#c5)
 
 ### Phase 1 checkpoint
 
 You can stop here if: **your repository uses AI only as a verifier, reviewer, suggester, test generator, or pair-programming assistant where humans accept every change before it ships, and the assistance workflow does not invoke shared skills, MCP servers, or delegated agents.** At this point AI is assisting, not completing self-contained implementation tasks or shipping without per-step human review.
 
-Phase 1 covers the Level 1 (Hardened) path for GitHub + TypeScript + web. Before claiming full Level 1 conformance, walk through [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) once. A few rows depend on your architecture and aren't expanded as dedicated steps because their shape is project-specific — close them against the checklist directly:
+Phase 1 covers the Level 1 (Hardened) path for GitHub + TypeScript + web. Before claiming full Level 1 conformance, walk through [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/) once. A few rows depend on your architecture and aren't expanded as dedicated steps because their shape is project-specific — close them against the checklist directly:
 
 - `Data Integrity Constraints` (§7): foreign keys, unique constraints, and check constraints where your database supports them. `MUST when applicable` — triggers for repositories that own a database schema.
 - `Credential Leakage Checks` (§7): automated checks or tests that detect privileged credentials in untrusted client code or roles being checked in the wrong layer. Unconditional `MUST`.
@@ -371,7 +371,7 @@ Close any of those that apply to you, then you are at Level 1.
 1. ✅ Step 1.1 — the authoritative AI instruction file (§17 MUSTs).
 2. ✅ The §22 AI-surface redaction MUSTs (covered by Phase 1's secret-handling and observability work, applied to AI surfaces — prompts, agent transcripts, tool outputs, AI-related error reports).
 3. ✅ Step 1.10 — the §26 AI-generated-content licensing declaration and authorship-traceability mechanism.
-4. ⚙️ Any §18–§20 `MUST when applicable` rows your assistance toolchain triggers — for example `Shared Skills` if the workflow invokes versioned skills or slash commands, `MCP Allowlist` if any MCP server is enabled, `Agent Scope` / `Agent Traceability` if a delegated agent is in the loop. Each row's per-row work lives in Phase 2 (Steps 2.1, 2.2, 2.3 cover them in detail), but at this checkpoint you only need the subset that applies to *your* assistance workflow. Walk the §18–§20 rows in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) and mark each one `Fulfilled` or `Not relevant` (with evidence) before claiming Level 2.
+4. ⚙️ Any §18–§20 `MUST when applicable` rows your assistance toolchain triggers — for example `Shared Skills` if the workflow invokes versioned skills or slash commands, `MCP Allowlist` if any MCP server is enabled, `Agent Scope` / `Agent Traceability` if a delegated agent is in the loop. Each row's per-row work lives in Phase 2 (Steps 2.1, 2.2, 2.3 cover them in detail), but at this checkpoint you only need the subset that applies to *your* assistance workflow. Walk the §18–§20 rows in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/) and mark each one `Fulfilled` or `Not relevant` (with evidence) before claiming Level 2.
 
 If your assistance workflow uses none of those mechanisms, items 1 + 2 + 3 are sufficient and you have reached Level 2. If it uses any of them, complete only the per-row subset above — the rest of Phase 2 is Level 3 work and stays in Phase 2 proper.
 
@@ -392,13 +392,13 @@ _Earns conformance Level 3 (AI Authored)._
 **How (TypeScript + pnpm + GitHub):**
 - Keep skills under `.claude/skills/**`, `.claude/commands/**`, or `.github/prompts/**`. Each skill file declares purpose, inputs, outputs, side effects, and owner.
 - Skills that run destructive tools (`git push --force`, `npm publish`, `rm -rf`) must gate on human confirmation per `AI-CONTRIBUTOR-SPECIFICATION.md` §23.
-- See [`hints-typescript-pnpm.md` §18](examples/typescript-pnpm/hints-typescript-pnpm.md#18-skills-and-shared-workflow-modules).
+- See [`hints-typescript-pnpm.md` §18](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#18-skills-and-shared-workflow-modules).
 
 **Verify:** Each shared skill file opens with the declared fields above. `grep -iE 'api[_-]?key|token|secret' .claude/` returns no plaintext credentials.
 
-**Scored as:** `Shared Skills`, `Skill Safety` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Shared Skills`, `Skill Safety` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §18 — Skills and shared workflow modules](AI-CONTRIBUTOR-SPECIFICATION.md#18-skills-and-shared-workflow-modules)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §18 — Skills and shared workflow modules](../../specification/#c18)
 
 ### Step 2.2: MCP governance
 
@@ -414,9 +414,9 @@ _Earns conformance Level 3 (AI Authored)._
 
 **Verify:** Every MCP server currently enabled for the team appears in the allowlist with all six fields above. Any server using OAuth or tokens has its redirect allowlist, token storage location, and rotation cadence documented. An MCP server in active use that isn't on the list, or an OAuth server with a missing rotation entry, fails the audit.
 
-**Scored as:** `MCP Allowlist`, `MCP Least Privilege`, `MCP Auth Security`, `MCP Auditability`, `MCP Root Scoping`, `Minimum Capability Set` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `MCP Allowlist`, `MCP Least Privilege`, `MCP Auth Security`, `MCP Auditability`, `MCP Root Scoping`, `Minimum Capability Set` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §19 — MCP servers and external tool governance](AI-CONTRIBUTOR-SPECIFICATION.md#19-mcp-servers-and-external-tool-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §19 — MCP servers and external tool governance](../../specification/#c19)
 
 ### Step 2.3: Agent governance
 
@@ -431,9 +431,9 @@ _Earns conformance Level 3 (AI Authored)._
 
 **Verify:** For a recent agent-authored commit, you can name (a) which agent produced it, (b) what its scope was, and (c) what tools it was allowed to call.
 
-**Scored as:** `Agent Scope`, `Agent Traceability`, `Agent Roles`, `Agent Permissions`, `Agent Behavior Monitoring`, `Agent Isolation`, `Short-Lived Agent Credentials`, `Agent Credential Scope`, `Agent Credential Approval`, `Agent Credential Audit`, `Observed Credential Rotation` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Agent Scope`, `Agent Traceability`, `Agent Roles`, `Agent Permissions`, `Agent Behavior Monitoring`, `Agent Isolation`, `Short-Lived Agent Credentials`, `Agent Credential Scope`, `Agent Credential Approval`, `Agent Credential Audit`, `Observed Credential Rotation` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §20 — Agents and delegation governance](AI-CONTRIBUTOR-SPECIFICATION.md#20-agents-and-delegation-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §20 — Agents and delegation governance](../../specification/#c20)
 
 ### Step 2.4: Untrusted input, capability scoping, and channel classification
 
@@ -449,9 +449,9 @@ _Earns conformance Level 3 (AI Authored)._
 
 **Verify:** For each agent role, you can name which capabilities are enabled for which task classes. Every content channel your agents read from appears in the **Content channels** table with an explicit trust level. A summarization task running with file-write or network-send capabilities enabled is a violation.
 
-**Scored as:** `Untrusted Agent Input`, `Capability Scoping`, `Non-English Filter Coverage` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Untrusted Agent Input`, `Capability Scoping`, `Non-English Filter Coverage` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](AI-CONTRIBUTOR-SPECIFICATION.md#21-ai-specific-risks)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](../../specification/#c21)
 
 ### Step 2.5: Provider allowlist scope, regulated data, residency
 
@@ -463,13 +463,13 @@ _Earns conformance Level 3 (AI Authored)._
 - Create or extend a provider allowlist for external AI providers. Add two fields per entry: **permitted data classes** (using the classes from Step 1.8) and **action categories** (read-only research / code authoring / release-affecting automation). Agent workflows must not route outside the allowlist. Enforce this at the SDK wrapper or reverse-proxy layer so it isn't a policy-only rule.
 - If regulated data applies, add a **"Regulated data controls"** subsection to `AGENTS.md` / `CLAUDE.md` documenting the legal basis (e.g. HIPAA BAA, GDPR Article 28 DPA, SOC 2 scope), which providers or tools have that basis on file, and the effective date of each agreement.
 - If data residency applies, add a **"Residency"** subsection listing the permitted regions per data class and verify each provider or MCP server supports region pinning. Re-verify on any provider change or regional expansion.
-- See [`hints-typescript-pnpm.md` §21](examples/typescript-pnpm/hints-typescript-pnpm.md#21-ai-specific-risks) and [§22](examples/typescript-pnpm/hints-typescript-pnpm.md#22-data-protection-and-privacy).
+- See [`hints-typescript-pnpm.md` §21](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#21-ai-specific-risks) and [§22](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#22-data-protection-and-privacy).
 
 **Verify:** Every entry in the provider allowlist has both data-class and action-category fields filled in. A workflow attempting to route an unapproved data class to a provider is rejected by the SDK wrapper, not by a human reviewer noticing. For each provider handling regulated data, a BAA, DPA, or equivalent agreement is on file. Every data-residency commitment traces to a provider configuration setting or contract clause.
 
-**Scored as:** `AI Provider Allowlist`, `Regulated Data Controls`, `Allowlist Rescope on Terms Change`, `Provider Deprecation Procedure`, `Provider EOL Tracking`, `No Routing Past EOL`, `Provider Fallback Path` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `AI Provider Allowlist`, `Regulated Data Controls`, `Allowlist Rescope on Terms Change`, `Provider Deprecation Procedure`, `Provider EOL Tracking`, `No Routing Past EOL`, `Provider Fallback Path` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](AI-CONTRIBUTOR-SPECIFICATION.md#21-ai-specific-risks), [`AI-CONTRIBUTOR-SPECIFICATION.md` §22 — Data protection and privacy](AI-CONTRIBUTOR-SPECIFICATION.md#22-data-protection-and-privacy)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](../../specification/#c21), [`AI-CONTRIBUTOR-SPECIFICATION.md` §22 — Data protection and privacy](../../specification/#c22)
 
 ### Step 2.6: Cost ceiling, context retention, dependency verification
 
@@ -490,15 +490,15 @@ _Earns conformance Level 3 (AI Authored)._
 
 **Verify:** A simulated runaway loop (deliberate infinite agent retry) hits the cost ceiling and stops. A PR adding a fictitious dependency is caught in review and reverted.
 
-**Scored as:** `Agent Cost Ceiling`, `AI Context Retention`, `AI Dependency Verification`, `Prompt Audit Trail`, `Prompt Versioning` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Agent Cost Ceiling`, `AI Context Retention`, `AI Dependency Verification`, `Prompt Audit Trail`, `Prompt Versioning` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](AI-CONTRIBUTOR-SPECIFICATION.md#21-ai-specific-risks)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §21 — AI-specific risks](../../specification/#c21)
 
 ### Phase 2 checkpoint
 
 You can stop here if: **your repository lets AI materially author code that humans review before merge, or uses governed shared skills, MCP servers, delegated agents, or untrusted external content, but does not let AI merge, release, deploy, or otherwise ship without per-step human review.**
 
-Phase 2 covers the Level 3 (AI Authored) path for every Pillar 6 `MUST` or `MUST when applicable` row triggered by AI-authored work, plus the applicable §18–§20 rows for the skills, MCP servers, delegated agents, or other AI tooling that materially author code. Two narrow §21 clauses aren't called out as dedicated steps and should be confirmed against [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) before you claim Level 3:
+Phase 2 covers the Level 3 (AI Authored) path for every Pillar 6 `MUST` or `MUST when applicable` row triggered by AI-authored work, plus the applicable §18–§20 rows for the skills, MCP servers, delegated agents, or other AI tooling that materially author code. Two narrow §21 clauses aren't called out as dedicated steps and should be confirmed against [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/) before you claim Level 3:
 
 - **Anti-pattern controls** (§21): no LLM-filter classifier or "refuse if tricked" system-prompt instruction is being counted, alone, as a control for any MUST clause. They may appear as telemetry only.
 - **Control evidence** (§21): each claimed control is evaluated against the specific risk class it addresses (prompt injection, data exfiltration, PII leakage, etc.), with adaptive or human-in-the-loop evaluation rather than static-benchmark results alone.
@@ -528,15 +528,15 @@ Phase 3 closes the controls needed before AI ships without per-step human review
 - Enable Dependabot alerts and security updates. Add Dependabot or Renovate config for routine update PRs.
 - Require `pnpm audit --audit-level=high` in CI. Track accepted exceptions in `SECURITY.md` with an expiry date.
 - Add `actions/dependency-review-action@v4` to PRs so reviewers see every added package inline.
-- See [`hints-typescript-pnpm.md` §6](examples/typescript-pnpm/hints-typescript-pnpm.md#6-security-scanning-and-dependency-security).
+- See [`hints-typescript-pnpm.md` §6](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#6-security-scanning-and-dependency-security).
 
 **Verify (contributor):** A PR that introduces a known-vulnerable dependency fails CI. A PR that adds a new transitive dependency shows an inline Dependency Review summary. CodeQL or Semgrep reports on every PR.
 
-**Verify (auditor will check):** for `Dependency Security`, the auditor first tries `gh api repos/<owner>/<repo>/dependabot/alerts?state=open&severity=high` and, failing that, runs `pnpm audit --prod --json` per inventory unit that has its own `pnpm-lock.yaml` (per [`audit-collect.ts` `ruleDependencySecurity`](skills/ai-contributor-audit/scripts/audit-collect.ts)). For `Automated Dependency Updates` the auditor inspects committed config (`.github/dependabot.yml`, `renovate.json`); a workflow that simply runs `pnpm audit` does not satisfy the rule — the rule wants automated update PRs.
+**Verify (auditor will check):** for `Dependency Security`, the auditor first tries `gh api repos/<owner>/<repo>/dependabot/alerts?state=open&severity=high` and, failing that, runs `pnpm audit --prod --json` per inventory unit that has its own `pnpm-lock.yaml` (per [`audit-collect.ts` `ruleDependencySecurity`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/audit-collect.ts)). For `Automated Dependency Updates` the auditor inspects committed config (`.github/dependabot.yml`, `renovate.json`); a workflow that simply runs `pnpm audit` does not satisfy the rule — the rule wants automated update PRs.
 
-**Scored as:** `Dependency Security`, `SAST`, `Custom Secret Patterns`, `Automated Dependency Updates`, `Dependency Review` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Dependency Security`, `SAST`, `Custom Secret Patterns`, `Automated Dependency Updates`, `Dependency Review` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §6 — Security scanning and dependency security](AI-CONTRIBUTOR-SPECIFICATION.md#6-security-scanning-and-dependency-security)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §6 — Security scanning and dependency security](../../specification/#c6)
 
 ### Step 3.2: CI/CD token hardening and deployment path protection
 
@@ -554,7 +554,7 @@ Workflow tokens and deployment paths:
 - Create GitHub **Environments** `preview` and `production`. On `production`, enable "Required reviewers" and restrict deployment branches to `main`.
 - Pin third-party Actions deliberately. Tag-pinning (`@v6`) plus an automated bumper (Renovate or Dependabot) is the practical default; SHA-pinning (`@<full-sha> # v6`) is recommended only when the threat model justifies it — production-deploy workflows, high-stakes tokens, or compliance regimes that require bit-exact reproducibility — and only when paired with a bumper that keeps the SHAs current. SHA-pinning without a bumper goes stale and stops delivering security patches, which is worse than tag-pinning.
 - Require security-team review on PRs touching `.github/workflows/**` via CODEOWNERS.
-- See [`hints-typescript-pnpm.md` §8](examples/typescript-pnpm/hints-typescript-pnpm.md#8-cicd-workflow-hardening).
+- See [`hints-typescript-pnpm.md` §8](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#8-cicd-workflow-hardening).
 
 Developer and agent credentials to GitHub:
 - Prefer **fine-grained PATs** scoped to specific repositories over classic PATs with account-wide `repo` scope. Grant only the permissions the task needs, and set the shortest expiry the workflow tolerates. The profiles below map directly to the trust tiers in §20 ("read-only, code-write, or release-capable agents"):
@@ -575,9 +575,9 @@ Developer and agent credentials to GitHub:
 
 **Verify:** Every workflow file declares an explicit `permissions:` block with only the scopes used. A deploy job uses OIDC (no cloud secret in Actions secrets). A PR targeting `production` waits on a human approver. PATs issued for humans or agents show a fine-grained scope, a non-empty expiry, and a repository allowlist (not "all repositories"). Code-write agent tokens cannot push to protected branches, delete protected refs, bypass required human review, or merge their own PRs. Bot automation uses a GitHub App installation token, not a long-lived PAT. `gh auth status` on a shared workstation shows which account is active, and agents are invoked with that account set deliberately.
 
-**Scored as:** `Workflow Security`, `Action Version Pinned`, `Deployment Protection`, `Deployment Protection Rules`, `Deployment Separation`, `Release from CI` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Workflow Security`, `Action Version Pinned`, `Deployment Protection`, `Deployment Protection Rules`, `Deployment Separation`, `Release from CI` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §8 — CI/CD workflow hardening](AI-CONTRIBUTOR-SPECIFICATION.md#8-cicd-workflow-hardening)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §8 — CI/CD workflow hardening](../../specification/#c8)
 
 ### Step 3.3: Threat model and security design review
 
@@ -599,9 +599,9 @@ Developer and agent credentials to GitHub:
 
 **Verify:** `docs/threat-model.md` exists, covers assets + trust boundaries + entry points, and has a `Last reviewed` date within your cadence. A PR changing authentication or deployment surfaces the threat model for re-review.
 
-**Scored as:** `Threat Model`, `Security Design Reviews` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Threat Model`, `Security Design Reviews` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §9 — Threat modeling and security design review](AI-CONTRIBUTOR-SPECIFICATION.md#9-threat-modeling-and-security-design-review)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §9 — Threat modeling and security design review](../../specification/#c9)
 
 ### Step 3.4: Accessibility gates
 
@@ -616,13 +616,13 @@ Developer and agent credentials to GitHub:
 - Add `vitest-axe` (or `jest-axe`) assertions to shared-component tests. No `critical` or `serious` violations in default and typical-state renders.
 - Add `@axe-core/playwright` checks to primary user flows in E2E.
 - Document keyboard behavior (Tab order, Escape, focus return on dialog close) in the component's test or story.
-- See [`hints-typescript-pnpm.md` §12](examples/typescript-pnpm/hints-typescript-pnpm.md#12-accessibility).
+- See [`hints-typescript-pnpm.md` §12](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#12-accessibility).
 
 **Verify:** `pnpm lint` fails on `<div onClick>` and similar violations. Shared-component tests fail on serious axe findings. Playwright runs of primary flows report no new serious violations.
 
-**Scored as:** `Accessibility`, `A11y Helpers` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Accessibility`, `A11y Helpers` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §12 — Accessibility](AI-CONTRIBUTOR-SPECIFICATION.md#12-accessibility)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §12 — Accessibility](../../specification/#c12)
 
 ### Step 3.5: Performance budgets and reliability targets
 
@@ -636,13 +636,13 @@ Developer and agent credentials to GitHub:
 - **Frontend:** `size-limit` for bundle budgets. Lighthouse CI (`lhci autorun`) with LCP / INP / CLS thresholds. Fail PRs that regress past threshold.
 - **Service:** export p95 latency, error rate, and availability as SLIs. Define SLOs (e.g. "p95 < 300ms, 99.9% over 30 days"). Wire error-budget breach to oncall escalation.
 - Budgets and thresholds are declarative configs. Per Step 1.5's `Threshold Enforcement` rule, every declared threshold must be evaluated in CI or production monitoring. Config without an evaluator doesn't count.
-- See [`hints-typescript-pnpm.md` §14](examples/typescript-pnpm/hints-typescript-pnpm.md#14-performance-and-reliability).
+- See [`hints-typescript-pnpm.md` §14](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#14-performance-and-reliability).
 
 **Verify:** A PR that increases bundle size past the `size-limit` threshold fails CI. A PR that regresses LCP past budget fails CI. The SLI dashboard is live; SLO breach triggers a documented response.
 
-**Scored as:** `Performance Budget`, `Reliability Targets`, `Error Budgets` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `Performance Budget`, `Reliability Targets`, `Error Budgets` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §14 — Performance and reliability](AI-CONTRIBUTOR-SPECIFICATION.md#14-performance-and-reliability)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §14 — Performance and reliability](../../specification/#c14)
 
 ### Step 3.6: SBOM, provenance, and release discipline
 
@@ -658,13 +658,13 @@ Developer and agent credentials to GitHub:
 - For container or generic artifacts: `actions/attest-build-provenance@v1` for signed attestations.
 - Block `npm publish` and `docker push` outside the release workflow. No publish tokens on workstations.
 - Tag releases from CI. Require signed commits on `main`.
-- See [`hints-typescript-pnpm.md` §15](examples/typescript-pnpm/hints-typescript-pnpm.md#15-supply-chain-transparency-and-artifact-integrity).
+- See [`hints-typescript-pnpm.md` §15](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#15-supply-chain-transparency-and-artifact-integrity).
 
 **Verify:** The latest release has an SBOM asset attached. The registry reports provenance metadata (`npm view <package> --json | jq .dist.attestations` or equivalent). An attempt to publish from a developer workstation fails for lack of token.
 
-**Scored as:** `SBOM`, `Build Origin Records`, `Release from CI` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `SBOM`, `Build Origin Records`, `Release from CI` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §15 — Supply-chain transparency and artifact integrity](AI-CONTRIBUTOR-SPECIFICATION.md#15-supply-chain-transparency-and-artifact-integrity)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §15 — Supply-chain transparency and artifact integrity](../../specification/#c15)
 
 ### Step 3.7: Expand CODEOWNERS and publish SECURITY.md
 
@@ -677,13 +677,13 @@ Developer and agent credentials to GitHub:
 **How (TypeScript + pnpm + GitHub):**
 - Extend the CODEOWNERS from Step 1.10 to cover auth and authz paths, `.github/workflows/**` (already in Step 3.2), deployment config, `package.json` + `pnpm-lock.yaml`, migrations, `docs/threat-model.md`, and any path that carries credentials or policy.
 - Write a `SECURITY.md` with: contact (email or GitHub private vulnerability reporting), disclosure SLA, supported versions, and scope (what is in or out of bounds for reports).
-- See [`hints-typescript-pnpm.md` §16](examples/typescript-pnpm/hints-typescript-pnpm.md#16-branch-protection-ownership-and-release-governance).
+- See [`hints-typescript-pnpm.md` §16](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/hints-typescript-pnpm.md#16-branch-protection-ownership-and-release-governance).
 
 **Verify:** A PR touching `src/auth/**` auto-routes to the security owner. A PR changing `package.json` auto-routes to the platform owner. `SECURITY.md` exists at root, names a contact, and has been reviewed within your chosen cadence.
 
-**Scored as:** `CODEOWNERS`, `Security Policy` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `CODEOWNERS`, `Security Policy` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](AI-CONTRIBUTOR-SPECIFICATION.md#16-branch-protection-ownership-and-release-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §16 — Branch protection, ownership, and release governance](../../specification/#c16)
 
 ### Step 3.8: AI-authorship disclosure for external contributions
 
@@ -700,9 +700,9 @@ Developer and agent credentials to GitHub:
 
 **Verify:** A PR from an external contributor that opens without the AI-authorship declaration fails the intake workflow. The `CONTRIBUTING.md` AI-authored section exists, names the declaration format, and names the expected evidence per change type.
 
-**Scored as:** `AI Authorship Disclosure`, `Disclosure Evidence` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
+**Scored as:** `AI Authorship Disclosure`, `Disclosure Evidence` in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/).
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §23 — Human approval and manual checkpoints](AI-CONTRIBUTOR-SPECIFICATION.md#23-human-approval-and-manual-checkpoints)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §23 — Human approval and manual checkpoints](../../specification/#c23)
 
 ### Step 3.9: Exception log for unmet SHOULDs
 
@@ -719,9 +719,9 @@ Developer and agent credentials to GitHub:
 
 **Verify:** Every `SHOULD` in the checklist is `Fulfilled`, `Not relevant` (with reason), or has a documented reason in Comment. A reader can open the checklist and immediately see which exceptions the team has accepted.
 
-**Scored as:** every `SHOULD` row in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md). For each not-fulfilled `SHOULD` row, the `Comment` column carries the exception reason; the auditor reads the comments as the exception log.
+**Scored as:** every `SHOULD` row in [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/). For each not-fulfilled `SHOULD` row, the `Comment` column carries the exception reason; the auditor reads the comments as the exception log.
 
-**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §25 — Policy governance](AI-CONTRIBUTOR-SPECIFICATION.md#25-policy-governance)
+**Spec reference:** [`AI-CONTRIBUTOR-SPECIFICATION.md` §25 — Policy governance](../../specification/#c25)
 
 ### Phase 3 checkpoint
 
@@ -736,4 +736,4 @@ Level 4 is the highest conformance level. Teams that want to go further have two
 - **`MAY` items and hardening patterns**: fuzzing, DAST, penetration testing, license-compliance automation, artifact signing, reproducible builds, SLSA 3+ provenance, downstream admission control. These are explicitly optional in `AI-CONTRIBUTOR-SPECIFICATION.md`. Adopt them where the blast radius of a failure justifies the cost. Consider a separate `AI-CONTRIBUTOR-HARDENING.md` companion in your adopted copy to record which patterns you run and why.
 - **Domain overlays**: healthcare (HIPAA), payments (PCI-DSS), government (FedRAMP-adjacent), EU (GDPR formal treatment), minors' data (COPPA). These layer domain-specific requirements on top of the base specification. They are better expressed as parallel specifications (e.g. `AI-CONTRIBUTOR-SPECIFICATION-healthcare.md`) referencing the base document rather than as higher conformance levels.
 
-If you're contributing a parallel guide for another stack (Python + uv, Go, Rust, JVM, …), mirror the four-phase spine and the per-step Do / Why / How / Verify / Spec-reference shape so readers get a predictable experience across stacks. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+If you're contributing a parallel guide for another stack (Python + uv, Go, Rust, JVM, …), mirror the four-phase spine and the per-step Do / Why / How / Verify / Spec-reference shape so readers get a predictable experience across stacks. See [`CONTRIBUTING.md`](../contributing/).

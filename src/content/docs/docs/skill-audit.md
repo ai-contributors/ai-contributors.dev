@@ -46,7 +46,7 @@ The job is simple: establish the owner profile first, collect evidence, stamp me
 
 Audit artifacts are not standalone documents for agents to patch. If a user asks to refresh a status, remove a backlog row, or update the root audit summary, run the audit flow first (`audit-collect` → `audit-stamp` → evidence review for judgment-required rows → `audit-stamp` → `audit-validate`) and let the scripts rewrite derived cells. Agents may edit only auditor-owned cells after current-run evidence exists, then must re-run stamp and validate.
 
-The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
+The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
 
 The owner profile at `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` is the default input for owner-confirmed applicability answers and should be prepared before collection starts. Run the `ai-contributor-audit-profile` companion skill first when the agent supports skills. Otherwise, copy `references/audit-profile-template.md` before the audit, draft answers from repository evidence, and ask the owner to confirm or correct them. Profile answers can explain applicability, but they do not make rows `Fulfilled` unless the row explicitly allows owner attestation or policy text as fulfillment evidence.
 
@@ -182,11 +182,11 @@ npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.t
 
 ## Required Workflow
 
-Follow the complete protocol in [`references/audit-protocol.md`](references/audit-protocol.md). Do not skip steps.
+Follow the complete protocol in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/references/audit-protocol.md). Do not skip steps.
 
 ## Evidence Rules
 
-Follow [`references/evidence-rules.md`](references/evidence-rules.md) when deciding statuses and writing comments.
+Follow [`references/evidence-rules.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/references/evidence-rules.md) when deciding statuses and writing comments.
 
 Core rules:
 

@@ -5,7 +5,7 @@ deck: "`AI-CONTRIBUTOR-RULE-CATALOG.json` is the machine-readable canon of the s
 ## Why a separate catalog?
 
 The prose specification
-([`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md))
+([`AI-CONTRIBUTOR-SPECIFICATION.md`](../../specification/))
 is what humans read. The catalog is what machines read. Every clause,
 level, and rule appears in *exactly one* place — the catalog — and four
 downstream artifacts are **generated** from it on every release:
@@ -212,5 +212,5 @@ jq '[.rules[]
   against the catalog at the right rev.
 
 If you build something with the catalog, open a PR adding it to
-[`CONTRIBUTING.md`](../CONTRIBUTING.md)'s "Tools using the catalog"
+[`CONTRIBUTING.md`](../contributing/)'s "Tools using the catalog"
 section.

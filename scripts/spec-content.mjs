@@ -4,6 +4,8 @@ import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import GithubSlugger from 'github-slugger';
+
 import { SOURCE_ROUTES } from './spec-content.routes.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -204,6 +206,96 @@ function preserveLeadingYamlFrontmatter(body) {
   return `\`\`\`yaml\n${metadata}\n\`\`\`\n\n${rest}`;
 }
 
+function headingIdsIn(body) {
+  const ids = new Set();
+  const slugger = new GithubSlugger();
+  for (const line of body.split('\n')) {
+    const match = /^(#{1,6})\s+(.+?)\s*$/.exec(line);
+    if (!match) continue;
+    const explicit = /\{#([^}]+)\}\s*$/.exec(match[2]);
+    ids.add(explicit ? explicit[1] : slugger.slug(match[2].replace(/\s*\{#[^}]+\}\s*$/, '')));
+  }
+  return ids;
+}
+
+function publishedSourceRoutes() {
+  const routes = new Map();
+  for (const route of SOURCE_ROUTES) {
+    routes.set(route.source, route.entry.path);
+  }
+
+  // Source files that are referenced from upstream prose but are
+  // intentionally represented by a companion published page.
+  routes.set('skills/ai-contributor-audit/README.md', 'docs/skill-audit');
+  routes.set('skills/ai-contributor-audit-profile/README.md', 'docs/skill-profile');
+  routes.set('skills/ai-contributor-audit-fix/README.md', 'docs/skill-fix');
+  routes.set('.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md', 'docs/stamped-audit');
+  routes.set('.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md', 'docs/stamped-audit');
+  routes.set('AI-CONTRIBUTOR-RULE-CATALOG.json', 'docs/rule-catalog');
+
+  return routes;
+}
+
+function sourceUrl(metadata, targetPath, fragment = '') {
+  const ref =
+    metadata.tag && metadata.tag !== 'unknown'
+      ? metadata.tag
+      : metadata.sha && metadata.sha !== 'unknown'
+        ? metadata.sha
+        : 'main';
+  return `${SPEC_REPO_URL}/blob/${ref}/${targetPath}${fragment}`;
+}
+
+function relativeSiteLink(fromEntryPath, toEntryPath, fragment = '') {
+  const fromDir = path.posix.dirname(`${fromEntryPath.replace(/^\/+|\/+$/g, '')}/index.html`);
+  const toFile = `${toEntryPath.replace(/^\/+|\/+$/g, '')}/index.html`;
+  let relative = path.posix.relative(fromDir, toFile);
+  if (!relative.startsWith('.')) relative = `./${relative}`;
+  return relative.replace(/index\.html$/, '') + fragment;
+}
+
+function sitePathForSource(targetPath, fromEntryPath, fragment = '') {
+  const route = publishedSourceRoutes().get(targetPath);
+  if (!route) return undefined;
+
+  // The generated full-spec page exposes compact aliases for numbered
+  // clauses (`#c1`, `#c2`, …) and catalog anchors (`#p01-c1-…`), not the
+  // upstream GitHub auto-slugs (`#1-reproducible-environment`).
+  if (targetPath === 'AI-CONTRIBUTOR-SPECIFICATION.md') {
+    const numbered = /^#(\d+)-/.exec(fragment);
+    if (numbered) return relativeSiteLink(fromEntryPath, route, `#c${numbered[1]}`);
+    if (fragment === '#conformance-levels') {
+      return relativeSiteLink(fromEntryPath, 'docs/conformance-levels');
+    }
+  }
+
+  return relativeSiteLink(fromEntryPath, route, fragment);
+}
+
+function rewriteSpecLinks(body, sourcePath, entry, metadata) {
+  const currentHeadingIds = headingIdsIn(body);
+  const currentDir = path.posix.dirname(sourcePath);
+
+  return body.replace(/(!?\[[^\]]*?\]\()([^)\s]+)(\))/g, (full, prefix, rawHref, suffix) => {
+    if (prefix.startsWith('!') || rawHref.startsWith('#') || /^[a-z][a-z0-9+.-]*:/i.test(rawHref)) {
+      if (rawHref.startsWith('#') && !currentHeadingIds.has(decodeURIComponent(rawHref.slice(1)))) {
+        return `${prefix}${sourceUrl(metadata, sourcePath, rawHref)}${suffix}`;
+      }
+      return full;
+    }
+
+    const [rawPath, rawFragment = ''] = rawHref.split('#');
+    const targetPath = path.posix.normalize(path.posix.join(currentDir, rawPath));
+    const fragment = rawFragment ? `#${rawFragment}` : '';
+    if (targetPath === 'README.md' && fragment === '#how-the-audit-runs') {
+      return `${prefix}${sourceUrl(metadata, targetPath, fragment)}${suffix}`;
+    }
+    const sitePath = sitePathForSource(targetPath, entry.path, fragment);
+
+    return `${prefix}${sitePath ?? sourceUrl(metadata, targetPath, fragment)}${suffix}`;
+  });
+}
+
 // Starlight-shaped frontmatter for the `docs` content collection consumed
 // by @astrojs/starlight. Maps the porter's deck → Starlight's description
 // so generated pages get OG/SEO metadata without a second extraction pass.
@@ -325,6 +417,7 @@ export async function generateDocs({
   starlightOutDir = STARLIGHT_DOCS_ROOT,
 } = {}) {
   assertSpecSource({ root });
+  const metadata = getSpecVersionMetadata({ root });
   await mkdir(outDir, { recursive: true });
   await mkdir(starlightOutDir, { recursive: true });
 
@@ -334,6 +427,7 @@ export async function generateDocs({
   for (const route of SOURCE_ROUTES) {
     const rawBody = await stageCopy(root, route.source);
     const { title, deck, body } = stageInject(rawBody, route.entry, route.source);
+    const linkedBody = rewriteSpecLinks(body, route.source, route.entry, metadata);
 
     // Body-only frontmatter for the generatedSpec content collection,
     // consumed by MDX pages (e.g. coverage-map.mdx, rule-catalog.mdx)
@@ -341,7 +435,11 @@ export async function generateDocs({
     // `getEntry('generatedSpec', …)` + `render()`.
     const generatedSpecTarget = path.join(outDir, route.file);
     expectedGeneratedSpecTargets.add(generatedSpecTarget);
-    await writeFile(generatedSpecTarget, `${buildFrontmatter({ title, deck })}${body}`, 'utf8');
+    await writeFile(
+      generatedSpecTarget,
+      `${buildFrontmatter({ title, deck })}${linkedBody}`,
+      'utf8',
+    );
 
     let starlightTarget = null;
     if (route.starlightFile) {
@@ -356,7 +454,7 @@ export async function generateDocs({
         sidebarOrder: route.sidebarOrder,
         sidebarLabel,
       });
-      await writeFile(starlightTarget, `${starlightFrontmatter}${body}`, 'utf8');
+      await writeFile(starlightTarget, `${starlightFrontmatter}${linkedBody}`, 'utf8');
     }
 
     generated.push({ ...route, target: generatedSpecTarget, starlightTarget, title, deck });

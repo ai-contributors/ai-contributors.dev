@@ -3,7 +3,7 @@ title: "AI Contributor Audit Prompt"
 deck: "Use this prompt when your agent does not support skills or when you want a copy-and-paste onboarding path."
 ---
 For repeat audits, prefer the
-[`ai-contributor-audit`](skills/ai-contributor-audit/SKILL.md) skill. The skill
+[`ai-contributor-audit`](../../docs/skill-audit/) skill. The skill
 uses the same audit model, but is easier to reuse and less error-prone.
 
 ## Copy-Paste Prompt
@@ -47,4 +47,4 @@ The `audited_commit` and `auditor` fields exist so a reviewer can reproduce and
 challenge any line.
 
 For the evidence model behind this flow, read
-[`AI-CONTRIBUTOR-AUDIT-MODEL.md`](AI-CONTRIBUTOR-AUDIT-MODEL.md).
+[`AI-CONTRIBUTOR-AUDIT-MODEL.md`](../../docs/audit-overview/).

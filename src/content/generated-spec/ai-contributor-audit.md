@@ -2,8 +2,8 @@
 title: "AI Contributor Audit"
 deck: "Full audit artifacts live in [`.ai-contributor-audit/`](.ai-contributor-audit/):"
 ---
-- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md)
-- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md)
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](./)
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](./)
 - `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`
 - `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`
 
@@ -35,7 +35,7 @@ No badge is displayed for `conformance_level: none` or `conformance_level: 0`.
 4. If no level row is `✅ Yes`, the stamper sets `none`.
 5. Never claim a level whose row is not `✅ Yes`, even if most requirements are met.
 
-The frontmatter value and the summary table `MUST` agree; a mismatch is an audit defect. To advertise the level with a README badge, see [the badge section in the spec README](README.md#display-your-level).
+The frontmatter value and the summary table `MUST` agree; a mismatch is an audit defect. To advertise the level with a README badge, see [the badge section in the spec README](../quickstart/#display-your-level).
 
 ## Backlog — what to address first
 

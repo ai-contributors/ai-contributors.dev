@@ -17,29 +17,29 @@ before publishing a conformance claim.
 ## Start Here
 
 1. Run the
-   [audit profile skill](skills/ai-contributor-audit-profile/SKILL.md), then
+   [audit profile skill](../skill-profile/), then
    have the owner confirm the profile answers. This gives the audit
    applicability evidence for checks that do not apply.
-2. Run the [audit skill](skills/ai-contributor-audit/README.md) to produce the
+2. Run the [audit skill](../skill-audit/) to produce the
    [audit artifacts](#what-the-audit-produces), including
    `AI-CONTRIBUTOR-AUDIT.md`.
 3. Review the current result and decide which
    [target level](#choose-your-target-level) you want to reach.
-4. Use the [fix skill](skills/ai-contributor-audit-fix/SKILL.md) to address one
+4. Use the [fix skill](../skill-fix/) to address one
    backlog row at a time.
 5. Rerun the audit after a batch of fixes, especially when you expect to reach
    the next level.
 6. Have a human or named accountable owner review the
-   [audit evidence](AI-CONTRIBUTOR-AUDIT-MODEL.md) before claiming a level.
+   [audit evidence](../audit-overview/) before claiming a level.
 
-If you are hesitant to start with an agent, use the [manual path](#manual-path)
+If you are hesitant to start with an agent, use the [manual path](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/README.md#manual-path)
 first. That gives you the same hardening path without letting an agent inspect
 the repository.
 
 Using TypeScript, pnpm, and GitHub? Follow the concrete adoption path in
-[`AI-CONTRIBUTOR-GUIDE.md`](AI-CONTRIBUTOR-GUIDE.md).
+[`AI-CONTRIBUTOR-GUIDE.md`](../adoption-guide/).
 
-Maintaining this repository? See [`TOOLING.md`](TOOLING.md) for the tooling
+Maintaining this repository? See [`TOOLING.md`](../tooling/) for the tooling
 architecture, command map, and directory responsibilities.
 
 ## Audit Prerequisites
@@ -87,13 +87,13 @@ change uncommitted, commit, branch, push, or open a PR.
 
 If your agent does not support skills, or you prefer the prompt-based flow, use
 the prompt in
-[`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](AI-CONTRIBUTOR-AUDIT-PROMPT.md).
+[`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](../../audit/prompt/).
 
 ## Choose Your Target Level
 
 Choose the highest-risk AI workflow the repository allows. The formal
 definitions are in
-[`AI-CONTRIBUTOR-SPECIFICATION.md` § Conformance levels](AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels).
+[`AI-CONTRIBUTOR-SPECIFICATION.md` § Conformance levels](../conformance-levels/).
 
 | Minimum level | Use this when... | What it enables |
 |---|---|---|
@@ -109,11 +109,11 @@ automated formatting.
 
 ## What The Audit Produces
 
-- [`AI-CONTRIBUTOR-AUDIT.md`](AI-CONTRIBUTOR-AUDIT.md): root summary
+- [`AI-CONTRIBUTOR-AUDIT.md`](../stamped-audit/): root summary
   template. A populated audit contains the conformance level and sorted backlog.
-- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md):
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](../stamped-audit/):
   full row-by-row checklist.
-- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md):
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](../stamped-audit/):
   command and evidence trace.
 - `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`: structured evidence
   collected from the repository and host.

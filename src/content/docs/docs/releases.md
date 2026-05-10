@@ -1,5 +1,5 @@
 ---
-title: "Changelog"
+title: "Release Changelog"
 description: "This file records notable normative changes to the AI Contributor Specification and its companion checklist, guide, and audit-log templates."
 sidebar:
   label: "Releases"

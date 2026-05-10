@@ -178,6 +178,7 @@
       "path": "docs/releases",
       "section": "Project",
       "label": "Releases",
+      "title": "Release Changelog",
       "source": { "repo": "spec", "path": "CHANGELOG.md" }
     },
     {

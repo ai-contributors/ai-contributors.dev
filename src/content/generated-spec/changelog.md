@@ -1,5 +1,5 @@
 ---
-title: "Changelog"
+title: "Release Changelog"
 deck: "This file records notable normative changes to the AI Contributor Specification and its companion checklist, guide, and audit-log templates."
 ---
 **Scope.** Only normative changes appear here: new or modified `MUST` / `SHOULD` / `MAY` clauses, checklist row changes, audit-log or evidence-model changes, and changes to shipped audit/skill behavior that adopters can observe. Tooling, coverage lifts, internal refactors, and CI gate adjustments live in `git log` rather than this file. Squash-merged commits to `main` therefore do not all map one-to-one to CHANGELOG entries.

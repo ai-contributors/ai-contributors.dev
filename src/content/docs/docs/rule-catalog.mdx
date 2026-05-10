@@ -1,0 +1,20 @@
+---
+title: 'The rule catalog.'
+description: '`AI-CONTRIBUTOR-RULE-CATALOG.json` is the machine-readable canon of the spec — the single source of truth that every other artifact (the prose specification, the checklist, the coverage map, the collector registry) is projected from. If you build linters, dashboards, IDE integrations, badges, or your own auditor, you target this file.'
+sidebar:
+  label: 'Rule catalog'
+  order: 80
+---
+
+import { getEntry, render } from 'astro:content';
+import RuleCatalogBrowser from '../../../components/RuleCatalogBrowser.astro';
+
+export const formatEntry = await getEntry('generatedSpec', 'rule-catalog-format');
+export const formatRendered = await render(formatEntry);
+export const FormatBody = formatRendered.Content;
+
+## Browse all rules
+
+<RuleCatalogBrowser />
+
+<FormatBody />

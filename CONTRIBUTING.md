@@ -41,9 +41,9 @@ pnpm build
 
 ## Generated Spec Pages
 
-Do not hand-edit `src/content/docs/generated-spec/`. The files are committed
-because Astro/Starlight must see them in CI and deploy environments. Refresh
-them with:
+Do not hand-edit `src/content/generated-spec/`. The files are committed
+because Astro's content collection loader resolves them at build time in CI
+and deploy environments. Refresh them with:
 
 ```sh
 pnpm prepare:spec

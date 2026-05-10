@@ -12,7 +12,7 @@ export default [
       'dist/**',
       'external/**',
       'node_modules/**',
-      'src/content/docs/generated-spec/**',
+      'src/content/generated-spec/**',
     ],
   },
   js.configs.recommended,

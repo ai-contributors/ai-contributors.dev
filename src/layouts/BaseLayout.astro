@@ -1,0 +1,57 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/+$/, '')}/favicon.svg`} />
+    {/* ClientRouter for non-Starlight routes (homepage, 404). Starlight
+        pages get their own ClientRouter via components/overrides/Head.astro;
+        the two layouts are mutually exclusive, so neither double-mounts. */}
+    <ClientRouter />
+    <script is:inline>
+      // Apply theme before paint to avoid FOUC. Reads the bespoke key
+      // ('theme') first, falls back to Starlight's ('starlight-theme')
+      // so the choice persists when the visitor arrives here from a
+      // Starlight page that was set in the same browser session.
+      // src/components/ThemeToggle.astro and the Starlight ThemeSelect
+      // override write both keys at runtime.
+      (function () {
+        try {
+          var theme = localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
+          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
+        } catch (_) {}
+      })();
+    </script>
+    <script is:inline>
+      // Reapply theme after Astro view-transition swaps, same reason as
+      // the Starlight Head override: ClientRouter applies the new
+      // page's <html> attributes which can clobber the toggled theme.
+      document.addEventListener('astro:after-swap', () => {
+        try {
+          var theme =
+            localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
+          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
+          else document.documentElement.removeAttribute('data-invert');
+          if (theme === 'light' || theme === 'dark')
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {}
+      });
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

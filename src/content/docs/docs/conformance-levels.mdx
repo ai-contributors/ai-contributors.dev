@@ -1,0 +1,189 @@
+---
+title: 'Five levels of AI autonomy.'
+description: 'Pick the minimum level your repo conforms to today. Display it. Earn the next one.'
+sidebar:
+  label: 'Levels overview'
+  order: 60
+---
+
+import { SPEC } from '../../../data/spec.generated';
+import {
+  badgeMarkdownForLevel,
+  badgeUrlForLevel,
+  pinnedBadgeMarkdownForLevel,
+} from '../../../data/badges';
+import { url as siteUrl } from '../../../lib/links';
+
+export const levels = SPEC.levels;
+export const maxOrder = Math.max(...levels.map((level) => level.order));
+export const allRules = SPEC.clauses.flatMap((clause) =>
+  clause.rules.map((rule) => ({ ...rule, clause: clause.num })),
+);
+export const levelRows = levels.map((level) => ({
+  ...level,
+  autonomy: Math.round((level.order / maxOrder) * 100),
+  ruleCount: allRules.filter((rule) => rule.level === level.id).length,
+}));
+export const sampleLevel = levelRows.find((level) => level.id === 'L2') ?? levelRows[0];
+
+## The ladder
+
+The level names, descriptions, workflow summaries, and rule counts below
+come from `AI-CONTRIBUTOR-RULE-CATALOG.json`. Each level adds gates on top
+of the previous one.
+
+<div class="level-card-list">
+  {levelRows.map((level) => (
+    <div class="level-card" data-level={level.id}>
+      <div class="level-card-id">
+        <span class="level-card-tag mono">{level.id}</span>
+        <span class="level-card-name">{level.label}</span>
+      </div>
+      <div class="level-card-main">
+        <div class="level-card-topline">
+          <span>{level.workflowSummary}</span>
+          <span class="mono">{level.autonomy}% autonomy</span>
+        </div>
+        <span class="level-card-bar" aria-hidden="true">
+          <span class="level-card-fill" style={`width: ${level.autonomy}%`} />
+        </span>
+        <p>{level.description}</p>
+        <span class="level-card-meta">{level.ruleCount} catalog rows start here</span>
+      </div>
+      <div class="level-card-badge">
+        <img
+          src={badgeUrlForLevel(level.id)}
+          width="214"
+          height="20"
+          alt={`AI Contributor ${level.id} ${level.label}`}
+        />
+      </div>
+    </div>
+  ))}
+</div>
+
+## Display your level
+
+Once the audit shows every row at your target level passing, advertise the
+level via a badge in your README. The labels below are derived from the
+catalog levels. Use the badge for the highest level your current audit
+actually reaches. The pinned form is recommended because it ties the claim
+to the catalog version you audited against.
+
+<pre class="codeblock"><code>{`<!-- README.md -->
+${badgeMarkdownForLevel(sampleLevel.id)}
+
+<!-- Pinned to ${SPEC.version} -->
+${pinnedBadgeMarkdownForLevel(sampleLevel.id)}`}</code></pre>
+
+## How a level is claimed
+
+A level is claimed by running the audit and showing every row at your
+target level passing. The audit records the spec source, audited commit,
+level claimed, and evidence hash so the claim can be reproduced.
+
+Claims are unilateral: there is no central registry. The verification path
+is to reproduce the audit against the repository at a specific commit and
+catalog version.
+
+## Where to next
+
+- <a href={siteUrl('specification')}>Browse every clause</a> grouped by pillar
+  and level.
+- [Read how the audit decides pass/fail](../audit-overview/).
+- [Run your first audit](../quickstart/) if you have not yet.
+
+<style>
+  {`
+    .level-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 32px 0 56px;
+    }
+    .level-card {
+      align-items: stretch;
+      border: 1px solid var(--sl-color-hairline);
+      background: var(--sl-color-bg-sidebar);
+      display: grid;
+      grid-template-columns: 120px 1fr 240px;
+      gap: 24px;
+      padding: 18px 22px;
+    }
+    .level-card-id {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .level-card-tag {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--sl-color-gray-3);
+    }
+    .level-card-name {
+      font-family: var(--sl-font-display);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+    .level-card-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .level-card-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .level-card-bar {
+      background: var(--sl-color-hairline-light);
+      display: block;
+      height: 4px;
+    }
+    .level-card-fill {
+      background: var(--sl-color-text);
+      display: block;
+      height: 100%;
+    }
+    .level-card-main p {
+      color: var(--sl-color-gray-2);
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin: 4px 0 0;
+    }
+    .level-card-meta {
+      font-family: var(--sl-font-system-mono);
+      font-size: 11.5px;
+      color: var(--sl-color-gray-3);
+    }
+    .level-card-badge {
+      align-items: center;
+      display: flex;
+      justify-content: flex-end;
+    }
+    pre.codeblock {
+      background: var(--sl-color-gray-7);
+      border: 1px solid var(--sl-color-hairline);
+      color: var(--sl-color-text);
+      font-family: var(--sl-font-system-mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      margin: 18px 0 28px;
+      overflow-x: auto;
+      padding: 14px 16px;
+    }
+    .mono {
+      font-family: var(--sl-font-system-mono);
+    }
+    @media (max-width: 880px) {
+      .level-card {
+        grid-template-columns: 1fr;
+      }
+      .level-card-badge {
+        justify-content: flex-start;
+      }
+    }
+  `}
+</style>

@@ -1,13 +1,13 @@
 # Threat Model
 
-Review date: 2026-05-03
+Review date: 2026-05-07
 Owner: `@ai-contributors`
 Review cadence: quarterly and before deployment, workflow, submodule, or
 generated-spec routing changes.
 
 ## System
 
-`ai-contributors.dev` is a public Astro/Starlight documentation site for the AI
+`ai-contributors.dev` is a public Astro 6.x documentation site for the AI
 Contributor Specification. It publishes site-authored docs plus generated pages
 from the pinned `external/ai-contributor-spec/` submodule to GitHub Pages.
 
@@ -15,7 +15,7 @@ from the pinned `external/ai-contributor-spec/` submodule to GitHub Pages.
 
 - Public documentation accuracy and route stability.
 - Pinned upstream specification submodule commit.
-- Generated Markdown under `src/content/docs/generated-spec/`.
+- Generated Markdown under `src/content/generated-spec/`.
 - GitHub Actions workflows and Pages deployment settings.
 - Repository governance files such as `AGENTS.md`, `SECURITY.md`,
   `.github/CODEOWNERS`, and audit evidence.
@@ -67,9 +67,9 @@ must add runtime validation and update this threat model in the same PR.
 
 Current test layers are:
 
-- Source-generation and routing tests under `tests/*.test.mjs`.
-- Unit tests under `tests/unit/`.
-- Integration tests under `tests/integration/`.
+- Unit tests under `tests/unit/` (no filesystem mutations, no git, no child processes).
+- Integration tests under `tests/integration/` (real filesystem, submodule helpers, child processes).
+- Built-output tests under `tests/built/` (run by `pnpm build` against `dist/`).
 - Coverage threshold checks through `pnpm coverage:check`.
 - Type checking through `pnpm type-check`.
 - Dependency-boundary and circular-dependency checking through

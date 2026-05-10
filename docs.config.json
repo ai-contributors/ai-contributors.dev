@@ -1,0 +1,227 @@
+{
+  "$schema": "./docs.config.schema.json",
+  "schemaVersion": "0.1",
+  "docs": [
+    {
+      "key": "overview",
+      "path": "docs/",
+      "section": "Start",
+      "label": "Overview",
+      "source": { "repo": "site", "path": "src/content/docs/docs/index.mdx" }
+    },
+    {
+      "key": "quickstart",
+      "path": "docs/quickstart",
+      "section": "Start",
+      "label": "Quickstart",
+      "source": { "repo": "spec", "path": "README.md" }
+    },
+    {
+      "key": "adoption-guide",
+      "path": "docs/adoption-guide",
+      "section": "Start",
+      "label": "Adoption guide",
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-GUIDE.md" }
+    },
+    {
+      "key": "spec",
+      "path": "specification",
+      "section": "Specification",
+      "label": "Full specification",
+      "tag": "page",
+      "starlightHandAuthored": true,
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-SPECIFICATION.md" },
+      "sourceInputs": [
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-SPECIFICATION.md",
+          "role": "canonical prose"
+        },
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-RULE-CATALOG.json",
+          "role": "rule data"
+        }
+      ]
+    },
+    {
+      "key": "pillars",
+      "path": "docs/pillars",
+      "section": "Specification",
+      "label": "Pillars overview",
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-RULE-CATALOG.json" }
+    },
+    {
+      "key": "ref-levels",
+      "path": "docs/conformance-levels",
+      "section": "Specification",
+      "label": "Levels overview",
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-RULE-CATALOG.json" }
+    },
+    {
+      "key": "coverage-map",
+      "path": "docs/coverage-map",
+      "section": "Specification",
+      "label": "Coverage map",
+      "starlightHandAuthored": true,
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-COVERAGE.md" },
+      "sourceInputs": [
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-COVERAGE.md",
+          "role": "coverage prose"
+        },
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-RULE-CATALOG.json",
+          "role": "coverage data"
+        }
+      ]
+    },
+    {
+      "key": "rule-catalog",
+      "path": "docs/rule-catalog",
+      "section": "Specification",
+      "label": "Rule catalog",
+      "starlightHandAuthored": true,
+      "source": { "repo": "spec", "path": "docs/RULE-CATALOG-FORMAT.md" },
+      "sourceInputs": [
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-RULE-CATALOG.json",
+          "role": "rule data"
+        },
+        {
+          "repo": "spec",
+          "path": "docs/RULE-CATALOG-FORMAT.md",
+          "role": "format prose"
+        }
+      ]
+    },
+    {
+      "key": "threat-model",
+      "path": "docs/threat-model",
+      "section": "Specification",
+      "label": "Threat model template",
+      "derived": true,
+      "source": { "repo": "spec", "path": "docs/threat-model-template.md" }
+    },
+    {
+      "key": "audit-how",
+      "path": "docs/audit-overview",
+      "section": "Audit",
+      "label": "How the audit works",
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-AUDIT-MODEL.md" }
+    },
+    {
+      "key": "profile",
+      "path": "docs/profile",
+      "section": "Audit",
+      "label": "The profile",
+      "source": { "repo": "spec", "path": "docs/AI-CONTRIBUTOR-AUDIT-PROFILE.md" }
+    },
+    {
+      "key": "audit-prompt",
+      "path": "audit/prompt",
+      "section": "Audit",
+      "label": "No-install prompt",
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-AUDIT-PROMPT.md" }
+    },
+    {
+      "key": "stamped-audit",
+      "path": "docs/stamped-audit",
+      "section": "Audit",
+      "label": "A stamped audit",
+      "starlightHandAuthored": true,
+      "source": { "repo": "spec", "path": "AI-CONTRIBUTOR-AUDIT.md" },
+      "sourceInputs": [
+        {
+          "repo": "spec",
+          "path": "AI-CONTRIBUTOR-AUDIT.md",
+          "role": "root summary"
+        },
+        {
+          "repo": "spec",
+          "path": ".ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md",
+          "role": "checklist"
+        },
+        {
+          "repo": "spec",
+          "path": ".ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md",
+          "role": "audit log"
+        }
+      ]
+    },
+    {
+      "key": "skill-profile",
+      "path": "docs/skill-profile",
+      "section": "Skills",
+      "label": "ai-contributor-audit-profile",
+      "source": { "repo": "spec", "path": "skills/ai-contributor-audit-profile/SKILL.md" }
+    },
+    {
+      "key": "skill-audit",
+      "path": "docs/skill-audit",
+      "section": "Skills",
+      "label": "ai-contributor-audit",
+      "source": { "repo": "spec", "path": "skills/ai-contributor-audit/SKILL.md" }
+    },
+    {
+      "key": "skill-fix",
+      "path": "docs/skill-fix",
+      "section": "Skills",
+      "label": "ai-contributor-audit-fix",
+      "source": { "repo": "spec", "path": "skills/ai-contributor-audit-fix/SKILL.md" }
+    },
+    {
+      "key": "ref-releases",
+      "path": "docs/releases",
+      "section": "Project",
+      "label": "Releases",
+      "source": { "repo": "spec", "path": "CHANGELOG.md" }
+    },
+    {
+      "key": "contributing",
+      "path": "docs/contributing",
+      "section": "Project",
+      "label": "Contributing",
+      "source": { "repo": "spec", "path": "CONTRIBUTING.md" }
+    },
+    {
+      "key": "authors",
+      "path": "docs/authors",
+      "section": "Project",
+      "label": "Authors",
+      "source": { "repo": "spec", "path": "AUTHORS.md" }
+    },
+    {
+      "key": "tooling",
+      "path": "docs/tooling",
+      "section": "Project",
+      "label": "Tooling",
+      "source": { "repo": "spec", "path": "TOOLING.md" }
+    },
+    {
+      "key": "security-policy",
+      "path": "docs/security-policy",
+      "section": "Project",
+      "label": "Security policy",
+      "source": { "repo": "spec", "path": "SECURITY.md" }
+    },
+    {
+      "key": "glossary",
+      "path": "docs/glossary",
+      "section": "Project",
+      "label": "Glossary",
+      "derived": true,
+      "source": { "repo": "spec", "path": "docs/glossary.md" }
+    },
+    {
+      "key": "doc-coverage",
+      "path": "docs/doc-coverage",
+      "section": "Project",
+      "label": "Published pages",
+      "source": { "repo": "site", "path": "src/content/docs/docs/doc-coverage.mdx" }
+    }
+  ]
+}

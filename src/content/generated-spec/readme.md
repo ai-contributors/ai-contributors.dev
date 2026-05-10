@@ -1,0 +1,128 @@
+---
+title: "Quickstart"
+---
+## Process Options
+
+| Process | What it means | Best use |
+| --- | --- | --- |
+| **Manual self-assessment** | A human reads the checklist and records findings by hand, without scripts or an agent. | Early gap analysis and planning. |
+| **Scripted human audit** | A human makes the judgment calls while `audit-collect.ts`, `audit-stamp.ts`, and `audit-validate.ts` handle evidence, derived fields, and consistency. | Recommended minimum for conformance claims. |
+| **Agent-assisted audit** | An agent follows the audit protocol, fills judgment-required rows from current evidence, and uses the scripts for collection, stamping, and validation. | Faster repeatable audits, with human/accountable-owner acceptance before a claim. |
+
+A script-free checklist pass is useful, but it is not the reproducible audit
+path: timestamps, summaries, derived level status, and evidence completeness are
+not mechanically checked. Use a scripted human audit or agent-assisted audit
+before publishing a conformance claim.
+
+## Start Here
+
+1. Run the
+   [audit profile skill](skills/ai-contributor-audit-profile/SKILL.md), then
+   have the owner confirm the profile answers. This gives the audit
+   applicability evidence for checks that do not apply.
+2. Run the [audit skill](skills/ai-contributor-audit/README.md) to produce the
+   [audit artifacts](#what-the-audit-produces), including
+   `AI-CONTRIBUTOR-AUDIT.md`.
+3. Review the current result and decide which
+   [target level](#choose-your-target-level) you want to reach.
+4. Use the [fix skill](skills/ai-contributor-audit-fix/SKILL.md) to address one
+   backlog row at a time.
+5. Rerun the audit after a batch of fixes, especially when you expect to reach
+   the next level.
+6. Have a human or named accountable owner review the
+   [audit evidence](AI-CONTRIBUTOR-AUDIT-MODEL.md) before claiming a level.
+
+If you are hesitant to start with an agent, use the [manual path](#manual-path)
+first. That gives you the same hardening path without letting an agent inspect
+the repository.
+
+Using TypeScript, pnpm, and GitHub? Follow the concrete adoption path in
+[`AI-CONTRIBUTOR-GUIDE.md`](AI-CONTRIBUTOR-GUIDE.md).
+
+Maintaining this repository? See [`TOOLING.md`](TOOLING.md) for the tooling
+architecture, command map, and directory responsibilities.
+
+## Audit Prerequisites
+
+For the automated audit path, have:
+
+- `git`, Node.js 24.x, and `npm` / `npx` available.
+- Network access to fetch the pinned specification and runbook tooling. The
+  bootstrap/start command may use `npx --yes tsx@4.21.0`; after `audit-run.ts`
+  starts, child phases reuse `tsx` from `PATH` instead of invoking `npx` again.
+- The target repository checked out locally.
+- The target repository's package tools installed where applicable, such as
+  `pnpm` or `npm`.
+- `gh` authenticated as an account that can read the target GitHub repository
+  if you want hosted settings verified.
+
+Without GitHub CLI access, the audit still runs, but hosted controls such as
+branch protection, required reviews, secret scanning, push protection, and
+dependency alerts may remain `Warning` / verification gaps.
+
+## Install The Skills
+
+```sh
+npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit-profile ai-contributor-audit ai-contributor-audit-fix
+```
+
+Refresh an already installed audit skill outside an audit run:
+
+```sh
+npx skills update ai-contributor-audit
+```
+
+Do not auto-update during an audit. The audit skill and specification are coupled, and silent updates would hurt reproducibility. Actual audits should materialize the runbook from a pinned release tag or full commit SHA.
+
+Then start the skill using your agent's invocation syntax:
+
+- GitHub Copilot / Claude Code: `/ai-contributor-audit-profile`,
+  `/ai-contributor-audit`, or `/ai-contributor-audit-fix`.
+- Codex: `$ai-contributor-audit-profile`, `$ai-contributor-audit`, or
+  `$ai-contributor-audit-fix`.
+- Other agents: ask for the skill by name.
+
+The fix skill works on one finding, stops, and asks what to do next: leave the
+change uncommitted, commit, branch, push, or open a PR.
+
+If your agent does not support skills, or you prefer the prompt-based flow, use
+the prompt in
+[`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](AI-CONTRIBUTOR-AUDIT-PROMPT.md).
+
+## Choose Your Target Level
+
+Choose the highest-risk AI workflow the repository allows. The formal
+definitions are in
+[`AI-CONTRIBUTOR-SPECIFICATION.md` § Conformance levels](AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels).
+
+| Minimum level | Use this when... | What it enables |
+|---|---|---|
+| **L0 Baseline Hygiene** | AI is not part of the contribution workflow yet. | Foundational repository hygiene. |
+| **L1 Hardened** | AI reads repository context, explains code, suggests commands, or helps with review. | Safer read-only AI assistance. |
+| **L2 AI Assisted** | AI creates changes and a human actively accepts each one. | Human-accepted AI contributions. |
+| **L3 AI Authored** | AI completes delegated tasks, opens pull requests, or changes files for review. | AI-authored work with human review. |
+| **L4 AI Autonomous** | AI merges, releases, deploys, schedules changes, approves workflows, or changes settings without human approval for each action. | Autonomous AI operation. |
+
+Level 0 is the minimum baseline. It covers universal hygiene such as secret
+handling, pinned tooling, committed lockfiles, clean setup instructions, and
+automated formatting.
+
+## What The Audit Produces
+
+- [`AI-CONTRIBUTOR-AUDIT.md`](AI-CONTRIBUTOR-AUDIT.md): root summary
+  template. A populated audit contains the conformance level and sorted backlog.
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md):
+  full row-by-row checklist.
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md):
+  command and evidence trace.
+- `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`: structured evidence
+  collected from the repository and host.
+- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`:
+  owner-confirmed applicability answers that can explain why mapped checks are
+  or are not in scope. The profile skill should draft answers from repository
+  evidence first, then ask the owner to confirm or correct them. The audit reads
+  this file as pre-audit input; if new owner facts are needed, update the
+  profile and rerun rather than relying on chat answers.
+
+The audit is not a generic security review. It checks whether repository
+guardrails are strong enough for the AI workflow level you want to claim.

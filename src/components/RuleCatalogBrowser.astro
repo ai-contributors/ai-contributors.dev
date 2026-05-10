@@ -1,0 +1,130 @@
+---
+import { SPEC } from '../data/spec.generated';
+
+// Flat list: every rule with its denormalised clause/pillar/level fields,
+// plus the lookup data the filter UI needs.
+const PILLAR_BY_ID: Record<string, { num: string; name: string; icon: string }> =
+  Object.fromEntries(SPEC.pillars.map((p) => [p.id, p]));
+
+const ROWS = SPEC.clauses.flatMap((c) =>
+  c.rules.map((r) => ({
+    id: r.id,
+    weight: r.w,
+    text: r.t,
+    clauseNum: c.num,
+    clauseTitle: c.title,
+    level: c.lvl,
+    pillarId: c.pillar,
+    pillarName: PILLAR_BY_ID[c.pillar]?.name ?? c.pillar,
+    pillarIcon: PILLAR_BY_ID[c.pillar]?.icon ?? '',
+  })),
+);
+
+const WEIGHT_LABEL: Record<string, string> = {
+  MUST: 'MUST',
+  MUST_WHEN: 'MUST·when',
+  SHOULD: 'SHOULD',
+  MAY: 'MAY',
+};
+---
+
+<section class="rc-browse" id="browse">
+  <header class="rc-browse-head">
+    <div class="rc-browse-meta">
+      <span class="rc-browse-eyebrow mono">Browse</span>
+      <h2 class="rc-browse-h">Every rule, filterable.</h2>
+    </div>
+    <p class="rc-browse-lede">
+      All <strong>{ROWS.length}</strong> rules across {SPEC.clauses.length} clauses
+      and {SPEC.pillars.length} pillars. Type to filter on rule id, text, clause
+      title, pillar, level, or weight. Press <kbd>/</kbd> to focus the filter,
+      <kbd>Esc</kbd> to clear.
+    </p>
+  </header>
+
+  <div class="rc-toolbar">
+    <input
+      class="rc-filter"
+      id="rc-filter"
+      type="search"
+      placeholder="Filter rules…"
+      autocomplete="off"
+      aria-label="Filter rules"
+    />
+    <span class="rc-count mono" id="rc-count">{ROWS.length} rules</span>
+  </div>
+
+  <div class="rc-table-wrap">
+    <table class="rc-table" id="rc-table">
+      <thead>
+        <tr>
+          <th>Rule ID</th>
+          <th>Weight</th>
+          <th>Level</th>
+          <th>Clause</th>
+          <th>Pillar</th>
+          <th>Text</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ROWS.map((row) => (
+          <tr
+            class="rc-row"
+            data-haystack={`${row.id} ${row.weight} ${row.level} ${row.clauseNum} ${row.clauseTitle} ${row.pillarId} ${row.pillarName} ${row.text}`.toLowerCase()}
+          >
+            <td class="rc-id"><code>{row.id}</code></td>
+            <td><span class={`rc-w rc-w-${row.weight.toLowerCase()}`}>{WEIGHT_LABEL[row.weight] ?? row.weight}</span></td>
+            <td><span class={`lvl-tag mono lvl-${row.level.toLowerCase()}`}>{row.level}</span></td>
+            <td class="rc-clause"><span class="mono">§{row.clauseNum}</span> {row.clauseTitle}</td>
+            <td><span class="rc-pillar"><span aria-hidden="true">{row.pillarIcon}</span> {row.pillarName}</span></td>
+            <td class="rc-text">{row.text}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="rc-empty" id="rc-empty" hidden>No rules match.</p>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const input = document.getElementById('rc-filter');
+    const tbody = document.querySelector('#rc-table tbody');
+    const count = document.getElementById('rc-count');
+    const empty = document.getElementById('rc-empty');
+    if (!input || !tbody || !count || !empty) return;
+    const rows = Array.from(tbody.querySelectorAll('.rc-row'));
+    const total = rows.length;
+
+    function apply() {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      for (const tr of rows) {
+        const hay = tr.getAttribute('data-haystack') || '';
+        const match = q === '' || hay.includes(q);
+        tr.hidden = !match;
+        if (match) shown += 1;
+      }
+      count.textContent = q === '' ? `${total} rules` : `${shown} of ${total} rules`;
+      empty.hidden = shown !== 0;
+    }
+
+    input.addEventListener('input', apply);
+    document.addEventListener('keydown', (e) => {
+      if (e.target && e.target instanceof HTMLElement) {
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) {
+          if (e.key === 'Escape' && e.target === input) {
+            input.value = '';
+            apply();
+          }
+          return;
+        }
+      }
+      if (e.key === '/') {
+        e.preventDefault();
+        input.focus();
+      }
+    });
+  })();
+</script>

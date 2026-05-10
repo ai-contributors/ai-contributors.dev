@@ -1,11 +1,6 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 
-const ignoredPrefixes = [
-  '.ai-contributor-audit/',
-  'docs/superpowers/',
-  'external/',
-  'src/content/docs/generated-spec/',
-];
+const ignoredPrefixes = ['.ai-contributor-audit/', 'external/', 'src/content/generated-spec/'];
 const ignoredFiles = new Set(['AI-CONTRIBUTOR-AUDIT.md']);
 
 const trackedFiles = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })

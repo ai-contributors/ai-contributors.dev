@@ -1,8 +1,11 @@
-import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 import starlight from '@astrojs/starlight';
-import mermaid from 'astro-mermaid';
-import starlightLlmsTxt from 'starlight-llms-txt';
+import { defineConfig } from 'astro/config';
+import remarkCustomHeadingId from 'remark-custom-heading-id';
+import remarkDirective from 'remark-directive';
 
+import remarkPromptDirective from './src/lib/markdown/prompt-toolbar.ts';
+import { STARLIGHT_SIDEBAR } from './src/lib/starlight-sidebar.generated.ts';
 import { CUSTOM_DOMAIN, PRODUCTION_BASE } from './scripts/pages-routing.mjs';
 
 const site = process.env.ASTRO_SITE ?? CUSTOM_DOMAIN;
@@ -11,69 +14,31 @@ const base = process.env.ASTRO_BASE ?? PRODUCTION_BASE;
 export default defineConfig({
   site,
   base,
+  trailingSlash: 'ignore',
   integrations: [
     starlight({
-      title: 'AI Contributor Spec',
-      description: 'Guardrails for repositories where AI reads, writes, reviews, or releases code.',
-      logo: {
-        src: './public/favicon.svg',
-        alt: 'AI Contributor Spec',
+      title: 'ai-contributor-spec / audit',
+      disable404Route: true,
+      pagefind: true,
+      sidebar: STARLIGHT_SIDEBAR,
+      logo: { src: './src/assets/logomark.svg', alt: 'ai-contributors logomark' },
+      customCss: ['./src/styles/starlight-theme.css'],
+      components: {
+        PageTitle: './src/components/overrides/PageTitle.astro',
+        Footer: './src/components/overrides/Footer.astro',
+        ThemeSelect: './src/components/overrides/ThemeSelect.astro',
+        Sidebar: './src/components/overrides/Sidebar.astro',
+        Head: './src/components/overrides/Head.astro',
       },
-      customCss: ['./src/styles/custom.css'],
-      social: [
-        {
-          icon: 'github',
-          label: 'Specification repository',
-          href: 'https://github.com/ai-contributors/ai-contributor-spec',
-        },
-      ],
-      plugins: [starlightLlmsTxt()],
-      sidebar: [
-        {
-          label: 'Start here',
-          items: [
-            { label: 'Home', slug: '' },
-            { label: 'Specification', slug: 'specification' },
-            { label: 'Conformance levels', slug: 'levels' },
-          ],
-        },
-        {
-          label: 'Audit',
-          items: [
-            { label: 'How the audit runs', slug: 'audit' },
-            { label: 'Audit evidence model', slug: 'audit/model' },
-            { label: 'No-skill audit prompt', slug: 'audit/prompt' },
-          ],
-        },
-        {
-          label: 'Skills',
-          items: [
-            { label: 'Skills overview', slug: 'skills' },
-            { label: 'ai-contributor-audit', slug: 'skills/audit' },
-            { label: 'ai-contributor-audit SKILL.md', slug: 'skills/audit/skill' },
-            { label: 'ai-contributor-audit-fix', slug: 'skills/audit-fix' },
-            { label: 'ai-contributor-audit-profile', slug: 'skills/audit-profile' },
-          ],
-        },
-        {
-          label: 'Adoption',
-          items: [
-            { label: 'TypeScript + pnpm + GitHub', slug: 'guide/typescript-pnpm' },
-            { label: 'Coverage matrix', slug: 'coverage' },
-          ],
-        },
-        {
-          label: 'Reference',
-          items: [
-            { label: 'Changelog', slug: 'changelog' },
-            {
-              label: 'Spec repo on GitHub',
-              link: 'https://github.com/ai-contributors/ai-contributor-spec',
-            },
-          ],
-        },
-      ],
     }),
-    mermaid(),
+    mdx(),
   ],
+  markdown: {
+    // Honour explicit `{#anchor}` IDs (U2 paired) and `:::prompt`
+    // container directives (U9 paired). remark-directive parses the
+    // directive into the AST; the rehype plugin replaces it with the
+    // toolbar markup. remark-custom-heading-id runs before rehype-slug
+    // so an explicit id wins over the auto-slug.
+    remarkPlugins: [remarkCustomHeadingId, remarkDirective, remarkPromptDirective],
+  },
 });

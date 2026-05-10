@@ -1,0 +1,114 @@
+---
+// The spec page's filter chips + contents list, rendered into
+// Starlight's left Sidebar slot (override applied per-slug in
+// src/components/overrides/Sidebar.astro). Inside this rail the user
+// sees:
+//   - "Required at level" chips that filter clauses cumulatively
+//   - "Normative weight" chips that show/hide MUST/SHOULD/MAY rules
+//   - "Pillar" chips that toggle whole pillar sections
+//   - A "Contents" list grouping clauses by pillar
+//
+// The chip behaviour lives in src/lib/specification-page.js, loaded
+// once by the spec MDX body via a `?raw` import + <script set:html>.
+import { SPEC } from '../data/spec.generated';
+import { url } from '../lib/links';
+
+const PILLARS = SPEC.pillars;
+const CLAUSES = SPEC.clauses;
+const WEIGHT_LABEL: Record<string, string> = {
+  MUST: 'MUST',
+  MUST_WHEN: 'MUST·when',
+  SHOULD: 'SHOULD',
+  MAY: 'MAY',
+};
+const LEVEL_TIERS = ['L0', 'L1', 'L2', 'L3', 'L4'];
+---
+
+<aside class="toc">
+  <a class="toc-back" href={url('docs/')}>← Back to all docs</a>
+  <div class="toc-section">
+    <div class="toc-h">Filter</div>
+
+    <div class="toc-sub mono">Required at level</div>
+    <div class="chip-row chip-row-lvl" data-filter-group="level">
+      {
+        LEVEL_TIERS.map((lv) => (
+          <button
+            class={`chip chip-lvl lvl-${lv.toLowerCase()}`}
+            data-level={lv}
+            type="button"
+          >
+            {lv}
+          </button>
+        ))
+      }
+      <button class="chip chip-lvl chip-lvl-all is-on" data-level="ALL" type="button">
+        All
+      </button>
+    </div>
+    <div class="toc-hint mono" id="toc-hint">Showing every clause.</div>
+
+    <div class="toc-sub mono" style="margin-top: 18px;">Normative weight</div>
+    <div class="chip-row" data-filter-group="weight">
+      {
+        Object.keys(WEIGHT_LABEL).map((w) => (
+          <button
+            class={`chip chip-w chip-${w.toLowerCase()}`}
+            data-weight={w}
+            type="button"
+            aria-pressed="true"
+          >
+            {WEIGHT_LABEL[w]}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="toc-sub mono" style="margin-top: 18px;">Pillar</div>
+    <div class="chip-col" data-filter-group="pillar">
+      {
+        PILLARS.map((p) => (
+          <button class="chip chip-p" data-pillar={p.id} type="button" aria-pressed="true">
+            <span class="chip-icon" aria-hidden="true">
+              {p.icon}
+            </span>
+            <span class="chip-label">{p.name}</span>
+            <span class="chip-range mono">{p.range}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-h">Contents</div>
+    {
+      PILLARS.map((p) => {
+        const cls = CLAUSES.filter((c) => c.pillar === p.id);
+        return (
+          <div class="toc-pillar" data-toc-pillar={p.id}>
+            <div class="toc-pillar-h">
+              <span class="toc-pillar-num mono">{p.num}</span>
+              <span>{p.name}</span>
+            </div>
+            <ul>
+              {cls.map((c) => (
+                <li
+                  data-toc-clause={c.num}
+                  data-clause-level={c.lvl}
+                  data-clause-pillar={c.pillar}
+                >
+                  <a href={`#c${c.num}`}>
+                    <span class="mono toc-num">§{c.num}</span>
+                    <span class="toc-title">{c.title}</span>
+                    <span class={`mono toc-lvl lvl-${c.lvl.toLowerCase()}`}>{c.lvl}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })
+    }
+  </div>
+</aside>

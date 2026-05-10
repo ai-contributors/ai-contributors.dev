@@ -1,0 +1,471 @@
+---
+title: 'Docs.'
+description: 'Reference, guides, and the canonical specification. This overview is site-authored, but its navigation and counts are generated from docs.config.json and the pinned rule catalog.'
+sidebar:
+  label: 'Overview'
+  order: 10
+---
+
+import docsConfig from '@/docs-config';
+import { SPEC } from '../../../data/spec.generated';
+import { url as siteUrl } from '../../../lib/links';
+
+export const DOCS = docsConfig.docs;
+export const byKey = new Map(DOCS.map((entry) => [entry.key, entry]));
+export const hrefForKey = (key) => {
+  const entry = byKey.get(key);
+  if (!entry) return '#';
+  return siteUrl(entry.path);
+};
+export const docTitle = (entry) => entry.title ?? entry.label;
+
+export const PILLARS = SPEC.pillars.length;
+export const CLAUSES = SPEC.clauses.length;
+export const LEVELS = SPEC.levels.length;
+export const VERSION = SPEC.version;
+export const LEVEL_RANGE = `${SPEC.levels[0].id}-${SPEC.levels[SPEC.levels.length - 1].id}`;
+
+export const featured = [
+  {
+    key: 'quickstart',
+    kind: 'Adopt',
+    description:
+      'Choose an audit path, install the skills, run the first audit, and review the generated artifacts.',
+    foot: 'first audit',
+  },
+  {
+    key: 'spec',
+    kind: 'Read',
+    description: `${CLAUSES} clauses across ${PILLARS} pillars. The normative document: every MUST, MUST when applicable, SHOULD, and MAY.`,
+    foot: `spec rev ${VERSION}`,
+  },
+  {
+    key: 'audit-prompt',
+    kind: 'Audit',
+    description:
+      'Drop a no-install audit prompt into a tool-using agent and produce stamped artifacts.',
+    foot: 'prompt path',
+  },
+  {
+    key: 'ref-levels',
+    kind: 'Reference',
+    description: `${LEVELS} levels, ${LEVEL_RANGE}. Each level adds one gate on top of the previous.`,
+    foot: 'level ladder',
+  },
+];
+
+export const sections = DOCS.reduce((acc, entry) => {
+  let bucket = acc[acc.length - 1];
+  if (!bucket || bucket.label !== entry.section) {
+    bucket = { label: entry.section, items: [] };
+    acc.push(bucket);
+  }
+  bucket.items.push(entry);
+  return acc;
+}, []);
+
+## Start here
+
+Pick the entry that matches what you're trying to do.
+
+<div class="dx-overview-grid">
+  {featured
+    .filter((tile) => byKey.has(tile.key))
+    .map((tile) => {
+      const entry = byKey.get(tile.key);
+      return (
+        <a class="dx-overview-tile" href={hrefForKey(tile.key)}>
+          <span class="dx-overview-kind">{tile.kind}</span>
+          <span class="dx-overview-title">{docTitle(entry)}</span>
+          <p class="dx-overview-desc">{tile.description}</p>
+          <span class="dx-overview-foot">
+            <span>{tile.foot}</span>
+            <span class="arr">→</span>
+          </span>
+        </a>
+      );
+    })}
+</div>
+
+## At a glance
+
+The spec is small on purpose. One page of normative text, one ladder of
+conformance levels, one canonical loop for verifying conformance.
+
+<div class="dx-strip">
+  <div class="dx-strip-cell">
+    <span class="dx-strip-k">Pillars</span>
+    <span class="dx-strip-v">{PILLARS}</span>
+  </div>
+  <div class="dx-strip-cell">
+    <span class="dx-strip-k">Clauses</span>
+    <span class="dx-strip-v">{CLAUSES}</span>
+  </div>
+  <div class="dx-strip-cell">
+    <span class="dx-strip-k">Levels</span>
+    <span class="dx-strip-v">{LEVELS} <small>{LEVEL_RANGE}</small></span>
+  </div>
+  <div class="dx-strip-cell">
+    <span class="dx-strip-k">Spec rev</span>
+    <span class="dx-strip-v">{VERSION}</span>
+  </div>
+</div>
+
+## Docs by section
+
+The sidebar, breadcrumbs, pagination, source links, search index, and
+this overview all derive from `docs.config.json`.
+
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th class="num">Pages</th>
+      <th>Entries</th>
+    </tr>
+  </thead>
+  <tbody>
+    {sections.map((section) => (
+      <tr>
+        <td>{section.label}</td>
+        <td class="num">{section.items.length}</td>
+        <td>
+          {section.items.map((entry, i) => (
+            <>
+              {i > 0 && ' · '}
+              <a href={hrefForKey(entry.key)}>{docTitle(entry)}</a>
+            </>
+          ))}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## The seven pillars
+
+Each pillar groups clauses that share a concern. Names, ranges, icons,
+and descriptions come from the rule catalog projection.
+
+<div class="pillars-grid">
+  {SPEC.pillars.map((pillar) => (
+    <a class="pillar" href={siteUrl(`specification#${pillar.id}`)}>
+      <div class="pillar-head">
+        <span class="pillar-k mono">{pillar.range}</span>
+        <span class="pillar-icon" aria-hidden="true">{pillar.icon}</span>
+      </div>
+      <h3>{pillar.name}</h3>
+      <p>{pillar.description}</p>
+      <div class="pillar-foot">
+        <span class="mono small">pillar-{pillar.num}</span>
+        <span class="mono small pillar-arrow">→</span>
+      </div>
+    </a>
+  ))}
+</div>
+
+## Conformance levels
+
+The level ladder describes how much of the workflow an AI tool
+participates in. Each level is cumulative.
+
+<div class="levels-table">
+  <div class="lvl-row lvl-head">
+    <span>Min. level</span>
+    <span>Name</span>
+    <span>Autonomy</span>
+    <span>Workflow</span>
+    <span>Definition</span>
+  </div>
+  {SPEC.levels.map((level) => {
+    const pct =
+      SPEC.levels.length <= 1
+        ? 0
+        : Math.round((level.order / (SPEC.levels.length - 1)) * 100);
+    return (
+      <div class="lvl-row" data-level={level.id}>
+        <span class="lvl-tag mono">{level.id}</span>
+        <span class="lvl-name">{level.label}</span>
+        <span class="lvl-auto">
+          <span class="lvl-bar"><span class="lvl-fill" style={`width: ${pct}%`} /></span>
+          <span class="mono small">{pct}%</span>
+        </span>
+        <span class="lvl-desc">{level.workflowSummary}</span>
+        <span class="lvl-review">{level.description}</span>
+      </div>
+    );
+  })}
+</div>
+
+Full normative requirements per level are on the
+[Levels overview](../conformance-levels/) page.
+
+## How to read these docs
+
+Use the [Quickstart](../quickstart/) if you want to run an audit now. Use
+the [Adoption guide](../adoption-guide/) if you are changing a repository.
+Use the [Rule catalog](../rule-catalog/) if you are building tooling. Use
+[Published pages](../doc-coverage/) to inspect what this site publishes
+and where each page comes from.
+
+## Versioning and stability
+
+The site renders the pinned specification revision. Audit artifacts pin
+the spec revision they were stamped against, and the validator
+cross-checks that stamp. See [Releases](../releases/) for the version
+timeline.
+
+:::note[docs vs. spec]
+If a guide or page in these docs disagrees with the
+<a href={siteUrl('specification')}>full specification</a>, the
+specification wins.
+:::
+
+## Contributing
+
+Issues, pull requests, and audits of real repositories are welcome. Start
+with [Contributing](../contributing/) and the
+[Security policy](../security-policy/).
+
+<style>
+  {`
+    .dx-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0 36px;
+    }
+    .dx-overview-tile {
+      align-items: stretch;
+      background: var(--sl-color-bg-sidebar);
+      border: 1px solid var(--sl-color-hairline);
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 18px 20px;
+      text-decoration: none;
+      transition: transform 80ms ease;
+    }
+    .dx-overview-tile:hover {
+      transform: translateY(-1px);
+    }
+    .dx-overview-kind {
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .dx-overview-title {
+      font-family: var(--sl-font-display);
+      font-size: 22px;
+      letter-spacing: -0.005em;
+      line-height: 1.15;
+    }
+    .dx-overview-desc {
+      color: var(--sl-color-gray-2);
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin: 4px 0 8px;
+    }
+    .dx-overview-foot {
+      align-items: center;
+      color: var(--sl-color-gray-3);
+      display: flex;
+      font-family: var(--sl-font-system-mono);
+      font-size: 11.5px;
+      justify-content: space-between;
+      letter-spacing: 0.04em;
+      margin-top: auto;
+      text-transform: uppercase;
+    }
+    .dx-overview-foot .arr {
+      font-size: 14px;
+    }
+    .dx-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--sl-color-hairline);
+      margin: 18px 0 32px;
+    }
+    .dx-strip-cell {
+      align-items: baseline;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-right: 1px solid var(--sl-color-hairline);
+    }
+    .dx-strip-cell:last-child {
+      border-right: none;
+    }
+    .dx-strip-k {
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .dx-strip-v {
+      font-family: var(--sl-font-display);
+      font-size: 24px;
+      line-height: 1;
+    }
+    .dx-strip-v small {
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11.5px;
+      margin-left: 6px;
+    }
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 32px;
+      font-size: 14px;
+    }
+    .coverage-table th,
+    .coverage-table td {
+      border: 1px solid var(--sl-color-hairline);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .coverage-table th {
+      background: var(--sl-color-bg-sidebar);
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .coverage-table td.num,
+    .coverage-table th.num {
+      white-space: nowrap;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 28px 0 32px;
+    }
+    .pillar {
+      background: var(--sl-color-bg-sidebar);
+      border: 1px solid var(--sl-color-hairline);
+      color: inherit;
+      display: block;
+      padding: 18px 20px;
+      text-decoration: none;
+    }
+    .pillar-head {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .pillar-k {
+      color: var(--sl-color-gray-3);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pillar-icon {
+      font-size: 22px;
+    }
+    .pillar h3 {
+      margin: 10px 0 6px;
+      font-family: var(--sl-font-display);
+      font-weight: 400;
+      font-size: 22px;
+      letter-spacing: -0.005em;
+    }
+    .pillar p {
+      color: var(--sl-color-gray-2);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .pillar-foot {
+      align-items: baseline;
+      color: var(--sl-color-gray-3);
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-top: 14px;
+    }
+    .levels-table {
+      border: 1px solid var(--sl-color-hairline);
+      margin: 28px 0 32px;
+    }
+    .lvl-row {
+      align-items: baseline;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 80px 1fr 160px 1.5fr 2fr;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--sl-color-hairline);
+      font-size: 13.5px;
+    }
+    .lvl-row:last-child {
+      border-bottom: none;
+    }
+    .lvl-head {
+      background: var(--sl-color-bg-sidebar);
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .lvl-tag {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .lvl-name {
+      font-family: var(--sl-font-display);
+      font-size: 18px;
+    }
+    .lvl-auto {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+    }
+    .lvl-bar {
+      background: var(--sl-color-hairline-light);
+      display: block;
+      flex: 1;
+      height: 4px;
+    }
+    .lvl-fill {
+      background: var(--sl-color-text);
+      display: block;
+      height: 100%;
+    }
+    .lvl-desc,
+    .lvl-review {
+      color: var(--sl-color-gray-2);
+      line-height: 1.5;
+    }
+    .mono {
+      font-family: var(--sl-font-system-mono);
+    }
+    .small {
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 880px) {
+      .dx-overview-grid,
+      .pillars-grid {
+        grid-template-columns: 1fr;
+      }
+      .dx-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+      .lvl-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  `}
+</style>

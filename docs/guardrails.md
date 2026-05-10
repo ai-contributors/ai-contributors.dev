@@ -1,6 +1,6 @@
 # Repository Guardrails
 
-Effective date: 2026-05-03
+Effective date: 2026-05-07
 Owner: `@ai-contributors`
 Review cadence: quarterly and before changes to `AGENTS.md`, `SECURITY.md`,
 `.github/workflows/`, `.github/CODEOWNERS`, package manifests, audit policy, or
@@ -14,7 +14,7 @@ reviewable.
 
 | Guardrail                   | Enforcement                                             | Failure surface                             |
 | --------------------------- | ------------------------------------------------------- | ------------------------------------------- |
-| Clean generated spec source | `pnpm validate:spec`, `pnpm prepare:spec`, `pnpm build` | Local command, prebuild step, CI check      |
+| Clean generated spec source | `pnpm validate:spec`, `pnpm prepare:spec`, `pnpm build` | Local command, `predev` hook, CI check      |
 | Unit and routing behavior   | `pnpm test`                                             | Local command, pre-commit, CI check         |
 | Type safety                 | `pnpm type-check` and `pnpm check`                      | Local command, pre-commit, CI check         |
 | Formatting                  | `pnpm format:check`                                     | Local command, pre-commit or CI check       |
@@ -53,7 +53,7 @@ machine guardrail without an approved replacement.
 
 - `external/ai-contributor-spec/` is pinned upstream input.
 - `scripts/spec-content.mjs` owns generated docs refresh and metadata.
-- `src/content/docs/generated-spec/` is committed generated output and must not
+- `src/content/generated-spec/` is committed generated output and must not
   be hand-edited.
 - `src/` may import presentation data and components, but must not import
   repository maintenance scripts.

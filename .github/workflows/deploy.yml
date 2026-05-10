@@ -48,6 +48,17 @@ jobs:
       - name: Prepare generated spec pages
         run: pnpm prepare:spec
 
+      - name: Guard against stale committed generated files
+        run: |
+          if ! git diff --exit-code -- \
+            src/content/generated-spec \
+            src/data/spec.generated.ts \
+            src/data/spec-source.generated.json \
+            src/lib/starlight-sidebar.generated.ts; then
+            echo "::error::Committed generated files are stale. Run 'pnpm prepare:spec' locally and commit the result." >&2
+            exit 1
+          fi
+
       - name: Format
         run: pnpm format:check
 
@@ -128,7 +139,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download built site
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: site-dist
           path: dist
@@ -194,7 +205,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download built site
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: site-dist
           path: dist

@@ -1,0 +1,30 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import SpecFilterSidebar from '../SpecFilterSidebar.astro';
+
+// Swap the default Starlight Sidebar (global doc nav) for the spec
+// filter rail when the visitor is on /specification. Other pages keep
+// the default. Plays nicely with `template: doc` so the filter occupies
+// the same screen position as the global Sidebar elsewhere.
+//
+// transition:persist on the default Sidebar wrapper means the global
+// doc nav stays in place when the visitor moves between docs pages —
+// no flicker as the rail re-renders. The spec page has its own
+// content (SpecFilterSidebar) so it gets a separate persist key; on
+// transitions between a doc page and the spec page the rail simply
+// swaps, which is the right behaviour.
+const slug = Astro.locals.starlightRoute.entry.id;
+const isSpec = slug === 'specification';
+---
+
+{
+  isSpec ? (
+    <div transition:persist="spec-sidebar">
+      <SpecFilterSidebar />
+    </div>
+  ) : (
+    <div transition:persist="docs-sidebar">
+      <Default />
+    </div>
+  )
+}

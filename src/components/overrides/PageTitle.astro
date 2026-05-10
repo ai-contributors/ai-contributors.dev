@@ -1,0 +1,15 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { eyebrowForPath } from '../../lib/doc-nav';
+
+// Starlight passes the content-collection entry id as `entry.id`. Our
+// docs.config.json keys pages by their URL `path` (e.g. "docs/skill-fix",
+// "audit/prompt", "specification") — the porter mirrors that path into
+// src/content/docs/, so the Starlight slug matches the docs.config path
+// directly.
+const entryId = Astro.locals.starlightRoute.entry.id;
+const eyebrow = eyebrowForPath(entryId);
+---
+
+{eyebrow && <div class="dx-eyebrow">{eyebrow}</div>}
+<Default><slot /></Default>

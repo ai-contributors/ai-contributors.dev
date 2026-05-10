@@ -1,0 +1,116 @@
+---
+// Replaces Starlight's dropdown theme picker with the same icon+label
+// button used on the bespoke marketing/spec pages. Uses Starlight's
+// own storage (`localStorage['starlight-theme']`) and html attribute
+// (`data-theme`) so Starlight CSS keeps responding correctly. Also
+// mirrors the bespoke `localStorage['theme']` + `data-invert` so
+// switching theme on a Starlight page stays in sync with the bespoke
+// pages (and vice-versa) within the same browser.
+---
+
+<button
+  class="theme-toggle"
+  type="button"
+  aria-label="Toggle theme"
+  aria-pressed="false"
+  data-theme-toggle
+>
+  <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+  <span class="theme-toggle-label" data-theme-label>Dark</span>
+</button>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      // Starlight is the authority on Starlight pages; data-theme wins.
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      // Fall back to the bespoke flag if Starlight has not initialised yet.
+      return root.getAttribute('data-invert') === '1';
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      // Starlight chrome
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('starlight-theme', next);
+      } catch (_) {}
+      // Bespoke pages: data-invert flag + 'theme' key.
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      try {
+        localStorage.setItem('theme', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs / other stack toggling theme via either key.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      syncButtons();
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-text);
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-family: var(--sl-font-system-mono);
+    font-size: 12px;
+    gap: 8px;
+    line-height: 1;
+    padding: 6px 10px;
+  }
+  .theme-toggle:hover {
+    background: var(--sl-color-gray-7);
+  }
+  .theme-toggle-icon {
+    font-size: 14px;
+  }
+</style>

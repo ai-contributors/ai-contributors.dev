@@ -4,81 +4,66 @@ import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import GithubSlugger from 'github-slugger';
+
+import { SOURCE_ROUTES } from './spec-content.routes.mjs';
+
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export const SPEC_REPO_URL = 'https://github.com/ai-contributors/ai-contributor-spec';
-export const SPEC_ROOT = path.join(repoRoot, 'external/ai-contributor-spec');
-export const GENERATED_DOCS_ROOT = path.join(repoRoot, 'src/content/docs/generated-spec');
+
+// Pick the spec root in priority order:
+//   1. SPEC_ROOT_OVERRIDE env (explicit caller intent — wins).
+//   2. The pinned submodule, if it has every required source file.
+//   3. A sibling `../ai-contributor-spec` checkout, if it has every
+//      required source file.
+//   4. Fall through to the submodule path; assertSpecSource() then
+//      fails with a clear "missing required spec source files" error.
+//
+// (3) is the dev-loop fallback for branches that consume content
+// that has not landed on `main` of the spec repo yet (see the
+// "Consume-branch pattern" section of docs/architecture.md). It
+// mirrors the convention of keeping the spec repo as a sibling
+// checkout of the site repo.
+//
+// Resolved lazily on first access so importing this module from a
+// test or script doesn't trigger filesystem checks (and the
+// sibling-fallback warning) at import time.
+let _specRoot;
+export function getSpecRoot() {
+  if (_specRoot !== undefined) return _specRoot;
+  if (process.env.SPEC_ROOT_OVERRIDE) {
+    return (_specRoot = path.resolve(process.env.SPEC_ROOT_OVERRIDE));
+  }
+  const submodule = path.join(repoRoot, 'external/ai-contributor-spec');
+  const required = SOURCE_ROUTES.map((r) => r.source);
+  const hasAll = (root) =>
+    existsSync(root) && required.every((rel) => existsSync(path.join(root, rel)));
+  if (hasAll(submodule)) return (_specRoot = submodule);
+
+  const sibling = path.resolve(repoRoot, '..', 'ai-contributor-spec');
+  if (hasAll(sibling)) {
+    console.warn(
+      `[spec-content] submodule at ${path.relative(repoRoot, submodule)} is missing required ` +
+        `files; using sibling checkout at ${sibling}. Set SPEC_ROOT_OVERRIDE to silence this ` +
+        `warning, or update the submodule pin once upstream merges.`,
+    );
+    return (_specRoot = sibling);
+  }
+  return (_specRoot = submodule);
+}
+
+export const GENERATED_DOCS_ROOT = path.join(repoRoot, 'src/content/generated-spec');
+export const STARLIGHT_DOCS_ROOT = path.join(repoRoot, 'src/content/docs');
 export const SPEC_METADATA_PATH = path.join(repoRoot, 'src/data/spec-source.generated.json');
 
-export const SOURCE_ROUTES = [
-  {
-    source: 'AI-CONTRIBUTOR-SPECIFICATION.md',
-    file: 'specification.md',
-    slug: 'specification',
-    title: 'Specification',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-AUDIT-MODEL.md',
-    file: 'audit-model.md',
-    slug: 'audit/model',
-    title: 'Audit Evidence Model',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-AUDIT-PROMPT.md',
-    file: 'audit-prompt.md',
-    slug: 'audit/prompt',
-    title: 'No-Skill Audit Prompt',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-GUIDE.md',
-    file: 'guide-typescript-pnpm.md',
-    slug: 'guide/typescript-pnpm',
-    title: 'TypeScript + pnpm + GitHub Adoption',
-  },
-  {
-    source: 'AI-CONTRIBUTOR-COVERAGE.md',
-    file: 'coverage.md',
-    slug: 'coverage',
-    title: 'Coverage Matrix',
-  },
-  {
-    source: 'CHANGELOG.md',
-    file: 'changelog.md',
-    slug: 'changelog',
-    title: 'Changelog',
-  },
-  {
-    source: 'skills/ai-contributor-audit/README.md',
-    file: 'skills-audit.md',
-    slug: 'skills/audit',
-    title: 'ai-contributor-audit',
-  },
-  {
-    source: 'skills/ai-contributor-audit/SKILL.md',
-    file: 'skills-audit-skill.md',
-    slug: 'skills/audit/skill',
-    title: 'ai-contributor-audit Skill',
-  },
-  {
-    source: 'skills/ai-contributor-audit-fix/SKILL.md',
-    file: 'skills-audit-fix.md',
-    slug: 'skills/audit-fix',
-    title: 'ai-contributor-audit-fix',
-  },
-  {
-    source: 'skills/ai-contributor-audit-profile/SKILL.md',
-    file: 'skills-audit-profile.md',
-    slug: 'skills/audit-profile',
-    title: 'ai-contributor-audit-profile',
-  },
-];
+export { SOURCE_ROUTES };
 
 export function getRequiredSourcePaths() {
   return SOURCE_ROUTES.map((route) => route.source);
 }
 
-export async function assertSpecSource({ root = SPEC_ROOT } = {}) {
+export function assertSpecSource({ root = getSpecRoot() } = {}) {
   if (!existsSync(root)) {
     throw new Error(
       `Spec submodule is missing at ${root}. Run: git submodule update --init --recursive`,
@@ -97,12 +82,12 @@ export async function assertSpecSource({ root = SPEC_ROOT } = {}) {
 }
 
 export async function ensureSpecSourceReady({
-  root = SPEC_ROOT,
+  root = getSpecRoot(),
   repoRoot: targetRepoRoot = repoRoot,
   runCommand = execFileSync,
 } = {}) {
   try {
-    await assertSpecSource({ root });
+    assertSpecSource({ root });
     return false;
   } catch {
     const relativeRoot = path.relative(targetRepoRoot, root);
@@ -117,43 +102,375 @@ export async function ensureSpecSourceReady({
         relativeRoot,
       ]),
     );
-    await assertSpecSource({ root });
+    assertSpecSource({ root });
     return true;
   }
 }
 
-function stripFrontmatter(markdown) {
-  if (!markdown.startsWith('---\n')) return markdown;
-  const closing = markdown.indexOf('\n---', 4);
-  if (closing === -1) return markdown;
-  return markdown.slice(closing + '\n---'.length).replace(/^\n+/, '');
+function yamlEscape(value) {
+  if (value === undefined || value === null) return '';
+  return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
-function toFrontmatter(route) {
-  return ['---', `title: ${route.title}`, `slug: ${route.slug}`, '---', ''].join('\n');
+// Pull title + deck from the rendered body's first H1 and first paragraph,
+// then strip both from the body so the rendered doc page does not show
+// the H1 + lede twice (once from the page header, once from <Content/>).
+//
+// Assumptions:
+//   1. The deck is a SINGLE paragraph. Multi-paragraph ledes are not
+//      supported by Starlight's `description:` field anyway, so the
+//      function deliberately stops at the first blank line after the
+//      lede starts. If a source has a multi-paragraph lede, the second
+//      paragraph silently becomes body — we warn so authors can reshape.
+//   2. Soft-wrapped lines inside the lede join with a single space.
+//      Explicit hard breaks (two-space line endings, `<br>`) are
+//      flattened into the description.
+//   3. Leading blockquotes and blank lines between the H1 and the lede
+//      are skipped; once a non-blockquote paragraph starts, blockquotes
+//      embedded inside it would still terminate it (rare in upstream MD).
+function extractTitleAndDeck(body, sourcePath) {
+  const lines = body.split('\n');
+  let title;
+  let deck;
+  let h1Line = -1;
+
+  for (let i = 0; i < lines.length; i++) {
+    const m = /^#\s+(.+?)\s*$/.exec(lines[i]);
+    if (m) {
+      title = m[1].trim();
+      h1Line = i;
+      break;
+    }
+  }
+  if (h1Line < 0) return { title: undefined, deck: undefined, body };
+
+  // Find first paragraph after the H1, skipping blockquotes and blanks.
+  let paraStart = -1;
+  for (let i = h1Line + 1; i < lines.length; i++) {
+    const ln = lines[i];
+    if (ln === '' || ln.startsWith('>')) continue;
+    if (ln.startsWith('#')) break;
+    paraStart = i;
+    break;
+  }
+
+  let paraEnd = paraStart;
+  if (paraStart >= 0) {
+    while (paraEnd + 1 < lines.length && lines[paraEnd + 1] !== '') paraEnd++;
+    deck = lines
+      .slice(paraStart, paraEnd + 1)
+      .join(' ')
+      .trim();
+
+    // Look ahead one paragraph: if the next non-blank line is more body
+    // text (not a heading), the source has a multi-paragraph lede that
+    // we just dropped. Warn so the author can either collapse to one
+    // paragraph or override `deck` in docs.config.json.
+    for (let i = paraEnd + 1; i < lines.length; i++) {
+      const ln = lines[i];
+      if (ln === '') continue;
+      if (ln.startsWith('#')) break;
+      const where = sourcePath ? ` in ${sourcePath}` : '';
+      console.warn(
+        `[spec-content] multi-paragraph lede detected${where}; only the first paragraph ` +
+          `becomes the deck/description. Collapse to a single paragraph or set "deck" ` +
+          `explicitly in docs.config.json.`,
+      );
+      break;
+    }
+  }
+
+  // Strip H1 line and (if found) the lede paragraph from the body.
+  const stripTo = paraStart >= 0 ? paraEnd : h1Line;
+  const newLines = [...lines.slice(0, h1Line), ...lines.slice(stripTo + 1)];
+  while (newLines.length && newLines[0] === '') newLines.shift();
+  return { title, deck, body: newLines.join('\n') };
 }
 
-export async function generateDocs({ root = SPEC_ROOT, outDir = GENERATED_DOCS_ROOT } = {}) {
-  await assertSpecSource({ root });
+function buildFrontmatter({ title, deck }) {
+  const lines = ['---'];
+  if (title) lines.push(`title: "${yamlEscape(title)}"`);
+  if (deck) lines.push(`deck: "${yamlEscape(deck)}"`);
+  lines.push('---', '');
+  return lines.join('\n');
+}
+
+function preserveLeadingYamlFrontmatter(body) {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(body);
+  if (!match) return body;
+
+  const metadata = match[1].trim();
+  const rest = body.slice(match[0].length).replace(/^\r?\n/, '');
+  if (!metadata) return rest;
+
+  return `\`\`\`yaml\n${metadata}\n\`\`\`\n\n${rest}`;
+}
+
+function headingIdsIn(body) {
+  const ids = new Set();
+  const slugger = new GithubSlugger();
+  for (const line of body.split('\n')) {
+    const match = /^(#{1,6})\s+(.+?)\s*$/.exec(line);
+    if (!match) continue;
+    const explicit = /\{#([^}]+)\}\s*$/.exec(match[2]);
+    ids.add(explicit ? explicit[1] : slugger.slug(match[2].replace(/\s*\{#[^}]+\}\s*$/, '')));
+  }
+  return ids;
+}
+
+function publishedSourceRoutes() {
+  const routes = new Map();
+  for (const route of SOURCE_ROUTES) {
+    routes.set(route.source, route.entry.path);
+  }
+
+  // Source files that are referenced from upstream prose but are
+  // intentionally represented by a companion published page.
+  routes.set('skills/ai-contributor-audit/README.md', 'docs/skill-audit');
+  routes.set('skills/ai-contributor-audit-profile/README.md', 'docs/skill-profile');
+  routes.set('skills/ai-contributor-audit-fix/README.md', 'docs/skill-fix');
+  routes.set('.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md', 'docs/stamped-audit');
+  routes.set('.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md', 'docs/stamped-audit');
+  routes.set('AI-CONTRIBUTOR-RULE-CATALOG.json', 'docs/rule-catalog');
+
+  return routes;
+}
+
+function sourceUrl(metadata, targetPath, fragment = '') {
+  const ref =
+    metadata.tag && metadata.tag !== 'unknown'
+      ? metadata.tag
+      : metadata.sha && metadata.sha !== 'unknown'
+        ? metadata.sha
+        : 'main';
+  return `${SPEC_REPO_URL}/blob/${ref}/${targetPath}${fragment}`;
+}
+
+function relativeSiteLink(fromEntryPath, toEntryPath, fragment = '') {
+  const fromDir = path.posix.dirname(`${fromEntryPath.replace(/^\/+|\/+$/g, '')}/index.html`);
+  const toFile = `${toEntryPath.replace(/^\/+|\/+$/g, '')}/index.html`;
+  let relative = path.posix.relative(fromDir, toFile);
+  if (!relative.startsWith('.')) relative = `./${relative}`;
+  return relative.replace(/index\.html$/, '') + fragment;
+}
+
+function sitePathForSource(targetPath, fromEntryPath, fragment = '') {
+  const route = publishedSourceRoutes().get(targetPath);
+  if (!route) return undefined;
+
+  // The generated full-spec page exposes compact aliases for numbered
+  // clauses (`#c1`, `#c2`, …) and catalog anchors (`#p01-c1-…`), not the
+  // upstream GitHub auto-slugs (`#1-reproducible-environment`).
+  if (targetPath === 'AI-CONTRIBUTOR-SPECIFICATION.md') {
+    const numbered = /^#(\d+)-/.exec(fragment);
+    if (numbered) return relativeSiteLink(fromEntryPath, route, `#c${numbered[1]}`);
+    if (fragment === '#conformance-levels') {
+      return relativeSiteLink(fromEntryPath, 'docs/conformance-levels');
+    }
+  }
+
+  return relativeSiteLink(fromEntryPath, route, fragment);
+}
+
+function rewriteSpecLinks(body, sourcePath, entry, metadata) {
+  const currentHeadingIds = headingIdsIn(body);
+  const currentDir = path.posix.dirname(sourcePath);
+
+  return body.replace(/(!?\[[^\]]*?\]\()([^)\s]+)(\))/g, (full, prefix, rawHref, suffix) => {
+    if (prefix.startsWith('!') || rawHref.startsWith('#') || /^[a-z][a-z0-9+.-]*:/i.test(rawHref)) {
+      if (rawHref.startsWith('#') && !currentHeadingIds.has(decodeURIComponent(rawHref.slice(1)))) {
+        return `${prefix}${sourceUrl(metadata, sourcePath, rawHref)}${suffix}`;
+      }
+      return full;
+    }
+
+    const [rawPath, rawFragment = ''] = rawHref.split('#');
+    const targetPath = path.posix.normalize(path.posix.join(currentDir, rawPath));
+    const fragment = rawFragment ? `#${rawFragment}` : '';
+    if (targetPath === 'README.md' && fragment === '#how-the-audit-runs') {
+      return `${prefix}${sourceUrl(metadata, targetPath, fragment)}${suffix}`;
+    }
+    const sitePath = sitePathForSource(targetPath, entry.path, fragment);
+
+    return `${prefix}${sitePath ?? sourceUrl(metadata, targetPath, fragment)}${suffix}`;
+  });
+}
+
+// Starlight-shaped frontmatter for the `docs` content collection consumed
+// by @astrojs/starlight. Maps the porter's deck → Starlight's description
+// so generated pages get OG/SEO metadata without a second extraction pass.
+function buildStarlightFrontmatter({ title, deck, sidebarOrder, sidebarLabel }) {
+  const lines = ['---'];
+  if (title) lines.push(`title: "${yamlEscape(title)}"`);
+  if (deck) lines.push(`description: "${yamlEscape(deck)}"`);
+  if (sidebarOrder !== undefined || sidebarLabel) {
+    lines.push('sidebar:');
+    if (sidebarLabel) lines.push(`  label: "${yamlEscape(sidebarLabel)}"`);
+    if (sidebarOrder !== undefined) lines.push(`  order: ${sidebarOrder}`);
+  }
+  lines.push('---', PORTER_MARKER, '');
+  return lines.join('\n');
+}
+
+async function rmEmptyDirsUnder(root) {
+  let entries;
+  try {
+    entries = await readdir(root, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      const subdir = path.join(root, entry.name);
+      await rmEmptyDirsUnder(subdir);
+      try {
+        await rm(subdir, { recursive: false });
+      } catch {
+        /* not empty */
+      }
+    }
+  }
+}
+
+async function stageCopy(root, sourcePath) {
+  return readFile(path.join(root, sourcePath), 'utf8');
+}
+
+// Extract the section bounded by `<!-- doc-site:extract:<key> -->` and the
+// matching `<!-- /doc-site:extract:<key> -->` if both markers are present.
+// This honors upstream [U11]: docs that share a multi-section source (the
+// README, the GUIDE) can mark exactly which slice the docs site shows.
+// When no marker is present the full body is returned verbatim. Asymmetric
+// markers (begin without end or vice versa) throw — silently shipping the
+// whole body in that case has previously masked typo'd close-marker tags
+// and produced 5x-too-long pages.
+function applyExtractMarkers(body, key, sourcePath) {
+  const begin = `<!-- doc-site:extract:${key} -->`;
+  const end = `<!-- /doc-site:extract:${key} -->`;
+  const beginIdx = body.indexOf(begin);
+  const endIdx = body.indexOf(end);
+  if (beginIdx < 0 && endIdx < 0) return body;
+  if (beginIdx < 0 || endIdx < 0 || endIdx <= beginIdx) {
+    const where = sourcePath ? ` in ${sourcePath}` : '';
+    throw new Error(
+      `[spec-content] asymmetric extract markers for key "${key}"${where}: ` +
+        `found begin=${beginIdx >= 0}, end=${endIdx >= 0}, end-after-begin=${endIdx > beginIdx}. ` +
+        `Both markers must be present and the end must follow the begin.`,
+    );
+  }
+  return body.slice(beginIdx + begin.length, endIdx).trim();
+}
+
+function stageInject(markdownBody, entry, sourcePath) {
+  const sliced = applyExtractMarkers(markdownBody, entry.key, sourcePath);
+  const bodyWithMetadata = preserveLeadingYamlFrontmatter(sliced);
+  const extracted = extractTitleAndDeck(bodyWithMetadata, sourcePath);
+  return {
+    // Fall back to entry.label when the extracted slice does not start
+    // with an H1 (e.g. the quickstart marker bounds skip the source
+    // document's leading title). Starlight requires a title.
+    title: entry.title ?? extracted.title ?? entry.label,
+    deck: entry.deck ?? extracted.deck,
+    body: extracted.body,
+  };
+}
+
+// Marker emitted as an HTML comment after the frontmatter of every
+// porter-generated Starlight MD. The sweep deletes only files carrying
+// this marker, so hand-authored pages in src/content/docs/ (e.g. the
+// starlight-test sandbox, future site-authored level checklists) are
+// preserved across porter runs.
+const PORTER_MARKER = '<!-- generated by scripts/spec-content.mjs; do not edit -->';
+
+async function sweepStarlightStale(root, expectedTargets) {
+  const walk = async (dir) => {
+    let entries;
+    try {
+      entries = await readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const child = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(child);
+        continue;
+      }
+      if (!entry.isFile() || expectedTargets.has(child)) continue;
+      // Read the whole file rather than the first 1KB. Generated MD/MDX
+      // are kilobytes at most and reading them entirely removes a latent
+      // failure: enlarged frontmatter (extra sidebar fields, longer
+      // descriptions) could push the marker past a fixed-size window
+      // and silently leave stale files un-swept.
+      const contents = await readFile(child, 'utf8').catch(() => '');
+      if (contents.includes(PORTER_MARKER)) {
+        await rm(child, { force: true });
+      }
+    }
+  };
+  await walk(root);
+}
+
+export async function generateDocs({
+  root = getSpecRoot(),
+  outDir = GENERATED_DOCS_ROOT,
+  starlightOutDir = STARLIGHT_DOCS_ROOT,
+} = {}) {
+  assertSpecSource({ root });
+  const metadata = getSpecVersionMetadata({ root });
   await mkdir(outDir, { recursive: true });
+  await mkdir(starlightOutDir, { recursive: true });
 
   const generated = [];
-  const expectedTargets = new Set();
+  const expectedGeneratedSpecTargets = new Set();
+  const expectedStarlightTargets = new Set();
   for (const route of SOURCE_ROUTES) {
-    const sourceBody = await readFile(path.join(root, route.source), 'utf8');
-    const body = stripFrontmatter(sourceBody);
-    const target = path.join(outDir, route.file);
-    expectedTargets.add(target);
-    await writeFile(target, `${toFrontmatter(route)}${body}`, 'utf8');
-    generated.push({ ...route, target });
+    const rawBody = await stageCopy(root, route.source);
+    const { title, deck, body } = stageInject(rawBody, route.entry, route.source);
+    const linkedBody = rewriteSpecLinks(body, route.source, route.entry, metadata);
+
+    // Body-only frontmatter for the generatedSpec content collection,
+    // consumed by MDX pages (e.g. coverage-map.mdx, rule-catalog.mdx)
+    // that inject upstream prose alongside their own components via
+    // `getEntry('generatedSpec', …)` + `render()`.
+    const generatedSpecTarget = path.join(outDir, route.file);
+    expectedGeneratedSpecTargets.add(generatedSpecTarget);
+    await writeFile(
+      generatedSpecTarget,
+      `${buildFrontmatter({ title, deck })}${linkedBody}`,
+      'utf8',
+    );
+
+    let starlightTarget = null;
+    if (route.starlightFile) {
+      starlightTarget = path.join(starlightOutDir, route.starlightFile);
+      expectedStarlightTargets.add(starlightTarget);
+      await mkdir(path.dirname(starlightTarget), { recursive: true });
+      const sidebarLabel =
+        route.entry.label && route.entry.label !== title ? route.entry.label : undefined;
+      const starlightFrontmatter = buildStarlightFrontmatter({
+        title,
+        deck,
+        sidebarOrder: route.sidebarOrder,
+        sidebarLabel,
+      });
+      await writeFile(starlightTarget, `${starlightFrontmatter}${linkedBody}`, 'utf8');
+    }
+
+    generated.push({ ...route, target: generatedSpecTarget, starlightTarget, title, deck });
   }
 
   for (const entry of await readdir(outDir, { withFileTypes: true })) {
     const target = path.join(outDir, entry.name);
-    if (entry.isFile() && !expectedTargets.has(target)) {
+    if (entry.isFile() && !expectedGeneratedSpecTargets.has(target)) {
       await rm(target, { force: true });
     }
   }
+
+  // Preserve hand-authored Starlight pages by deleting only files carrying
+  // the porter marker (PORTER_MARKER) emitted into Starlight frontmatter.
+  await sweepStarlightStale(starlightOutDir, expectedStarlightTargets);
+  await rmEmptyDirsUnder(starlightOutDir);
 
   return { generated };
 }
@@ -165,7 +482,7 @@ function git(root, args) {
   }).trim();
 }
 
-export function getSpecVersionMetadata({ root = SPEC_ROOT } = {}) {
+export function getSpecVersionMetadata({ root = getSpecRoot() } = {}) {
   try {
     const sha = git(root, ['rev-parse', 'HEAD']);
     const shortSha = git(root, ['rev-parse', '--short', 'HEAD']);
@@ -183,18 +500,31 @@ export function getSpecVersionMetadata({ root = SPEC_ROOT } = {}) {
       tagUrl: `${SPEC_REPO_URL}/releases/tag/${tag}`,
       commitUrl: `${SPEC_REPO_URL}/tree/${sha}`,
     };
-  } catch {
+  } catch (err) {
+    // Silent 'unknown' would ship dist/ with no version stamp and quietly
+    // violate SP-1.5 ("every published page SHOULD show the spec submodule
+    // version tag with the short SHA"). Warn loudly and add a `stale: true`
+    // flag so callers (and tests) can detect the degraded mode.
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(
+      `[spec-content] could not read spec version metadata at ${root}: ${message}. ` +
+        `Stamping with 'unknown'/stale=true; SP-1.5 cannot be honoured for this build.`,
+    );
     return {
       tag: 'unknown',
       sha: 'unknown',
       shortSha: 'unknown',
       tagUrl: SPEC_REPO_URL,
       commitUrl: SPEC_REPO_URL,
+      stale: true,
     };
   }
 }
 
-export async function writeSpecMetadata({ root = SPEC_ROOT, target = SPEC_METADATA_PATH } = {}) {
+export async function writeSpecMetadata({
+  root = getSpecRoot(),
+  target = SPEC_METADATA_PATH,
+} = {}) {
   const metadata = getSpecVersionMetadata({ root });
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');

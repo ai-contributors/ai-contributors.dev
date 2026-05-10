@@ -1,0 +1,41 @@
+#!/bin/sh
+set -eu
+
+# pre-push: mirror the CI deploy workflow's gate order so failures
+# surface locally before push instead of in CI.
+#
+# Order matches .github/workflows/deploy.yml. Skipping this hook
+# (`git push --no-verify`) is forbidden by SP policy unless explicitly
+# approved by a maintainer for a specific situation.
+#
+# Pairs with the lighter .husky/pre-commit. See docs/process.md for
+# the full "what runs when" matrix.
+
+echo "[pre-push] validate:spec"
+pnpm validate:spec
+
+echo "[pre-push] format:check"
+pnpm format:check
+
+echo "[pre-push] lint"
+pnpm lint
+
+echo "[pre-push] test"
+pnpm test
+
+echo "[pre-push] coverage:check"
+pnpm coverage:check
+
+echo "[pre-push] type-check"
+pnpm type-check
+
+echo "[pre-push] deps:check"
+pnpm deps:check
+
+echo "[pre-push] secret:scan"
+pnpm secret:scan
+
+echo "[pre-push] build"
+pnpm build
+
+echo "[pre-push] all checks passed."

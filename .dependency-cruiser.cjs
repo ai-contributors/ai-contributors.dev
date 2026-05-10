@@ -40,7 +40,7 @@ module.exports = {
       comment: 'Generated specification pages are content outputs, not source imports.',
       severity: 'error',
       from: { path: '^(src|scripts|tests)/' },
-      to: { path: '^src/content/docs/generated-spec/' },
+      to: { path: '^src/content/generated-spec/' },
     },
     {
       name: 'tests-not-imported-by-runtime',
@@ -56,7 +56,7 @@ module.exports = {
       dependencyTypes: ['npm', 'npm-dev', 'npm-optional', 'npm-peer', 'npm-bundled', 'npm-no-pkg'],
     },
     exclude: {
-      path: '^(dist|external|node_modules|src/content/docs/generated-spec|docs/superpowers)/',
+      path: '^(dist|external|node_modules|src/content/generated-spec)/',
     },
     tsConfig: {
       fileName: 'tsconfig.json',

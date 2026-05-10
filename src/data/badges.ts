@@ -1,44 +1,32 @@
+import { SPEC } from './spec.generated.ts';
+
 export type BadgeLevelId = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 
 export interface BadgeLevel {
   id: BadgeLevelId;
   name: string;
+  order: number;
   color: string;
   description: string;
+  workflowSummary: string;
 }
 
-export const BADGE_LEVELS: BadgeLevel[] = [
-  {
-    id: 'L0',
-    name: 'Unassessed',
-    color: 'lightgrey',
-    description: 'No AI Contributor claim.',
-  },
-  {
-    id: 'L1',
-    name: 'AI Assisted',
-    color: 'blue',
-    description: 'AI assists with local tasks under human control.',
-  },
-  {
-    id: 'L2',
-    name: 'AI Reviewed',
-    color: 'green',
-    description: 'AI participates in reviewable checks and evidence.',
-  },
-  {
-    id: 'L3',
-    name: 'AI Authored',
-    color: 'blueviolet',
-    description: 'AI completes delegated code tasks for human review.',
-  },
-  {
-    id: 'L4',
-    name: 'AI Governed',
-    color: 'brightgreen',
-    description: 'AI contribution is governed through stronger automation and oversight.',
-  },
-];
+const BADGE_COLORS: Record<BadgeLevelId, string> = {
+  L0: 'lightgrey',
+  L1: 'blue',
+  L2: 'green',
+  L3: 'blueviolet',
+  L4: 'brightgreen',
+};
+
+export const BADGE_LEVELS: BadgeLevel[] = SPEC.levels.map((level) => ({
+  id: level.id as BadgeLevelId,
+  name: level.label,
+  order: level.order,
+  color: BADGE_COLORS[level.id as BadgeLevelId],
+  description: level.description,
+  workflowSummary: level.workflowSummary,
+}));
 
 function findLevel(levelId: string) {
   const level = BADGE_LEVELS.find((entry) => entry.id === levelId);
@@ -56,5 +44,10 @@ export function badgeUrlForLevel(levelId: string): string {
 
 export function badgeMarkdownForLevel(levelId: string): string {
   const level = findLevel(levelId);
-  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/ai-contributor-spec/levels/)`;
+  return `[![AI Contributor: ${level.id} ${level.name}](${badgeUrlForLevel(level.id)})](https://ai-contributors.dev/ai-contributor-spec/docs/conformance-levels/)`;
+}
+
+export function pinnedBadgeMarkdownForLevel(levelId: string): string {
+  const level = findLevel(levelId);
+  return `[![AI Contributor: ${level.id} ${level.name} · spec ${SPEC.version}](${badgeUrlForLevel(level.id)}?rev=${SPEC.version})](https://github.com/ai-contributors/ai-contributor-spec/releases/tag/${SPEC.version})`;
 }

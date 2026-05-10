@@ -1,9 +1,11 @@
+import { generateStarlightSidebar } from './build-starlight-sidebar.mjs';
 import { assertSpecSource, generateDocs, writeSpecMetadata } from './spec-content.mjs';
 
 try {
-  await assertSpecSource();
+  assertSpecSource();
   const result = await generateDocs();
   const metadata = await writeSpecMetadata();
+  generateStarlightSidebar();
   console.log(
     `Generated ${result.generated.length} spec docs from ${metadata.tag} (${metadata.shortSha})`,
   );

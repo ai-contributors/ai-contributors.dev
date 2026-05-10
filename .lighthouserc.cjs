@@ -5,7 +5,12 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: './.lhci-dist',
-      url: [normalizedBase, `${normalizedBase}levels/`],
+      url: [
+        normalizedBase,
+        `${normalizedBase}docs/`,
+        `${normalizedBase}docs/conformance-levels/`,
+        `${normalizedBase}specification/`,
+      ],
       numberOfRuns: 1,
       settings: {
         chromeFlags: '--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage',

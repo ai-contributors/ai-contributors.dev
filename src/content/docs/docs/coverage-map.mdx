@@ -1,0 +1,18 @@
+---
+title: 'AI Contributor Specification — Coverage map'
+description: '**Non-normative.** This file shows how `AI-CONTRIBUTOR-CHECKLIST.md` is distributed across pillars, scopes, and minimum levels. Use it to estimate audit effort. Use the checklist itself for scoring.'
+sidebar:
+  label: 'Coverage map'
+  order: 70
+---
+
+import { getEntry, render } from 'astro:content';
+import CoverageMap from '../../../components/CoverageMap.astro';
+
+export const coverageEntry = await getEntry('generatedSpec', 'ai-contributor-coverage');
+export const rendered = await render(coverageEntry);
+export const CoverageBody = rendered.Content;
+
+<CoverageMap />
+
+<CoverageBody />

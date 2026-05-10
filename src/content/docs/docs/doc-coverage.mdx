@@ -1,0 +1,318 @@
+---
+title: 'Published pages.'
+description: "A current inventory of the published docs surface: which pages exist, which ones are backed by the pinned specification repo, which ones are site-authored, and what is intentionally outside the coverage boundary."
+sidebar:
+  label: 'Published pages'
+  order: 240
+---
+
+import docsConfig from '@/docs-config';
+import { url as siteUrl } from '../../../lib/links';
+
+export const entries = docsConfig.docs;
+export const specEntries = entries.filter((entry) => entry.source.repo === 'spec');
+export const siteEntries = entries.filter((entry) => entry.source.repo === 'site');
+export const sourceInputsFor = (entry) => entry.sourceInputs ?? [{ ...entry.source, role: 'source' }];
+export const uniqueGeneratedMarkdownSources = [
+  ...new Set(
+    specEntries.map((entry) => entry.source.path).filter((p) => p.endsWith('.md')),
+  ),
+];
+export const uniqueJsonSources = [
+  ...new Set(
+    specEntries.map((entry) => entry.source.path).filter((p) => p.endsWith('.json')),
+  ),
+];
+export const sectionCounts = entries.reduce((counts, entry) => {
+  counts[entry.section] = (counts[entry.section] ?? 0) + 1;
+  return counts;
+}, {});
+
+:::note[TL;DR]
+The docs inventory is complete against the current published navigation:
+**{entries.length}** doc entries, **{specEntries.length}** backed by the
+pinned specification repo, **{siteEntries.length}** intentionally owned
+by this site, and **0** missing or stubbed pages in the nav. This is a
+current-state coverage map, not a changelog.
+:::
+
+## At a glance
+
+<div class="coverage-summary">
+  <div class="coverage-cell">
+    <div class="coverage-k">Nav entries</div>
+    <div class="coverage-v">{entries.length}</div>
+    <div class="coverage-d">Pages listed in <code>docs.config.json</code>.</div>
+  </div>
+  <div class="coverage-cell">
+    <div class="coverage-k">Spec-backed</div>
+    <div class="coverage-v">{specEntries.length}</div>
+    <div class="coverage-d">Canonical source lives in <code>external/ai-contributor-spec</code>.</div>
+  </div>
+  <div class="coverage-cell">
+    <div class="coverage-k">Generated MD</div>
+    <div class="coverage-v">{uniqueGeneratedMarkdownSources.length}</div>
+    <div class="coverage-d">Unique upstream Markdown sources copied into <code>src/content/generated-spec</code>.</div>
+  </div>
+  <div class="coverage-cell">
+    <div class="coverage-k">Site-authored</div>
+    <div class="coverage-v">{siteEntries.length}</div>
+    <div class="coverage-d">Presentation, orientation, or site self-documentation.</div>
+  </div>
+</div>
+
+## What counts as covered
+
+A page is covered when it has a route in `docs.config.json`, a matching
+Astro page or content-collection MD/MDX, and a canonical source mapping.
+Spec-backed pages point at the pinned spec submodule or a generated
+projection from it. Site-authored pages are allowed only for navigation,
+orientation, presentation, and this site's own operating documentation.
+
+The drift gate for this inventory is `scripts/check-doc-nav.mjs`. It
+checks that configured doc entries have pages, that docs pages are
+present in the config, and that cross-page anchors referenced from docs
+content resolve.
+
+## Coverage by section
+
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th class="num">Pages</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(sectionCounts).map(([section, count]) => (
+      <tr>
+        <td>{section}</td>
+        <td class="num">{count}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Published inventory
+
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th>Page</th>
+      <th>Canonical source</th>
+      <th>Inputs</th>
+      <th class="num">Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {entries.map((entry) => {
+      const repoClass = entry.source.repo === 'spec' ? 'spec' : 'site';
+      const repoLabel = entry.source.repo === 'spec' ? 'spec-backed' : 'site-authored';
+      const route = entry.path.replace(/^\/+/, '');
+      return (
+        <tr>
+          <td>{entry.section}</td>
+          <td><a href={siteUrl(route)}>{entry.label}</a></td>
+          <td><code>{entry.source.path}</code></td>
+          <td>
+            <ul class="coverage-source-list">
+              {sourceInputsFor(entry).map((input) => (
+                <li>
+                  <code>{input.path}</code>
+                  <span>{input.role}</span>
+                </li>
+              ))}
+            </ul>
+          </td>
+          <td class="num"><span class={`coverage-tag ${repoClass}`}>{repoLabel}</span></td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+## Generated upstream sources
+
+These unique Markdown sources are projected into two locations by
+`pnpm prepare:spec`:
+
+- `src/content/docs/` — the Starlight route the page is served from.
+- `src/content/generated-spec/` — the body-only projection that
+  composed MDX pages (e.g. `coverage-map.mdx`, `rule-catalog.mdx`)
+  pull in via `getEntry('generatedSpec', key)` + `render()` so they
+  can mix upstream prose with their own component chrome.
+
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th class="num">Projection</th>
+    </tr>
+  </thead>
+  <tbody>
+    {uniqueGeneratedMarkdownSources.map((sourcePath) => (
+      <tr>
+        <td><code>{sourcePath}</code></td>
+        <td class="num"><span class="coverage-tag generated">generated Markdown</span></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+The rule catalog is intentionally not generated as Markdown; it is
+consumed as structured data for the rule-catalog page and specification
+data.
+
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th class="num">Projection</th>
+    </tr>
+  </thead>
+  <tbody>
+    {uniqueJsonSources.map((sourcePath) => (
+      <tr>
+        <td><code>{sourcePath}</code></td>
+        <td class="num"><span class="coverage-tag json">JSON projection</span></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## What is not covered
+
+There are no known missing docs pages in the current navigation. The
+boundaries are deliberate:
+
+- **Internal implementation files** under `tools/`, test fixtures, and
+  collector internals are not documented page by page. The public docs
+  cover their command surface through Tooling, Rule catalog, and the
+  audit pages.
+- **Example template contents** are not mirrored file by file. The
+  TypeScript + pnpm recipe documents the scaffold path and the expected
+  adoption flow.
+- **License files** are represented in the site footer rather than a
+  dedicated docs page.
+- **Unpinned upstream changes** are not covered until the spec submodule
+  is updated and `pnpm prepare:spec` is run.
+
+## Maintenance rule
+
+When adding, removing, or renaming a docs page, update
+`docs.config.json` first. The config is the single source of truth for
+sidebar order, breadcrumbs, pagination, search, source links, and this
+coverage page. Do not edit `src/content/generated-spec/` or
+`src/content/docs/` by hand for spec-backed entries; change the pinned
+spec source or route mapping, then regenerate.
+
+<style>
+  {`
+    .coverage-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0 32px;
+    }
+    .coverage-cell {
+      border: 1px solid var(--sl-color-hairline);
+      padding: 16px;
+      background: var(--sl-color-bg-sidebar);
+    }
+    .coverage-k {
+      font-family: var(--sl-font-system-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sl-color-gray-3);
+    }
+    .coverage-v {
+      font-family: var(--sl-font-display);
+      font-size: 32px;
+      line-height: 1;
+      margin-top: 6px;
+      letter-spacing: -0.01em;
+    }
+    .coverage-d {
+      font-size: 12px;
+      color: var(--sl-color-gray-2);
+      margin-top: 6px;
+    }
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 28px;
+      font-size: 14px;
+    }
+    .coverage-table th,
+    .coverage-table td {
+      border: 1px solid var(--sl-color-hairline);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .coverage-table th {
+      background: var(--sl-color-bg-sidebar);
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .coverage-table td.num,
+    .coverage-table th.num {
+      white-space: nowrap;
+    }
+    .coverage-source-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .coverage-source-list li {
+      display: grid;
+      gap: 2px;
+    }
+    .coverage-source-list span {
+      color: var(--sl-color-gray-3);
+      font-size: 12px;
+    }
+    .coverage-tag {
+      display: inline-block;
+      border: 1px solid var(--sl-color-hairline);
+      padding: 2px 7px;
+      font-family: var(--sl-font-system-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .coverage-tag.spec,
+    .coverage-tag.generated {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+    .coverage-tag.site {
+      background: #e0e7ff;
+      border-color: #4338ca;
+      color: #312e81;
+    }
+    .coverage-tag.json {
+      background: #f3e8ff;
+      border-color: #7c3aed;
+      color: #4c1d95;
+    }
+    @media (max-width: 880px) {
+      .coverage-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .coverage-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  `}
+</style>

@@ -1,0 +1,122 @@
+---
+import { SPEC } from '../data/spec.generated';
+import { url } from '../lib/links';
+
+const PILLARS = SPEC.pillars;
+const CLAUSES = SPEC.clauses;
+const WEIGHTS = ['MUST', 'MUST_WHEN', 'SHOULD', 'MAY'] as const;
+const WEIGHT_LABEL: Record<string, string> = {
+  MUST: 'MUST',
+  MUST_WHEN: 'MUST·when',
+  SHOULD: 'SHOULD',
+  MAY: 'MAY',
+};
+const LEVEL_TIERS = ['L0', 'L1', 'L2', 'L3', 'L4'];
+
+const ALL_RULES = CLAUSES.flatMap((c) =>
+  c.rules.map((r) => ({ ...r, clauseLvl: c.lvl, clauseNum: c.num, pillar: c.pillar })),
+);
+const TOTAL_RULES = ALL_RULES.length;
+const BY_WEIGHT: Record<string, number> = Object.fromEntries(WEIGHTS.map((w) => [w, 0]));
+for (const r of ALL_RULES) {
+  const key = (BY_WEIGHT[r.w] !== undefined ? r.w : 'MUST_WHEN') as string;
+  BY_WEIGHT[key] = (BY_WEIGHT[key] ?? 0) + 1;
+}
+const BY_PILLAR = PILLARS.map((p) => {
+  const clauses = CLAUSES.filter((c) => c.pillar === p.id);
+  const rules = ALL_RULES.filter((r) => r.pillar === p.id);
+  const weights: Record<string, number> = Object.fromEntries(WEIGHTS.map((w) => [w, 0]));
+  for (const r of rules) {
+    const key = (weights[r.w] !== undefined ? r.w : 'MUST_WHEN') as string;
+    weights[key] = (weights[key] ?? 0) + 1;
+  }
+  return { pillar: p, clauseCount: clauses.length, ruleCount: rules.length, weights };
+});
+let cumulative = 0;
+const BY_LEVEL = LEVEL_TIERS.map((lv) => {
+  const rulesAt = ALL_RULES.filter((r) => r.clauseLvl === lv).length;
+  cumulative += rulesAt;
+  return {
+    id: lv,
+    rulesAt,
+    cumulative,
+    pct: TOTAL_RULES > 0 ? Math.round((cumulative / TOTAL_RULES) * 100) : 0,
+  };
+});
+---
+<section class="spec-appendix" id="coverage-map">
+  <header class="appendix-head">
+    <span class="appendix-eyebrow mono">Coverage</span>
+    <h2 class="appendix-h">Coverage map</h2>
+    <p class="appendix-lede">
+      Every rule in the spec, aggregated by weight, pillar, and minimum level.
+      Numbers are derived from the rule catalog at build time — they cannot drift.
+    </p>
+  </header>
+
+  <div class="appendix-hero">
+    <div class="appendix-num-cell">
+      <span class="appendix-num-k mono">Rules</span>
+      <span class="appendix-num-v">{TOTAL_RULES}</span>
+    </div>
+    {WEIGHTS.map((w) => (
+      <div class="appendix-num-cell" data-w={w}>
+        <span class="appendix-num-k mono">{WEIGHT_LABEL[w]}</span>
+        <span class="appendix-num-v">{BY_WEIGHT[w]}</span>
+      </div>
+    ))}
+  </div>
+
+  <h3 class="appendix-sub">By pillar</h3>
+  <table class="appendix-table appendix-pillar-table">
+    <thead>
+      <tr>
+        <th>Pillar</th>
+        <th class="num">Clauses</th>
+        <th class="num">Rules</th>
+        {WEIGHTS.map((w) => (<th class="num">{WEIGHT_LABEL[w]}</th>))}
+      </tr>
+    </thead>
+    <tbody>
+      {BY_PILLAR.map((row) => (
+        <tr>
+          <td>
+            <a href={url(`specification#p-${row.pillar.id}`)}>
+              <span class="appendix-pillar-icon" aria-hidden="true">{row.pillar.icon}</span>
+              {row.pillar.name}
+              <span class="appendix-pillar-range mono">{row.pillar.range}</span>
+            </a>
+          </td>
+          <td class="num">{row.clauseCount}</td>
+          <td class="num">{row.ruleCount}</td>
+          {WEIGHTS.map((w) => (<td class="num">{row.weights[w]}</td>))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h3 class="appendix-sub">By level (cumulative)</h3>
+  <table class="appendix-table appendix-level-table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th class="num">Rules at this level</th>
+        <th class="num">Cumulative</th>
+        <th>Closure</th>
+      </tr>
+    </thead>
+    <tbody>
+      {BY_LEVEL.map((row) => (
+        <tr>
+          <td><span class={`lvl-tag mono lvl-${row.id.toLowerCase()}`}>{row.id}</span></td>
+          <td class="num">{row.rulesAt}</td>
+          <td class="num">{row.cumulative}</td>
+          <td>
+            <div class="appendix-bar"><span class="appendix-bar-fill" style={`width:${row.pct}%`}></span></div>
+            <span class="appendix-bar-pct mono">{row.pct}%</span>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>

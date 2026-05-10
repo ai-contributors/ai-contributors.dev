@@ -1,6 +1,6 @@
 # Credential Handling
 
-Effective date: 2026-05-03
+Effective date: 2026-05-07
 Owner: `@ai-contributors`
 Review cadence: quarterly and whenever deployment, workflow, or hosting
 configuration changes.

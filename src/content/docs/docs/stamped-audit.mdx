@@ -1,0 +1,121 @@
+---
+title: 'A stamped audit.'
+description: 'A source-backed view of the audit artifacts shipped by the pinned specification repo: root summary, checklist, and audit log.'
+sidebar:
+  label: 'A stamped audit'
+  order: 130
+---
+
+import { excerpt, loadSpecAuditArtifacts } from '../../../lib/stamped-audit';
+
+export const artifacts = loadSpecAuditArtifacts();
+export const rootArtifact = artifacts.find((artifact) => artifact.key === 'root');
+export const checklistArtifact = artifacts.find((artifact) => artifact.key === 'checklist');
+export const auditLogArtifact = artifacts.find((artifact) => artifact.key === 'audit-log');
+
+## Artifact set
+
+The content below is loaded from the pinned specification repo at build
+time. The site owns the layout and annotations; the audit artifact text
+comes from the spec source.
+
+<div class="artifact-grid">
+  {artifacts.map((artifact) => (
+    <article class="artifact-card">
+      <div class="artifact-k">{artifact.label}</div>
+      <div class="artifact-n">{artifact.path}</div>
+      <div class="artifact-d">{artifact.description}</div>
+      <div class="artifact-d" style="margin-top: 10px;">{artifact.lineCount} source lines</div>
+    </article>
+  ))}
+</div>
+
+The root `AI-CONTRIBUTOR-AUDIT.md` is the canonical source link for this
+page. The companion checklist and audit log are read from
+`.ai-contributor-audit/`. `AI-CONTRIBUTOR-EVIDENCE.json` is produced by a
+filled audit run, so it is described by the templates rather than bundled
+as static source.
+
+## Root summary
+
+This is the root-level audit summary template. In an adopting repository,
+the stamper fills the conformance summary and backlog from the checklist.
+
+<pre class="artifact-pre"><code>{excerpt(rootArtifact?.content ?? '', 80)}</code></pre>
+
+## Checklist template
+
+The checklist is the scoring surface. It carries synchronized frontmatter,
+level summaries, backlog rows, per-level audit rows, and verification
+gaps.
+
+<pre class="artifact-pre"><code>{excerpt(checklistArtifact?.content ?? '', 90)}</code></pre>
+
+## Audit log template
+
+The audit log records the commands and short output excerpts that support
+checklist comments. Stamped collector rows live between the stamped
+markers; manual rows are appended outside them.
+
+<pre class="artifact-pre"><code>{excerpt(auditLogArtifact?.content ?? '', 90)}</code></pre>
+
+## How to reproduce
+
+For a filled audit, clone the target repository, check out the audited
+commit recorded in the artifact frontmatter, run the collector and
+stamper against the same immutable spec source, then run the validator.
+The template text above defines which fields are stamper-owned, which
+fields are auditor-owned, and which differences are expected between two
+runs.
+
+<style>
+  {`
+    .artifact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0 32px;
+    }
+    .artifact-card {
+      background: var(--sl-color-bg-sidebar);
+      border: 1px solid var(--sl-color-hairline);
+      padding: 16px 18px;
+    }
+    .artifact-k {
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font-system-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .artifact-n {
+      color: var(--sl-color-text);
+      font-family: var(--sl-font-system-mono);
+      font-size: 13px;
+      margin: 8px 0;
+      word-break: break-word;
+    }
+    .artifact-d {
+      color: var(--sl-color-gray-2);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    pre.artifact-pre {
+      background: var(--sl-color-gray-7);
+      border: 1px solid var(--sl-color-hairline);
+      color: var(--sl-color-text);
+      font-family: var(--sl-font-system-mono);
+      font-size: 12px;
+      line-height: 1.55;
+      margin: 14px 0 30px;
+      overflow-x: auto;
+      padding: 16px 18px;
+      white-space: pre;
+    }
+    @media (max-width: 880px) {
+      .artifact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  `}
+</style>

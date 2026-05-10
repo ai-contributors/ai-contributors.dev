@@ -1,0 +1,171 @@
+---
+title: 'Seven pillars, twenty-nine clauses.'
+description: 'The spec groups its 29 clauses into seven catalog-backed pillars. Use this page to triage which pillar your repo needs work on.'
+sidebar:
+  label: 'Pillars overview'
+  order: 50
+---
+
+import { SPEC } from '../../../data/spec.generated';
+import { url as link } from '../../../lib/links';
+
+export const pillars = SPEC.pillars.map((pillar, index) => {
+  const clauses = SPEC.clauses.filter((clause) => clause.pillar === pillar.id);
+  const ruleCount = clauses.reduce((count, clause) => count + clause.rules.length, 0);
+  return {
+    ...pillar,
+    index: index + 1,
+    clauses,
+    ruleCount,
+  };
+});
+
+## The seven pillars
+
+The pillar names, descriptions, icons, and clause ranges below come from
+`AI-CONTRIBUTOR-RULE-CATALOG.json`. This page owns the presentation only.
+
+<div class="pillars-grid">
+  {pillars.map((pillar) => (
+    <article class="pillar">
+      <div class="pillar-head">
+        <span class="pillar-k mono">{pillar.range}</span>
+        <span class="pillar-icon" aria-hidden="true">{pillar.icon}</span>
+      </div>
+      <h3>{pillar.name}</h3>
+      <p>{pillar.description}</p>
+      <div class="pillar-foot">
+        <span class="mono small">pillar-{String(pillar.index).padStart(2, '0')}</span>
+        <span class="mono small">{pillar.clauses.length} clauses · {pillar.ruleCount} rules</span>
+      </div>
+    </article>
+  ))}
+</div>
+
+## Clause coverage
+
+Each pillar is a contiguous clause range in the catalog. Follow the clause
+links to the full specification for the rule text and audit level.
+
+<div class="coverage-grid">
+  {pillars.map((pillar) => (
+    <section class="coverage-card">
+      <h3>
+        <span aria-hidden="true">{pillar.icon}</span>
+        {pillar.name}
+      </h3>
+      <ul>
+        {pillar.clauses.map((clause) => (
+          <li>
+            <a href={link(`specification#${clause.anchor}`)}>
+              §{clause.num} · {clause.title}
+            </a>
+            <span class="mono small">{clause.lvl}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  {`
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 28px 0 32px;
+    }
+    .pillar {
+      border: 1px solid var(--sl-color-hairline);
+      background: var(--sl-color-bg-sidebar);
+      padding: 18px 20px;
+    }
+    .pillar-head {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .pillar-k {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sl-color-gray-3);
+    }
+    .pillar-icon {
+      font-size: 22px;
+    }
+    .pillar h3 {
+      margin: 10px 0 6px;
+      font-family: var(--sl-font-display);
+      font-weight: 400;
+      font-size: 22px;
+      letter-spacing: -0.005em;
+    }
+    .pillar p {
+      color: var(--sl-color-gray-2);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .pillar-foot {
+      align-items: baseline;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      color: var(--sl-color-gray-3);
+    }
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px 0 32px;
+    }
+    .coverage-card {
+      border: 1px solid var(--sl-color-hairline);
+      background: var(--sl-color-bg-sidebar);
+      padding: 16px 18px;
+    }
+    .coverage-card h3 {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+      margin-top: 0;
+      font-family: var(--sl-font-display);
+      font-weight: 400;
+      font-size: 20px;
+    }
+    .coverage-card ul {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+    }
+    .coverage-card li {
+      align-items: baseline;
+      border-top: 1px solid var(--sl-color-hairline);
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      padding: 9px 0;
+      font-size: 13.5px;
+    }
+    .coverage-card a {
+      color: var(--sl-color-text);
+    }
+    .mono {
+      font-family: var(--sl-font-system-mono);
+    }
+    .small {
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 880px) {
+      .pillars-grid,
+      .coverage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  `}
+</style>

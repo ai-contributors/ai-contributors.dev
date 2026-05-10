@@ -1,0 +1,123 @@
+---
+title: 'Specification'
+description: 'Twenty-nine clauses across seven pillars and five conformance levels. The full normative specification.'
+sidebar:
+  label: 'Full specification'
+  order: 30
+tableOfContents: false
+---
+
+import { SPEC } from '../../data/spec.generated';
+import { highlightWeight } from '../../lib/spec-rendering';
+// `?raw` + <script set:html data-astro-rerun> is intentional. The script
+// binds listeners and an IntersectionObserver at module top-level against
+// elements present on the rendered page; `data-astro-rerun` re-fires the
+// whole body after every ClientRouter swap so a fresh DOM gets fresh
+// bindings. Switching to a bundled <script> via static import would only
+// run the module once per browser session (modules cache), so the
+// observer would never re-attach when the visitor returned via view
+// transition. Loss of bundling/minification is the price of correctness.
+import specPageScript from '../../lib/specification-page.js?raw';
+import '../../styles/spec.css';
+
+export const WEIGHT_LABEL = {
+  MUST: 'MUST',
+  MUST_WHEN: 'MUST·when',
+  SHOULD: 'SHOULD',
+  MAY: 'MAY',
+};
+export const grouped = SPEC.pillars
+  .map((p) => ({
+    pillar: p,
+    clauses: SPEC.clauses.filter((c) => c.pillar === p.id),
+  }))
+  .filter((g) => g.clauses.length > 0);
+
+<div class="progress-bar" id="spec-progress-bar">
+  <span style="width: 3%" />
+</div>
+
+<div class="spec-content" data-pagefind-body data-pagefind-meta="title:Specification">
+  <div class="spec-hero">
+    <div class="eyebrow mono">specification · {SPEC.version}</div>
+    <h1>The AI Contributor Spec</h1>
+    <p class="lede">
+      Twenty-nine clauses across seven pillars. Five levels from baseline hygiene to autonomous AI operation.
+      Use <em>MUST</em> / <em>SHOULD</em> / <em>MAY</em> in the RFC&nbsp;2119 sense.
+    </p>
+    <div class="spec-meta">
+      <a class="meta-chip" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
+        <span class="cc-glyphs mono">CC&nbsp;BY&nbsp;4.0</span>
+        <span>Creative Commons Attribution 4.0 International</span>
+      </a>
+    </div>
+  </div>
+
+{
+grouped.map(({ pillar, clauses }) => (
+
+<>
+<section class="pillar-div" id={pillar.id} data-pillar={pillar.id}>
+<a id={`p-${pillar.id}`} class="pillar-anchor-alias" aria-hidden="true" />
+<div class="pd-rule" />
+<div class="pd-head">
+<span class="pd-num mono">{pillar.num}</span>
+<div>
+<h2>
+<span class="pd-icon" aria-hidden="true">
+{pillar.icon}
+</span>
+{pillar.name}
+</h2>
+<div class="pd-meta mono">
+{pillar.range} · {clauses.length} {clauses.length === 1 ? 'clause' : 'clauses'}
+</div>
+</div>
+</div>
+</section>
+
+        {clauses.map((c) => (
+          <article
+            class="clause"
+            id={c.anchor}
+            data-clause-num={c.num}
+            data-clause-pillar={c.pillar}
+            data-clause-level={c.lvl}
+          >
+            <a id={`c${c.num}`} class="clause-anchor-alias" aria-hidden="true" />
+            <header class="clause-head">
+              <div class="clause-num-wrap">
+                <a href={`#${c.anchor}`} class="clause-num mono">
+                  §{c.num}
+                </a>
+                <span class={`clause-lvl mono lvl-${c.lvl.toLowerCase()}`}>
+                  required at {c.lvl}
+                </span>
+              </div>
+              <h3 class="clause-title">{c.title}</h3>
+              <p class="clause-intent">{c.intent}</p>
+            </header>
+            <ol class="rule-list">
+              {c.rules.map((r) => (
+                <li id={r.id} class={`rule rule-${r.w.toLowerCase()}`} data-weight={r.w}>
+                  <span class="rule-w mono">{WEIGHT_LABEL[r.w]}</span>
+                  <span class="rule-text" set:html={highlightWeight(r.t)} />
+                  <a class="rule-id mono" href={`#${r.id}`} title="Permalink">
+                    {r.id}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </article>
+        ))}
+      </>
+    ))
+
+}
+
+  <footer class="spec-foot">
+    <div class="mono">end of specification · {SPEC.version}</div>
+  </footer>
+</div>
+
+<script is:inline data-astro-rerun set:html={specPageScript} />

@@ -9,7 +9,12 @@ dist/
 .husky/
 
 external/
-src/content/docs/generated-spec/
+src/content/generated-spec/
+src/content/docs/audit/
+src/content/docs/docs/
+src/content/docs/specification.md
+src/data/spec.generated.ts
+src/data/spec-source.generated.json
+src/lib/starlight-sidebar.generated.ts
 AI-CONTRIBUTOR-AUDIT.md
 .ai-contributor-audit/
-docs/superpowers/

@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logomark from '../components/Logomark.astro';
+import { url } from '../lib/links';
+
+// Pagefind index lives at <base>/pagefind/pagefind.js after `pagefind --site dist`.
+// Built only after `astro build`, so dev/preview before build will hit the catch
+// branch and degrade to plain links.
+const BASE = import.meta.env.BASE_URL.replace(/\/+$/, '/');
+const PAGEFIND_URL = `${BASE}pagefind/pagefind.js`;
+---
+
+<BaseLayout
+  title="Page not found · ai-contributor-spec / audit"
+  description="The page you tried to reach doesn't exist. Search the docs or jump back to the homepage."
+>
+  <div class="nf-page">
+    <header class="nf-topbar">
+      <a class="nf-brand" href={url('')}>
+        <Logomark size={24} />
+        <span class="nf-brand-name">ai-contributor-spec</span>
+        <span class="nf-brand-slash">/</span>
+        <span class="nf-brand-doc">audit</span>
+      </a>
+      <nav class="nf-nav">
+        <a href={url('docs/')}>Docs</a>
+        <a href={url('specification')}>Spec</a>
+        <a href="https://github.com/ai-contributors/ai-contributor-spec" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <main class="nf-hero">
+      <div class="nf-eyebrow mono">404 · page not found</div>
+      <h1>That URL isn&rsquo;t part of this spec.</h1>
+      <p class="nf-lede">
+        The page may have moved between releases, or the link could be stale. Search the docs or
+        head back to the entry points below.
+      </p>
+
+      <div class="nf-search">
+        <input
+          id="nf-search-input"
+          type="search"
+          placeholder="Search the docs…"
+          autocomplete="off"
+          aria-label="Search the docs"
+        />
+        <div id="nf-search-results" class="nf-search-results" aria-live="polite"></div>
+      </div>
+
+      <div class="nf-cta-row">
+        <a class="nf-btn nf-btn-primary" href={url('')}>Back to the homepage</a>
+        <a class="nf-btn nf-btn-ghost" href={url('docs/')}>Read the docs</a>
+        <a class="nf-btn nf-btn-ghost" href={url('specification')}>Open the specification</a>
+      </div>
+    </main>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ PAGEFIND_URL }}>
+  const input = document.getElementById('nf-search-input');
+  const results = document.getElementById('nf-search-results');
+  if (input && results) {
+    let pagefind = null;
+    let loading = null;
+    let token = 0;
+
+    async function load() {
+      if (pagefind) return pagefind;
+      if (loading) return loading;
+      loading = (async () => {
+        try {
+          const mod = await import(/* @vite-ignore */ PAGEFIND_URL);
+          if (mod.options) await mod.options({ excerptLength: 24 });
+          return (pagefind = mod);
+        } catch (err) {
+          console.error('[404] pagefind unavailable', err);
+          return null;
+        }
+      })();
+      return loading;
+    }
+
+    function empty(message) {
+      results.innerHTML = '';
+      const div = document.createElement('div');
+      div.className = 'nf-search-empty';
+      div.textContent = message;
+      results.appendChild(div);
+    }
+
+    async function render(query) {
+      const id = ++token;
+      const q = (query || '').trim();
+      if (!q) {
+        results.innerHTML = '';
+        return;
+      }
+      const pf = await load();
+      if (id !== token) return;
+      if (!pf) {
+        empty('Search index isn’t available here.');
+        return;
+      }
+      const search = await pf.search(q);
+      if (id !== token) return;
+      if (!search || !search.results.length) {
+        empty(`No matches for “${q}”.`);
+        return;
+      }
+      const top = search.results.slice(0, 8);
+      const data = await Promise.all(top.map((r) => r.data()));
+      if (id !== token) return;
+      results.innerHTML = '';
+      for (const d of data) {
+        const a = document.createElement('a');
+        a.className = 'nf-search-hit';
+        a.href = d.url;
+        const title = document.createElement('div');
+        title.className = 'nf-search-hit-title';
+        title.textContent = (d.meta && d.meta.title) || d.url;
+        a.appendChild(title);
+        if (d.excerpt) {
+          const ex = document.createElement('div');
+          ex.className = 'nf-search-hit-excerpt';
+          ex.innerHTML = d.excerpt;
+          a.appendChild(ex);
+        }
+        results.appendChild(a);
+      }
+    }
+
+    let debounce;
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => render(input.value), 80);
+    });
+    load();
+  }
+</script>
+
+<style>
+  .nf-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 40px 96px;
+  }
+  .nf-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0 56px;
+  }
+  .nf-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nf-brand-name,
+  .nf-brand-slash,
+  .nf-brand-doc {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .nf-nav {
+    display: flex;
+    gap: 28px;
+    font-size: 14px;
+  }
+  .nf-nav a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .nf-nav a:hover {
+    color: var(--ink);
+  }
+  .nf-hero {
+    padding: 56px 0 0;
+    max-width: 720px;
+  }
+  .nf-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    display: inline-block;
+    margin-bottom: 28px;
+  }
+  .nf-hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+  .nf-lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin: 0 0 36px;
+    text-wrap: pretty;
+  }
+  .nf-search {
+    margin-bottom: 36px;
+  }
+  .nf-search input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: inherit;
+  }
+  .nf-search input:focus {
+    outline: none;
+    border-color: var(--ink);
+  }
+  .nf-search-results {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nf-search-results:empty {
+    display: none;
+  }
+  .nf-search-empty {
+    padding: 12px 4px;
+    font-size: 13.5px;
+    color: var(--mute);
+  }
+  .nf-search-hit {
+    display: block;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nf-search-hit:hover {
+    border-color: var(--ink);
+  }
+  .nf-search-hit-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .nf-search-hit-excerpt {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .nf-search-hit-excerpt :global(mark) {
+    background: var(--paper);
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 0 1px;
+  }
+  .nf-cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .nf-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    border: 1px solid var(--ink);
+    font-size: 14px;
+    text-decoration: none;
+    transition:
+      background 120ms ease,
+      transform 120ms ease;
+  }
+  .nf-btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .nf-btn-primary:hover {
+    transform: translateY(-1px);
+  }
+  .nf-btn-ghost {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .nf-btn-ghost:hover {
+    background: var(--paper-2);
+  }
+  @media (max-width: 720px) {
+    .nf-page {
+      padding: 24px 22px 64px;
+    }
+    .nf-hero {
+      padding-top: 32px;
+    }
+  }
+</style>

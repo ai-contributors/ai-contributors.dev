@@ -9,15 +9,17 @@
     "pnpm": "10.33.2"
   },
   "scripts": {
+    "prepare": "husky",
     "predev": "pnpm prepare:spec",
     "dev": "astro dev",
     "setup:spec": "node scripts/setup-spec-source.mjs",
-    "prepare:spec": "node scripts/generate-docs.mjs",
+    "prepare:spec": "node scripts/generate-docs.mjs && node scripts/generate-spec-data.mjs",
     "validate:spec": "node scripts/validate-spec-source.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "test": "node --test tests/*.test.mjs tests/unit/*.test.js tests/integration/*.test.js",
+    "test": "node --test tests/unit/*.test.mjs tests/integration/*.test.mjs",
+    "test:dist": "node --test tests/built/*.test.mjs",
     "type-check": "astro check",
     "coverage:check": "vitest run --coverage",
     "prelhci:assert": "node scripts/prepare-lhci-dist.mjs",
@@ -26,36 +28,41 @@
     "secretlint:scan": "node scripts/secret-scan-tracked.mjs",
     "secret-scan": "pnpm secretlint:scan",
     "secret:scan": "pnpm secretlint:scan",
-    "check": "pnpm type-check",
-    "build": "astro build && node scripts/generate-llms.mjs",
+    "check:doc-nav": "node scripts/check-doc-nav.mjs",
+    "check": "pnpm check:doc-nav && pnpm type-check",
+    "build": "astro build && node scripts/generate-llms.mjs && pagefind --site dist --output-subdir pagefind && pnpm test:dist",
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/starlight": "0.38.4",
-    "@mermaid-js/layout-elk": "0.2.1",
-    "astro": "6.2.1",
-    "astro-mermaid": "2.0.1",
-    "mermaid": "11.14.0",
-    "starlight-llms-txt": "0.8.1"
+    "@astrojs/mdx": "5.0.4",
+    "@astrojs/starlight": "0.39.2",
+    "@fontsource/instrument-serif": "5.2.8",
+    "astro": "6.3.1"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",
-    "@eslint/js": "^10.0.1",
-    "@lhci/cli": "^0.15.1",
-    "@secretlint/secretlint-rule-preset-recommend": "^12.3.1",
-    "@vitest/coverage-v8": "^4.1.5",
-    "dependency-cruiser": "^17.4.0",
-    "eslint": "^10.3.0",
-    "globals": "^17.6.0",
-    "madge": "^8.0.0",
-    "prettier": "^3.8.3",
-    "secretlint": "^12.3.1",
+    "@eslint/js": "10.0.1",
+    "@lhci/cli": "0.15.1",
+    "@secretlint/secretlint-rule-preset-recommend": "13.0.0",
+    "@vitest/coverage-v8": "4.1.5",
+    "dependency-cruiser": "17.4.0",
+    "eslint": "10.3.0",
+    "github-slugger": "2.0.0",
+    "globals": "17.6.0",
+    "husky": "9.1.7",
+    "madge": "8.0.0",
+    "pagefind": "1.5.2",
+    "prettier": "3.8.3",
+    "remark-custom-heading-id": "2.0.0",
+    "remark-directive": "4.0.0",
+    "secretlint": "13.0.0",
     "typescript": "6.0.3",
-    "vitest": "^4.1.5"
+    "unist-util-visit": "5.0.0",
+    "vitest": "4.1.5"
   },
   "pnpm": {
     "overrides": {
-      "uuid": "^14.0.0"
+      "uuid": "14.0.0"
     },
     "onlyBuiltDependencies": [
       "esbuild",

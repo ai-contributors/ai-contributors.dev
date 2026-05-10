@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logomark from '../components/Logomark.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { url } from '../lib/links';
+import { SPEC } from '../data/spec.generated';
+import { BADGE_LEVELS, badgeUrlForLevel } from '../data/badges';
+
+import '../styles/landing.css';
+---
+<BaseLayout title="ai-contributor-spec / audit — repository guardrails for AI agents" description="Guardrails for repositories where AI reads, writes, reviews, or releases code.">
+  <div class="marketing-page" data-pagefind-body data-pagefind-meta="title:ai-contributor-spec / audit">
+    <header class="mk-topbar">
+      <a class="mk-brand" href={url('')}>
+        <Logomark size={24} />
+        <span class="mk-brand-name">ai-contributor-spec</span>
+        <span class="mk-brand-slash">/</span>
+        <span class="mk-brand-doc">audit</span>
+      </a>
+      <nav class="mk-nav">
+        <a href={url('docs/')}>Docs</a>
+        <a href={url('specification')}>Spec</a>
+        <a href={url('docs/releases')}>Releases</a>
+        <a href="https://github.com/ai-contributors/ai-contributor-spec" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <ThemeToggle />
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="hero-eyebrow"><a href={url('docs/releases')}>{SPEC.version}</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span>
+        <h1>Letting an agent into your repo isn&rsquo;t a <em>vibe</em>. It&rsquo;s a <em>level</em>.</h1>
+        <p class="hero-lede">
+          Coding agents now write, review, and merge code. There&rsquo;s no shared definition of what an
+          <em>agent-friendly</em> repo even looks like — every team reinvents the guardrails. This spec is the
+          shared definition: <strong>{SPEC.clauses.length} clauses, {SPEC.pillars.length} pillars, {SPEC.levels.length} levels</strong>, and a single audit loop that
+          tells you exactly where your repo sits today.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={url('docs/')}>Read the docs →</a>
+          <a class="btn btn-ghost" href={url('audit/prompt')}><span class="mono">$ audit my repo</span></a>
+        </div>
+      </div>
+
+      <div class="logo-grid-wrap">
+        <div class="logo-grid" aria-hidden="true">
+          <div class="lc lc-dark"></div><div class="lc lc-light"></div><div class="lc lc-dark"></div><div class="lc lc-light"></div>
+          <div class="lc lc-light"></div><div class="lc lc-dark"></div><div class="lc lc-ai">ai</div><div class="lc lc-light"></div>
+          <div class="lc lc-dark"></div><div class="lc lc-light"></div><div class="lc lc-light"></div><div class="lc lc-dark"></div>
+          <div class="lc lc-bottom">S</div><div class="lc lc-bottom">P</div><div class="lc lc-bottom">E</div><div class="lc lc-bottom">C</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── WHY ───────── -->
+    <section class="section" id="why">
+      <div class="eyebrow">Why this matters</div>
+      <h2 class="section-title">Without a shared contract, every repo reinvents the guardrails.</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <span class="why-num">01</span>
+          <div class="why-h">A common language for &ldquo;agent-ready&rdquo;</div>
+          <p class="why-d">&ldquo;Our repo is agent-friendly&rdquo; means nothing today. <em>L2</em> means something. Adopters get a checklist; tool authors get a stable target.</p>
+        </div>
+        <div class="why-card">
+          <span class="why-num">02</span>
+          <div class="why-h">Guardrails before you let agents in</div>
+          <p class="why-d">Pinned environments, scoped capabilities, secrets handling, branch protection, attribution. The spec is the boring list nobody wants to write but everyone needs.</p>
+        </div>
+        <div class="why-card">
+          <span class="why-num">03</span>
+          <div class="why-h">Reproducible claims, not assertions</div>
+          <p class="why-d">A repo claims a level by running the audit and producing a stamped artifact. Anyone can reproduce the audit at the same commit. No central registry, no vendor.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── AUDIT LOOP ───────── -->
+    <section class="section" id="loop">
+      <div class="eyebrow">How conformance is checked</div>
+      <h2 class="section-title">Install the skills. <em>Run the audit.</em></h2>
+      <p class="section-lede">Run the audit. Get a sorted backlog of gaps. Fix one row at a time. Rerun. Repeat until the repository reaches the level you actually need — not a level a benchmark told you to chase.</p>
+
+      <div class="loop-wrap">
+        <div class="loop-steps">
+          <div class="loop-step">
+            <div class="loop-step-num">Step 01</div>
+            <div class="loop-step-title"><a href={url('docs/profile')}>Profile</a></div>
+            <div class="loop-step-desc">Owner-confirmed answers about which checks apply. Drafted from repo evidence, then reviewed.</div>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">Step 02</div>
+            <div class="loop-step-title"><a href={url('docs/audit-overview')}>Audit</a></div>
+            <div class="loop-step-desc">Evidence collected, stamped, validated. A reviewable artifact: filled checklist, evidence JSON, sorted backlog.</div>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">Step 03</div>
+            <div class="loop-step-title"><a href={url('docs/skill-fix')}>Fix</a></div>
+            <div class="loop-step-desc">Close one gap at a time. The fix skill stops after each finding and asks what to do — commit, branch, push, or open a PR.</div>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">Step 04</div>
+            <div class="loop-step-title"><a href={url('docs/audit-overview')}>Rerun</a></div>
+            <div class="loop-step-desc">Especially when you expect to reach the next level. A human or accountable owner accepts the result before claiming a level.</div>
+          </div>
+        </div>
+        <div class="loop-rerun">
+          <span>Until target level reached</span>
+          <span class="loop-rerun-line"></span>
+          <span>Self-declared, auditor-verifiable</span>
+        </div>
+      </div>
+      <a class="loop-link" href={url('audit/prompt')}><span class="mono">$ audit my repo</span> →</a>
+    </section>
+
+    <!-- ───────── BADGE ───────── -->
+    <section class="section" id="badge">
+      <div class="eyebrow">After the audit</div>
+      <h2 class="section-title">Five levels. One audit-backed claim.</h2>
+      <p class="section-lede">When the audit lands and a human or accountable owner accepts the result, display the highest level your repository actually reaches. The full docs include the markdown badge pattern and pinned-spec variant.</p>
+      <div class="level-band">
+        {BADGE_LEVELS.map((level) => (
+          <div class="level-band-cell">
+            <div class="level-band-head">
+              <span class="level-band-id">{level.id}</span>
+              <span class="level-band-name">{level.name}</span>
+            </div>
+            <div class="level-band-bar" aria-hidden="true">
+              <span style={`width: ${(level.order / 4) * 100}%`}></span>
+            </div>
+            <img src={badgeUrlForLevel(level.id)} alt={`AI Contributor: ${level.id} ${level.name}`} />
+            <div class="badge-desc">{level.workflowSummary}</div>
+          </div>
+        ))}
+      </div>
+      <a class="badge-link" href={url('docs/conformance-levels')}>See levels and badge markdown →</a>
+    </section>
+
+    <footer class="mk-foot">
+      <span><strong>ai-contributor-spec / audit</strong> · <a href={url('docs/releases')}>{SPEC.version}</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> (docs/spec) · <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a> (tooling)</span>
+      <span>
+        <a href="https://github.com/ai-contributors/ai-contributor-spec" target="_blank" rel="noopener noreferrer">GitHub</a>
+        &nbsp;·&nbsp;
+        <a href={url('docs/releases')}>Releases</a>
+        &nbsp;·&nbsp;
+        <a href={url('docs/')}>Docs</a>
+      </span>
+    </footer>
+  </div>
+</BaseLayout>

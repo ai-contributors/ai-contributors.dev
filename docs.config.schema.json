@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-contributors.dev/docs.config.schema.json",
+  "title": "AI Contributors Docs Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "docs"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "0.1" },
+    "docs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/doc" }
+    }
+  },
+  "$defs": {
+    "doc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "path", "section", "label", "source"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9/-]*$"
+        },
+        "section": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "deck": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string", "minLength": 1 },
+        "derived": {
+          "type": "boolean",
+          "description": "True when the page is rendered from a generated/projected source rather than the literal source path. The source.path field is then a provenance pointer, not a build input."
+        },
+        "starlightHandAuthored": {
+          "type": "boolean",
+          "description": "True when the Starlight content for this entry is hand-authored (typically as .mdx with component imports). The porter still writes the generated-spec body so the .mdx can render it via getEntry/render, but does NOT overwrite src/content/docs/<path>.md."
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repo", "path"],
+          "properties": {
+            "repo": { "enum": ["spec", "site"] },
+            "path": { "type": "string", "minLength": 1 }
+          }
+        },
+        "sourceInputs": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Optional complete provenance list for pages assembled from more than one source. The source field remains the primary View source target.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["repo", "path", "role"],
+            "properties": {
+              "repo": { "enum": ["spec", "site"] },
+              "path": { "type": "string", "minLength": 1 },
+              "role": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

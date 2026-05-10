@@ -302,27 +302,27 @@ before publishing a conformance claim.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="start-here">Start Here</h2><a class="sl-anchor-link" href="#start-here"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Start Here”</span></a></div>
 <ol>
 <li>Run the
-<a href="skills/ai-contributor-audit-profile/SKILL.md">audit profile skill</a>, then
+<a href="../skill-profile/">audit profile skill</a>, then
 have the owner confirm the profile answers. This gives the audit
 applicability evidence for checks that do not apply.</li>
-<li>Run the <a href="skills/ai-contributor-audit/README.md">audit skill</a> to produce the
+<li>Run the <a href="../skill-audit/">audit skill</a> to produce the
 <a href="#what-the-audit-produces">audit artifacts</a>, including
 <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>.</li>
 <li>Review the current result and decide which
 <a href="#choose-your-target-level">target level</a> you want to reach.</li>
-<li>Use the <a href="skills/ai-contributor-audit-fix/SKILL.md">fix skill</a> to address one
+<li>Use the <a href="../skill-fix/">fix skill</a> to address one
 backlog row at a time.</li>
 <li>Rerun the audit after a batch of fixes, especially when you expect to reach
 the next level.</li>
 <li>Have a human or named accountable owner review the
-<a href="AI-CONTRIBUTOR-AUDIT-MODEL.md">audit evidence</a> before claiming a level.</li>
+<a href="../audit-overview/">audit evidence</a> before claiming a level.</li>
 </ol>
-<p>If you are hesitant to start with an agent, use the <a href="#manual-path">manual path</a>
+<p>If you are hesitant to start with an agent, use the <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/README.md#manual-path" target="_blank" rel="noopener noreferrer">manual path</a>
 first. That gives you the same hardening path without letting an agent inspect
 the repository.</p>
 <p>Using TypeScript, pnpm, and GitHub? Follow the concrete adoption path in
-<a href="AI-CONTRIBUTOR-GUIDE.md"><code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code></a>.</p>
-<p>Maintaining this repository? See <a href="TOOLING.md"><code dir="auto">TOOLING.md</code></a> for the tooling
+<a href="../adoption-guide/"><code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code></a>.</p>
+<p>Maintaining this repository? See <a href="../tooling/"><code dir="auto">TOOLING.md</code></a> for the tooling
 architecture, command map, and directory responsibilities.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="audit-prerequisites">Audit Prerequisites</h2><a class="sl-anchor-link" href="#audit-prerequisites"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Audit Prerequisites”</span></a></div>
 <p>For the automated audit path, have:</p>
@@ -357,11 +357,11 @@ dependency alerts may remain <code dir="auto">Warning</code> / verification gaps
 change uncommitted, commit, branch, push, or open a PR.</p>
 <p>If your agent does not support skills, or you prefer the prompt-based flow, use
 the prompt in
-<a href="AI-CONTRIBUTOR-AUDIT-PROMPT.md"><code dir="auto">AI-CONTRIBUTOR-AUDIT-PROMPT.md</code></a>.</p>
+<a href="../../audit/prompt/"><code dir="auto">AI-CONTRIBUTOR-AUDIT-PROMPT.md</code></a>.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="choose-your-target-level">Choose Your Target Level</h2><a class="sl-anchor-link" href="#choose-your-target-level"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Choose Your Target Level”</span></a></div>
 <p>Choose the highest-risk AI workflow the repository allows. The formal
 definitions are in
-<a href="AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels"><code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code> § Conformance levels</a>.</p>
+<a href="../conformance-levels/"><code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code> § Conformance levels</a>.</p>
 
 
 
@@ -403,11 +403,11 @@ handling, pinned tooling, committed lockfiles, clean setup instructions, and
 automated formatting.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="what-the-audit-produces">What The Audit Produces</h2><a class="sl-anchor-link" href="#what-the-audit-produces"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “What The Audit Produces”</span></a></div>
 <ul>
-<li><a href="AI-CONTRIBUTOR-AUDIT.md"><code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code></a>: root summary
+<li><a href="../stamped-audit/"><code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code></a>: root summary
 template. A populated audit contains the conformance level and sorted backlog.</li>
-<li><a href=".ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></a>:
+<li><a href="../stamped-audit/"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></a>:
 full row-by-row checklist.</li>
-<li><a href=".ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></a>:
+<li><a href="../stamped-audit/"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></a>:
 command and evidence trace.</li>
 <li><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>: structured evidence
 collected from the repository and host.</li>
@@ -419,6 +419,6 @@ this file as pre-audit input; if new owner facts are needed, update the
 profile and rerun rather than relying on chat answers.</li>
 </ul>
 <p>The audit is not a generic security review. It checks whether repository
-guardrails are strong enough for the AI workflow level you want to claim.</p> </div> <footer class="dx-footer"> <span><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> docs/spec</span> <span class="sep">·</span> <span> <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a>
+guardrails are strong enough for the AI workflow level you want to claim.</p> </div> <footer class="dx-footer"> <span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span> <span class="sep">·</span> <span> <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>
 tooling/template/runtime
 </span> </footer> </div> </div>  </main> </div> </div> </div> </div> </body></html>

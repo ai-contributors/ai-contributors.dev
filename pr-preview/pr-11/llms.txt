@@ -34,7 +34,7 @@
 
 ### Project
 
-- [Releases](https://ai-contributors.dev/ai-contributor-spec/docs/releases)
+- [Release Changelog](https://ai-contributors.dev/ai-contributor-spec/docs/releases)
 - [Contributing](https://ai-contributors.dev/ai-contributor-spec/docs/contributing)
 - [Authors](https://ai-contributors.dev/ai-contributor-spec/docs/authors)
 - [Tooling](https://ai-contributors.dev/ai-contributor-spec/docs/tooling)

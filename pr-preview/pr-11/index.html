@@ -1,14 +1,11 @@
 <!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ai-contributor-spec / audit — repository guardrails for AI agents</title><meta name="description" content="Guardrails for repositories where AI reads, writes, reviews, or releases code."><link rel="icon" type="image/svg+xml" href="/pr-preview/pr-11/favicon.svg"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-11/_astro/ClientRouter.astro_astro_type_script_index_0_lang.Dj3vPp6j.js"></script><script>
-      // Apply theme before paint to avoid FOUC. Reads the bespoke key
-      // ('theme') first, falls back to Starlight's ('starlight-theme')
-      // so the choice persists when the visitor arrives here from a
-      // Starlight page that was set in the same browser session.
-      // src/components/ThemeToggle.astro and the Starlight ThemeSelect
-      // override write both keys at runtime.
+      // Apply theme before paint to avoid FOUC. `theme-mode` is the
+      // single persisted site theme key; missing or invalid values use
+      // the light theme.
       (function () {
         try {
-          var theme = localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
-          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
+          var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {}
       })();
     </script><script>
@@ -17,15 +14,11 @@
       // page's <html> attributes which can clobber the toggled theme.
       document.addEventListener('astro:after-swap', () => {
         try {
-          var theme =
-            localStorage.getItem('theme') || localStorage.getItem('starlight-theme');
-          if (theme === 'dark') document.documentElement.setAttribute('data-invert', '1');
-          else document.documentElement.removeAttribute('data-invert');
-          if (theme === 'light' || theme === 'dark')
-            document.documentElement.setAttribute('data-theme', theme);
+          var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {}
       });
-    </script><link rel="stylesheet" href="/pr-preview/pr-11/_astro/Logomark.BuV_Ehs2.css">
+    </script><link rel="stylesheet" href="/pr-preview/pr-11/_astro/Logomark.IfoQ0iDo.css">
 <style>.astro-route-announcer{position:absolute;left:0;top:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}
 </style>
 <link rel="stylesheet" href="/pr-preview/pr-11/_astro/index.CKAhR2w5.css"><script type="module" src="/pr-preview/pr-11/_astro/page.UGCqloYM.js"></script></head> <body>  <div class="marketing-page" data-pagefind-body data-pagefind-meta="title:ai-contributor-spec / audit"> <header class="mk-topbar"> <a class="mk-brand" href="/pr-preview/pr-11/"> <svg viewBox="0 0 120 120" width="24" height="24" aria-hidden="true"> <rect x="0" y="0" width="24" height="24" fill="#000"></rect> <rect x="32" y="0" width="24" height="24" fill="#bdbdbd"></rect> <rect x="64" y="0" width="24" height="24" fill="#000"></rect> <rect x="96" y="0" width="24" height="24" fill="#bdbdbd"></rect> <rect x="0" y="32" width="24" height="24" fill="#bdbdbd"></rect> <rect x="32" y="32" width="24" height="24" fill="#000"></rect> <rect x="64" y="32" width="24" height="24" fill="#000"></rect> <rect x="96" y="32" width="24" height="24" fill="#bdbdbd"></rect> <rect x="0" y="64" width="24" height="24" fill="#000"></rect> <rect x="32" y="64" width="24" height="24" fill="#bdbdbd"></rect> <rect x="64" y="64" width="24" height="24" fill="#bdbdbd"></rect> <rect x="96" y="64" width="24" height="24" fill="#000"></rect> <rect x="0" y="96" width="24" height="24" fill="#000"></rect> <rect x="32" y="96" width="24" height="24" fill="#000"></rect> <rect x="64" y="96" width="24" height="24" fill="#000"></rect> <rect x="96" y="96" width="24" height="24" fill="#000"></rect> </svg> <span class="mk-brand-name">ai-contributor-spec</span> <span class="mk-brand-slash">/</span> <span class="mk-brand-doc">audit</span> </a> <nav class="mk-nav"> <a href="/pr-preview/pr-11/docs/">Docs</a> <a href="/pr-preview/pr-11/specification">Spec</a> <a href="/pr-preview/pr-11/docs/releases">Releases</a> <a href="https://github.com/ai-contributors/ai-contributor-spec" target="_blank" rel="noreferrer">GitHub ↗</a> <button class="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle> <span class="theme-toggle-icon" aria-hidden="true">◐</span> <span class="theme-toggle-label" data-theme-label>Dark</span> </button> <script data-astro-rerun>
@@ -35,7 +28,7 @@
     if (!buttons.length) return;
 
     function isDark() {
-      return root.getAttribute('data-invert') === '1';
+      return root.getAttribute('data-theme') === 'dark';
     }
     function syncButtons() {
       const dark = isDark();
@@ -47,16 +40,12 @@
     }
 
     function setTheme(next) {
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       // Mirror Starlight's flag + key so navigating from the bespoke
       // /, /specification surfaces into a /docs/** Starlight page keeps
-      // the same theme. The Starlight ThemeSelect override mirrors in
-      // the other direction.
+      // the same theme.
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('theme', next);
-        localStorage.setItem('starlight-theme', next);
+        localStorage.setItem('theme-mode', next);
       } catch (_) {}
       syncButtons();
     }
@@ -69,10 +58,8 @@
     });
 
     window.addEventListener('storage', (e) => {
-      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      if (e.key !== 'theme-mode') return;
       const next = e.newValue === 'dark' ? 'dark' : 'light';
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       root.setAttribute('data-theme', next);
       syncButtons();
     });

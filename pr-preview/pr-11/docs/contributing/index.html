@@ -1,4 +1,14 @@
-<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-usskuoms"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Contributing | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-11/docs/contributing/"/><link rel="sitemap" href="/pr-preview/pr-11/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-11/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v6.3.1"/><meta name="generator" content="Starlight v0.39.2"/><meta property="og:title" content="Contributing"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-11/docs/contributing/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Thanks for considering a contribution. This repository maintains:"/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Thanks for considering a contribution. This repository maintains:"/> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.js" as="script" crossorigin> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.css" as="style">  <meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-11/_astro/ClientRouter.astro_astro_type_script_index_0_lang.Dj3vPp6j.js"></script> <script>
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-usskuoms"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Contributing | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-11/docs/contributing/"/><link rel="sitemap" href="/pr-preview/pr-11/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-11/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v6.3.1"/><meta name="generator" content="Starlight v0.39.2"/><meta property="og:title" content="Contributing"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-11/docs/contributing/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Thanks for considering a contribution. This repository maintains:"/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Thanks for considering a contribution. This repository maintains:"/> <script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.js" as="script" crossorigin> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.css" as="style">  <meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-11/_astro/ClientRouter.astro_astro_type_script_index_0_lang.Dj3vPp6j.js"></script> <script>
   // Capture the docs-sidebar pane's scrollTop right before the new
   // page replaces it. The `<nav class="sidebar">` and its inner
   // `#starlight__sidebar` scroll container are NOT covered by the
@@ -14,17 +24,12 @@
 
   // ClientRouter applies the destination page's <html> attributes after
   // each swap, which overwrites the user-toggled theme with Starlight's
-  // SSR default (`data-theme="dark"`). Reapply the stored choice on
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
   // every transition so the theme survives navigation.
   document.addEventListener('astro:after-swap', () => {
     try {
-      const saved =
-        localStorage.getItem('starlight-theme') || localStorage.getItem('theme');
-      if (saved === 'light' || saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', saved);
-        if (saved === 'dark') document.documentElement.setAttribute('data-invert', '1');
-        else document.documentElement.removeAttribute('data-invert');
-      }
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
     } catch (_) {}
 
     // The docs sidebar uses transition:persist to avoid flicker between
@@ -126,8 +131,7 @@
       const t = root.getAttribute('data-theme');
       if (t === 'dark') return true;
       if (t === 'light') return false;
-      // Fall back to the bespoke flag if Starlight has not initialised yet.
-      return root.getAttribute('data-invert') === '1';
+      return false;
     }
 
     function syncButtons() {
@@ -140,16 +144,9 @@
     }
 
     function setTheme(next) {
-      // Starlight chrome
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('starlight-theme', next);
-      } catch (_) {}
-      // Bespoke pages: data-invert flag + 'theme' key.
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
-      try {
-        localStorage.setItem('theme', next);
+        localStorage.setItem('theme-mode', next);
       } catch (_) {}
 
       syncButtons();
@@ -176,13 +173,11 @@
       });
     });
 
-    // React to other tabs / other stack toggling theme via either key.
+    // React to other tabs toggling the shared site theme.
     window.addEventListener('storage', (e) => {
-      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      if (e.key !== 'theme-mode') return;
       const next = e.newValue === 'dark' ? 'dark' : 'light';
       root.setAttribute('data-theme', next);
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       syncButtons();
     });
   })();
@@ -227,8 +222,7 @@
       const t = root.getAttribute('data-theme');
       if (t === 'dark') return true;
       if (t === 'light') return false;
-      // Fall back to the bespoke flag if Starlight has not initialised yet.
-      return root.getAttribute('data-invert') === '1';
+      return false;
     }
 
     function syncButtons() {
@@ -241,16 +235,9 @@
     }
 
     function setTheme(next) {
-      // Starlight chrome
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('starlight-theme', next);
-      } catch (_) {}
-      // Bespoke pages: data-invert flag + 'theme' key.
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
-      try {
-        localStorage.setItem('theme', next);
+        localStorage.setItem('theme-mode', next);
       } catch (_) {}
 
       syncButtons();
@@ -277,13 +264,11 @@
       });
     });
 
-    // React to other tabs / other stack toggling theme via either key.
+    // React to other tabs toggling the shared site theme.
     window.addEventListener('storage', (e) => {
-      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      if (e.key !== 'theme-mode') return;
       const next = e.newValue === 'dark' ? 'dark' : 'light';
       root.setAttribute('data-theme', next);
-      if (next === 'dark') root.setAttribute('data-invert', '1');
-      else root.removeAttribute('data-invert');
       syncButtons();
     });
   })();

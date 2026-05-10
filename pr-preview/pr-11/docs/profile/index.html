@@ -1,0 +1,362 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-usskuoms"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Audit Profile | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-11/docs/profile/"/><link rel="sitemap" href="/pr-preview/pr-11/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-11/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v6.3.1"/><meta name="generator" content="Starlight v0.39.2"/><meta property="og:title" content="Audit Profile"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-11/docs/profile/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Owner-confirmed applicability for an audit. Narrows scope; does not grant exemptions. This document is the human-facing companion to the `ai-contributor-audit-profile` skill — the skill is the agent runbook, this is the concept reference."/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Owner-confirmed applicability for an audit. Narrows scope; does not grant exemptions. This document is the human-facing companion to the `ai-contributor-audit-profile` skill — the skill is the agent runbook, this is the concept reference."/> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.js" as="script" crossorigin> <link rel="prefetch" href="/pr-preview/pr-11/pagefind/pagefind-ui.css" as="style">  <meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-11/_astro/ClientRouter.astro_astro_type_script_index_0_lang.Dj3vPp6j.js"></script> <script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the stored choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved =
+        localStorage.getItem('starlight-theme') || localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+        if (saved === 'dark') document.documentElement.setAttribute('data-invert', '1');
+        else document.documentElement.removeAttribute('data-invert');
+      }
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/pr-preview/pr-11/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-11/_astro/index.BAW2LMWX.css">
+<style>.astro-route-announcer{position:absolute;left:0;top:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}
+</style><script type="module" src="/pr-preview/pr-11/_astro/page.UGCqloYM.js"></script></head> <body class="astro-usskuoms"> <a href="#_top" class="astro-m26ymx6b">Skip to content</a> <div class="page sl-flex astro-hazf6gbd"> <header class="header astro-hazf6gbd"><div class="header astro-4suy2sg2"> <div class="title-wrapper sl-flex astro-4suy2sg2"> <a href="/pr-preview/pr-11/" class="site-title sl-flex astro-tpvwi2ht">  <img class="astro-tpvwi2ht" alt="ai-contributors logomark" src="/pr-preview/pr-11/_astro/logomark.M5JGvKcj.svg" width="120" height="120">  <span class="astro-tpvwi2ht" translate="no"> ai-contributor-spec / audit </span> </a> </div> <div class="sl-flex print:hidden astro-4suy2sg2"> <site-search class="astro-4suy2sg2 astro-wdlapr6d" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-wdlapr6d"> <svg aria-hidden="true" class="astro-wdlapr6d astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-wdlapr6d" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-wdlapr6d" style="display: none;"> <kbd class="astro-wdlapr6d">Ctrl</kbd><kbd class="astro-wdlapr6d">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-wdlapr6d"> <div class="dialog-frame sl-flex astro-wdlapr6d">  <button data-close-modal class="sl-flex md:sl-hidden astro-wdlapr6d"> Cancel </button> <div class="search-container astro-wdlapr6d"> <div id="starlight__search" class="astro-wdlapr6d"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/pr-preview/pr-11/_astro/Search.astro_astro_type_script_index_0_lang.WPbAZm-x.js"></script>  </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-4suy2sg2"> <div class="sl-flex social-icons astro-4suy2sg2">  </div> <button class="theme-toggle astro-uux2s3do" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle> <span class="theme-toggle-icon astro-uux2s3do" aria-hidden="true">◐</span> <span class="theme-toggle-label astro-uux2s3do" data-theme-label>Dark</span> </button> <script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      // Starlight is the authority on Starlight pages; data-theme wins.
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      // Fall back to the bespoke flag if Starlight has not initialised yet.
+      return root.getAttribute('data-invert') === '1';
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      // Starlight chrome
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('starlight-theme', next);
+      } catch (_) {}
+      // Bespoke pages: data-invert flag + 'theme' key.
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      try {
+        localStorage.setItem('theme', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs / other stack toggling theme via either key.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      syncButtons();
+    });
+  })();
+</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div></header> <nav class="sidebar print:hidden astro-hazf6gbd" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jrt6jkxs"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jrt6jkxs"> <svg aria-hidden="true" class="open-menu astro-jrt6jkxs astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jrt6jkxs astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>  <div id="starlight__sidebar" class="sidebar-pane astro-hazf6gbd"> <div class="sidebar-content sl-flex astro-hazf6gbd"> <div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="0tsmwiy" class="astro-lsibntan"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3gjjypif"> <li class="astro-3gjjypif"> <details open class="astro-3gjjypif"> <summary class="astro-3gjjypif"> <span class="group-label astro-3gjjypif"> <span class="large astro-3gjjypif">Start</span>  </span> <svg aria-hidden="true" class="caret astro-3gjjypif astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <ul class="astro-3gjjypif"> <li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Overview</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/quickstart/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Quickstart</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/adoption-guide/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Adoption guide</span>  </a> </li> </ul> </details> </li><li class="astro-3gjjypif"> <details open class="astro-3gjjypif"> <summary class="astro-3gjjypif"> <span class="group-label astro-3gjjypif"> <span class="large astro-3gjjypif">Specification</span>  </span> <svg aria-hidden="true" class="caret astro-3gjjypif astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <ul class="astro-3gjjypif"> <li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/specification/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Full specification</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/pillars/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Pillars overview</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/conformance-levels/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Levels overview</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/coverage-map/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Coverage map</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/rule-catalog/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Rule catalog</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/threat-model/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Threat model template</span>  </a> </li> </ul> </details> </li><li class="astro-3gjjypif"> <details open class="astro-3gjjypif"> <summary class="astro-3gjjypif"> <span class="group-label astro-3gjjypif"> <span class="large astro-3gjjypif">Audit</span>  </span> <svg aria-hidden="true" class="caret astro-3gjjypif astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <ul class="astro-3gjjypif"> <li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/audit-overview/" class="astro-3gjjypif"> <span class="astro-3gjjypif">How the audit works</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/profile/" aria-current="page" class="astro-3gjjypif"> <span class="astro-3gjjypif">The profile</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/audit/prompt/" class="astro-3gjjypif"> <span class="astro-3gjjypif">No-install prompt</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/stamped-audit/" class="astro-3gjjypif"> <span class="astro-3gjjypif">A stamped audit</span>  </a> </li> </ul> </details> </li><li class="astro-3gjjypif"> <details open class="astro-3gjjypif"> <summary class="astro-3gjjypif"> <span class="group-label astro-3gjjypif"> <span class="large astro-3gjjypif">Skills</span>  </span> <svg aria-hidden="true" class="caret astro-3gjjypif astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <ul class="astro-3gjjypif"> <li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/skill-profile/" class="astro-3gjjypif"> <span class="astro-3gjjypif">ai-contributor-audit-profile</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/skill-audit/" class="astro-3gjjypif"> <span class="astro-3gjjypif">ai-contributor-audit</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/skill-fix/" class="astro-3gjjypif"> <span class="astro-3gjjypif">ai-contributor-audit-fix</span>  </a> </li> </ul> </details> </li><li class="astro-3gjjypif"> <details open class="astro-3gjjypif"> <summary class="astro-3gjjypif"> <span class="group-label astro-3gjjypif"> <span class="large astro-3gjjypif">Project</span>  </span> <svg aria-hidden="true" class="caret astro-3gjjypif astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <ul class="astro-3gjjypif"> <li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/releases/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Releases</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/contributing/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Contributing</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/authors/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Authors</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/tooling/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Tooling</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/security-policy/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Security policy</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/glossary/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Glossary</span>  </a> </li><li class="astro-3gjjypif"> <a href="/pr-preview/pr-11/docs/doc-coverage/" class="astro-3gjjypif"> <span class="astro-3gjjypif">Published pages</span>  </a> </li> </ul> </details> </li> </ul>  <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist> <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-6zt7bdf3"> <div class="social-icons astro-6zt7bdf3">  </div> <button class="theme-toggle astro-uux2s3do" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle> <span class="theme-toggle-icon astro-uux2s3do" aria-hidden="true">◐</span> <span class="theme-toggle-label astro-uux2s3do" data-theme-label>Dark</span> </button> <script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      // Starlight is the authority on Starlight pages; data-theme wins.
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      // Fall back to the bespoke flag if Starlight has not initialised yet.
+      return root.getAttribute('data-invert') === '1';
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      // Starlight chrome
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('starlight-theme', next);
+      } catch (_) {}
+      // Bespoke pages: data-invert flag + 'theme' key.
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      try {
+        localStorage.setItem('theme', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs / other stack toggling theme via either key.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme' && e.key !== 'starlight-theme') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      if (next === 'dark') root.setAttribute('data-invert', '1');
+      else root.removeAttribute('data-invert');
+      syncButtons();
+    });
+  })();
+</script>  </div> </div></div> </div> </div> </nav> <div class="main-frame astro-hazf6gbd">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-yss6ga66"> <aside class="right-sidebar-container print:hidden astro-yss6ga66"> <div class="right-sidebar astro-yss6ga66"> <div class="lg:sl-hidden astro-alrmlee4"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-zezf7gzf"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-zezf7gzf"><details id="starlight__mobile-toc" class="astro-zezf7gzf"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-zezf7gzf"><span class="toggle sl-flex astro-zezf7gzf">On this page<svg aria-hidden="true" class="caret astro-zezf7gzf astro-udhuopin" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-zezf7gzf"></span></summary><div class="dropdown astro-zezf7gzf"><ul class="isMobile astro-jc25jxui" style="--depth: 0;"> <li class="astro-jc25jxui" style="--depth: 0;"> <a href="#_top" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#what-the-profile-is" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">What the profile is</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#why-it-exists-separately-from-the-audit" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Why it exists separately from the audit</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#what-an-answer-means" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">What an answer means</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#lifecycle" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Lifecycle</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#how-to-fill-it" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">How to fill it</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#related-references" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Related references</span> </a>  </li> </ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-11/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.hwBsy0Mo.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-alrmlee4"><div class="sl-container astro-alrmlee4"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-jc25jxui" style="--depth: 0;"> <li class="astro-jc25jxui" style="--depth: 0;"> <a href="#_top" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#what-the-profile-is" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">What the profile is</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#why-it-exists-separately-from-the-audit" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Why it exists separately from the audit</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#what-an-answer-means" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">What an answer means</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#lifecycle" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Lifecycle</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#how-to-fill-it" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">How to fill it</span> </a>  </li><li class="astro-jc25jxui" style="--depth: 0;"> <a href="#related-references" class="astro-jc25jxui" style="--depth: 0;"> <span class="astro-jc25jxui" style="--depth: 0;">Related references</span> </a>  </li> </ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-11/_astro/TableOfContents.astro_astro_type_script_index_0_lang.FuRcXuRY.js"></script></div></div> </div> </aside> <div class="main-pane astro-yss6ga66">  <main data-pagefind-body class="astro-usskuoms" lang="en" dir="ltr">    <div class="content-panel astro-cjikvxcb"> <div class="sl-container astro-cjikvxcb"> <div class="dx-eyebrow">Audit › The profile</div><h1 id="_top" class="astro-f3kthl3y">Audit Profile</h1> </div> </div> <div class="content-panel astro-cjikvxcb"> <div class="sl-container astro-cjikvxcb"> <div class="sl-markdown-content"> <!-- generated by scripts/spec-content.mjs; do not edit -->
+<div class="sl-heading-wrapper level-h2"><h2 id="what-the-profile-is">What the profile is</h2><a class="sl-anchor-link" href="#what-the-profile-is"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “What the profile is”</span></a></div>
+<p>The profile is a small Markdown file at
+<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code> that records
+owner-confirmed applicability answers for an audit. It captures facts
+the auditor cannot infer from the repository alone — whether the
+project handles regulated data, whether a given workflow targets
+production, whether shared MCP servers are in scope.</p>
+<p>It does <strong>not</strong> grant exemptions. The profile narrows what an audit
+must verify; it never marks a rule <em>Fulfilled</em> on its own. Mechanical
+evidence still has to be present where a clause requires it.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="why-it-exists-separately-from-the-audit">Why it exists separately from the audit</h2><a class="sl-anchor-link" href="#why-it-exists-separately-from-the-audit"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Why it exists separately from the audit”</span></a></div>
+<p>An audit run is mechanical and reproducible: collect evidence, score
+against the rule catalog, stamp the result. The owner’s applicability
+answers are not mechanical — they describe intent, regulatory posture,
+and what the repo is for. Mixing the two would let an audit silently
+change scope between runs based on owner mood. Keeping the profile in
+its own file means scope changes are reviewable and dated, and the
+audit run itself stays stateless.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="what-an-answer-means">What an answer means</h2><a class="sl-anchor-link" href="#what-an-answer-means"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “What an answer means”</span></a></div>
+<ul>
+<li><strong><code dir="auto">yes</code></strong> — the affected checks are in scope. Normal evidence still
+required.</li>
+<li><strong><code dir="auto">no</code></strong> — the affected checks may be marked <em>Not relevant</em>, but
+only when the mapped checklist row explicitly allows owner
+attestation as the disposition.</li>
+<li><strong>blank</strong> — the auditor decides from repository evidence. Use this
+when the answer depends on facts already visible in the repo, or
+when the owner is unsure.</li>
+</ul>
+<p>Confidence is reviewed at fill time, not stored in the file. Rows that
+flip from blank to <code dir="auto">no</code> on absence-of-evidence alone are flagged for
+owner reconfirmation.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="lifecycle">Lifecycle</h2><a class="sl-anchor-link" href="#lifecycle"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Lifecycle”</span></a></div>
+<ol>
+<li>The profile is filled or refreshed <em>before</em> an audit, never during
+one. If an audit surfaces a missing or contradictory owner fact, it
+raises a verification gap and asks for a profile update; the audit
+is then rerun from collection.</li>
+<li>Each row carries an <code dir="auto">Owner (re)confirmed YYYY-MM-DD</code> stamp. The
+stamp moves only when the answer or evidence actually changed in
+that run. No-op date refreshes are forbidden — they erase the
+meaning of “reconfirmed”.</li>
+<li>A tracked deletion (<code dir="auto">git status</code> shows <code dir="auto">D</code>) is treated as a
+fresh-start signal. The default is to start from the canonical
+blank template, not to silently restore the prior file.</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="how-to-fill-it">How to fill it</h2><a class="sl-anchor-link" href="#how-to-fill-it"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “How to fill it”</span></a></div>
+<p>Two paths, both produce the same file:</p>
+<ul>
+<li><strong>Skill-driven.</strong> Run the
+<a href="../skills/ai-contributor-audit-profile/SKILL.md"><code dir="auto">ai-contributor-audit-profile</code></a>
+skill in a tool-using agent. The skill walks the canonical questions,
+drafts answers from repo evidence, and presents a rendered diff
+against the existing profile for owner confirmation.</li>
+<li><strong>By hand.</strong> Copy the canonical question template from this
+repository, answer in canonical order, preserve the
+<code dir="auto">Area · Question · Answer · Evidence · Affected checks · Owner (re)confirmed</code>
+column shape.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-references">Related references</h2><a class="sl-anchor-link" href="#related-references"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Related references”</span></a></div>
+<ul>
+<li><a href="../AI-CONTRIBUTOR-AUDIT-MODEL.md"><code dir="auto">AI-CONTRIBUTOR-AUDIT-MODEL.md</code></a> —
+where the profile fits in the audit loop.</li>
+<li><a href="../skills/ai-contributor-audit-profile/SKILL.md"><code dir="auto">skills/ai-contributor-audit-profile/SKILL.md</code></a>
+— the agent-facing runbook, including guardrails and validator
+commands.</li>
+<li><a href="../AI-CONTRIBUTOR-AUDIT-PROMPT.md"><code dir="auto">AI-CONTRIBUTOR-AUDIT-PROMPT.md</code></a>
+— the no-install prompt path that does not require the skills
+package.</li>
+</ul> </div> <footer class="dx-footer"> <span><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> docs/spec</span> <span class="sep">·</span> <span> <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a>
+tooling/template/runtime
+</span> </footer> </div> </div>  </main> </div> </div> </div> </div> </body></html>

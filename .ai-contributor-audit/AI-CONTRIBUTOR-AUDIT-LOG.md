@@ -1,15 +1,15 @@
 ---
-spec_version: "0.1"
-spec_source: https://github.com/ai-contributors/ai-contributor-spec/tree/9d6e0676353315f6c0f86e5ed09468f6ac2286e9
-assessment_started_at: 2026-05-03T18:29:29.109Z
-assessment_completed_at: 2026-05-03T18:31:25.996Z
-assessment_duration: 00:01:56
-audited_commit: 3f3da08bf652162f9543c5f544d6385cad6151ab
-auditor: OpenAI Codex | GPT-5 | medium
+spec_version: "0.1.3"
+spec_source: https://github.com/ai-contributors/ai-contributor-spec/tree/v0.1.3
+assessment_started_at: 2026-07-02T11:35:39.584Z
+assessment_completed_at: 2026-07-02T11:39:15.051Z
+assessment_duration: 00:03:35
+audited_commit: 317c440f190abe3854e9ed1e7be03ffd70b9de3f
+auditor: Claude Code | Claude Fable 5 | n/a
 validator_version: "0.1.0"
 collector_version: "0.1.0"
-runner_agent: OpenAI Codex
-runner_model: GPT-5
+runner_agent: Claude Code
+runner_model: Claude Fable 5
 conformance_level: 3
 ---
 
@@ -62,22 +62,23 @@ Rows between `<!-- BEGIN:STAMPED-COLLECTOR-ROWS -->` and `<!-- END:STAMPED-COLLE
 | Spec IDs | Rules | Command | Output excerpt |
 | -------- | ----- | ------- | -------------- |
 <!-- BEGIN:STAMPED-COLLECTOR-ROWS -->
-<!-- STAMPED-BLOCK-SHA256: 5648ee180cd16d6f0a20870aa9ad0f54c49d437fa5b7ad0c16684d4d426567d6 -->
+<!-- STAMPED-BLOCK-SHA256: 65f376f6e58b309b5d211adfa566b4499168fd26edd4ef44428f792a4e8a1021 -->
 
-| | `<preflight>` | `npx --yes tsx@4.21.0 audit-collect.ts /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation --out /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.worktrees/aic-level-3-remediation/.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json --commit 3f3da08bf652162f9543c5f544d6385cad6151ab` | `[audit-collect] wrote .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json — 44 rules; Fulfilled=37 Warning=4 Alarm=0 jud…` |
-| | `<preflight>` | `gh api user --jq .login` | `login=ai-contributors; token_tier=api_identity_verified_scopes_unknown; gh api user login=ai-contributors; gh auth stat…` |
+| | `<preflight>` | `npx --yes tsx@4.21.0 audit-collect.ts /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev --out /home/sasc9948/dev/github/ai-contributors/ai-contributors.dev/.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json --commit 317c440f190abe3854e9ed1e7be03ffd70b9de3f` | `[audit-collect] wrote .ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json — 44 rules; Fulfilled=36 Warning=5 Alarm=0 jud…` |
+| | `<preflight>` | `gh api user --jq .login` | `login=ai-contributors; token_tier=audit_read_only; gh api user login=ai-contributors\ngithub.com\n  ✓ Logged in to github…` |
 | `AIC-default-branch-protected` | `Branch Protection` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-ci-guardrail-suite` | `CI Gates` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-dependency-review-visibility` | `Dependency Review` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
 | `AIC-dependency-vuln-detection` | `Dependency Security` | `gh api repos/ai-contributors/ai-contributors.dev/dependabot/alerts?state=open&severity=high&per_page=1` | `[]` |
 | `AIC-human-review-required` | `Human Review Required` | `gh api repos/ai-contributors/ai-contributors.dev/rules/branches/main` | `[\n  {\n    "type": "deletion",\n    "ruleset_source_type": "Repository",\n    "ruleset_source": "ai-contributors/ai-contri…` |
-| `AIC-lint-correctness-rules` | `Lint Rules` | `pnpm -r lint` | `\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-3f3da08b-4FlXfF\n> eslint .\n\n` |
-| `AIC-lockfile-integrity-hashes`, `AIC-lockfile-enforced-in-ci` | `Lockfile Integrity` | `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` | `Done in 391ms using pnpm v10.33.2\n` |
+| `AIC-lint-correctness-rules` | `Lint Rules` | `pnpm -r lint` | `\n> ai-contributors-dev@0.1.0 lint /tmp/audit-collect-317c440f-qh7pKA\n> eslint .\n\n` |
+| `AIC-lockfile-integrity-hashes`, `AIC-lockfile-enforced-in-ci` | `Lockfile Integrity` | `pnpm install --frozen-lockfile --ignore-scripts --prefer-offline --lockfile-only` | `Done in 369ms using pnpm v10.33.2\n` |
 | `AIC-push-protection-enabled` | `Push Protection` | `gh api repos/ai-contributors/ai-contributors.dev` | `{\n  "id": 1227930329,\n  "node_id": "R_kgDOSTC62Q",\n  "name": "ai-contributors.dev",\n  "full_name": "ai-contributors/ai-…` |
 | `AIC-secret-scanning-enabled` | `Secret Scanning` | `gh api repos/ai-contributors/ai-contributors.dev/secret-scanning/alerts` | `[]` |
-| `AIC-strict-typing-enabled` | `Strict Types` | `pnpm -r type-check` | `\n> ai-contributors-dev@0.1.0 type-check /tmp/audit-collect-3f3da08b-4FlXfF\n> astro check\n\n20:29:44 [astro-mermaid] Sett…` |
+| `AIC-strict-typing-enabled` | `Strict Types` | `pnpm -r type-check` | `\n> ai-contributors-dev@0.1.0 type-check /tmp/audit-collect-317c440f-qh7pKA\n> astro check\n\n13:35:45 [vite] Re-optimizing…` |
 
 <!-- END:STAMPED-COLLECTOR-ROWS -->
+| `AIC-default-branch-protected`, `AIC-required-checks-and-reviews`, `AIC-agent-credential-not-sole-approver` | `Branch Protection`, `Agent Credential Approval`, `Human Approval — Large Changes` | `gh api repos/ai-contributors/ai-contributors.dev/rulesets` | `main-protection: active; rules: deletion, non_fast_forward, required_linear_history, pull_request approvals=1 codeowners=true, required_status_checks` |
 
 Append further rows as needed. If a rule is evidenced entirely by `AI-CONTRIBUTOR-EVIDENCE.json`, keep the collector row and cite `AI-CONTRIBUTOR-EVIDENCE.json` in the checklist Comment.
 

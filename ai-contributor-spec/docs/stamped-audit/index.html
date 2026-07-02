@@ -270,7 +270,7 @@
 <p>The content below is loaded from the pinned specification repo at build
 time. The site owns the layout and annotations; the audit artifact text
 comes from the spec source.</p>
-<div class="artifact-grid"><article class="artifact-card"><div class="artifact-k">Root summary</div><div class="artifact-n">AI-CONTRIBUTOR-AUDIT.md</div><div class="artifact-d">Repo-root summary projected by the stamper from the checklist level summary and backlog.</div><div class="artifact-d" style="margin-top: 10px;">80 source lines</div></article><article class="artifact-card"><div class="artifact-k">Checklist</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</div><div class="artifact-d">Full scoring surface: status, comment, automation marker, and spec IDs for every audit row.</div><div class="artifact-d" style="margin-top: 10px;">506 source lines</div></article><article class="artifact-card"><div class="artifact-k">Audit log</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</div><div class="artifact-d">Evidence ledger for commands, hosted-setting checks, stamped collector rows, and manual rows.</div><div class="artifact-d" style="margin-top: 10px;">100 source lines</div></article></div>
+<div class="artifact-grid"><article class="artifact-card"><div class="artifact-k">Root summary</div><div class="artifact-n">AI-CONTRIBUTOR-AUDIT.md</div><div class="artifact-d">Repo-root summary projected by the stamper from the checklist level summary and backlog.</div><div class="artifact-d" style="margin-top: 10px;">80 source lines</div></article><article class="artifact-card"><div class="artifact-k">Checklist</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</div><div class="artifact-d">Full scoring surface: status, comment, automation marker, and spec IDs for every audit row.</div><div class="artifact-d" style="margin-top: 10px;">511 source lines</div></article><article class="artifact-card"><div class="artifact-k">Audit log</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</div><div class="artifact-d">Evidence ledger for commands, hosted-setting checks, stamped collector rows, and manual rows.</div><div class="artifact-d" style="margin-top: 10px;">104 source lines</div></article></div>
 <p>The root <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code> is the canonical source link for this
 page. The companion checklist and audit log are read from
 <code dir="auto">.ai-contributor-audit/</code>. <code dir="auto">AI-CONTRIBUTOR-EVIDENCE.json</code> is produced by a
@@ -363,7 +363,7 @@ Once a rule reaches `Fulfilled` or `Not relevant` in the checklist, it disappear
 level summaries, backlog rows, per-level audit rows, and verification
 gaps.</p>
 <pre class="artifact-pre"><code>---
-spec_version: &quot;0.1.3&quot;
+spec_version: &quot;0.1.4&quot;
 spec_source:           # Stamped automatically by audit-stamp.ts from --spec-source, AI_CONTRIBUTOR_SPEC_SOURCE, the bootstrap manifest, or the pinned runbook path. Immutable source used for this audit, e.g. https://github.com/ai-contributors/ai-contributor-spec/tree/&lt;full-commit-sha&gt; or a release tag. Must match the companion audit log exactly.
 assessment_started_at:    # Stamped automatically by audit-stamp.ts from the collector&#39;s evidence JSON. Leave blank — the stamper overwrites it. ISO 8601 date-time with seconds.
 assessment_completed_at:  # Stamped automatically by audit-stamp.ts. Leave blank — the stamper overwrites it.
@@ -412,6 +412,7 @@ conformance_level:  # one of: none, 0, 1, 2, 3, 4. Stamped automatically by audi
 4. **Every Comment must cite current-run evidence.** A checklist Comment must cite either a command recorded in the current run&#39;s audit log, a `file:line` / section citation from `audited_commit`, or `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` emitted by the current `audit-collect` invocation. This rule prevents copied evidence: an agent cannot reuse a Comment unless it also provides current, reviewable evidence. Each `Fulfilled` row `MUST` additionally have at least one matching audit-log entry whose `Spec IDs` column lists one of the rule&#39;s visible IDs from this checklist, unless the row is a collector-derived finding citing `AI-CONTRIBUTOR-EVIDENCE.json`; CI fails the audit otherwise.
 5. **Timestamps must be fresh and measured by the scripts.** Do not run `date` or type assessment timestamps by hand. `audit-collect.ts` records `assessment_started_at` in `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`; `audit-stamp.ts` stamps `assessment_started_at`, `assessment_completed_at`, and `assessment_duration` into both files.
 6. **Spec source must be immutable.** Ensure the stamper records the exact spec source used for the current run in both files. For an upstream audit, use a release tag or full commit SHA. For a forked local policy, pass `--spec-source` with the local policy file path plus its commit SHA. Same target repository, same `audited_commit`, same `spec_source`, and same external settings snapshots are the reproducibility boundary.
+7. **Status changes from the previous committed audit need a rationale.** `audit-run.ts` diffs the filled checklist against the version committed at `HEAD` and validation fails (`AUDIT070`) when an auditor-owned row&#39;s Status changed without a Comment rationale in the form `Changed from &lt;old status&gt; to &lt;new status&gt; because &lt;reason&gt;`, citing current-run evidence in backticks. Collector-derived and owner-profile stamped rows are exempt.
 
 The audit artifacts have different roles: `AI-CONTRIBUTOR-EVIDENCE.json` is the source for collector-derived facts and findings, the audit log records command and manual evidence, this checklist is the rendered scoring and judgment surface, and the root `AI-CONTRIBUTOR-AUDIT.md` summary is a stamper-written projection from the checklist. The canonical ownership table is in [`AI-CONTRIBUTOR-AUDIT-MODEL.md` § Artifact And Field Ownership](../AI-CONTRIBUTOR-AUDIT-MODEL.md#artifact-and-field-ownership).
 
@@ -451,14 +452,13 @@ Use `Warning` when you are unsure. A conservative `Warning` is a valid audit res
   - Leave blank while unassessed — a blank row is an open gap, not a pass.
   - Prefix the status with an emoji for human readability and quick column scanning: `✅ Fulfilled`, `⚠️ Warning`, `🚨 Alarm`, `➖ Not relevant`. Matches the emoji convention used in the conformance-level summary table below.
 - **Comment format.** Every non-blank status needs evidence a reader can independently verify:
-  - `file:line — &quot;quoted excerpt&quot;` — for example `tsconfig.json:4 — &quot;strict&quot;: true`.
 ...</code></pre>
 <div class="sl-heading-wrapper level-h2"><h2 id="audit-log-template">Audit log template</h2><a class="sl-anchor-link" href="#audit-log-template"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Audit log template”</span></a></div>
 <p>The audit log records the commands and short output excerpts that support
 checklist comments. Stamped collector rows live between the stamped
 markers; manual rows are appended outside them.</p>
 <pre class="artifact-pre"><code>---
-spec_version: &quot;0.1.3&quot;
+spec_version: &quot;0.1.4&quot;
 spec_source:           # Stamped automatically by audit-stamp.ts from --spec-source, AI_CONTRIBUTOR_SPEC_SOURCE, the bootstrap manifest, or the pinned runbook path. Must match the companion checklist exactly.
 assessment_started_at:    # Stamped automatically by audit-stamp.ts from the collector&#39;s evidence JSON. Leave blank — the stamper overwrites it. ISO 8601 date-time with seconds.
 assessment_completed_at:  # Stamped automatically by audit-stamp.ts. Leave blank — the stamper overwrites it.
@@ -539,7 +539,7 @@ npm --prefix tools run audit -- \
   --runner-agent &quot;&lt;runner&gt;&quot; \
   --runner-model &quot;&lt;model&gt;&quot;
 npm --prefix tools run audit:stamp     # writes derivable cells
-npm --prefix tools run audit:validate  # read-only structural check
+npm --prefix tools run audit:validate  # read-only structural check (re-audit: append -- --previous /tmp/previous-checklist.md)
 
 # Or invoke directly:
 tsx skills/ai-contributor-audit/scripts/audit-stamp.ts \

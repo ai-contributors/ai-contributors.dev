@@ -659,7 +659,10 @@ repo.</li>
 <li><code dir="auto">audit-stamp.ts</code> writes derivable audit fields into checklist, audit
 log, root summary.</li>
 <li><code dir="auto">audit-validate.ts</code> checks artifact structure and cross-file
-consistency.</li>
+consistency. When <code dir="auto">audit-run.ts</code> finds the checklist tracked at <code dir="auto">HEAD</code>,
+it passes that previous version to <code dir="auto">audit-validate.ts</code> via
+<code dir="auto">--previous</code>, and auditor-owned status changes then require a change
+rationale (<code dir="auto">AUDIT070</code>–<code dir="auto">AUDIT072</code>).</li>
 <li><code dir="auto">bootstrap.ts</code> fetches the pinned runbook file set for prompt-based
 audits.</li>
 <li><code dir="auto">internal/</code> — implementation modules the entry points import. Shipped

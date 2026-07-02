@@ -1,0 +1,127 @@
+name: Spec Bump
+
+# SP-1.6: check at least daily whether the spec repo has a newer released
+# tag than the pinned submodule and open a bump PR. The spec repo can also
+# fire a repository_dispatch on release so the PR opens within minutes.
+# SP-1.2: the PR opened here MUST NOT auto-merge; a human reviewer approves
+# each bump after CI and the deploy preview pass.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [spec-release]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spec-bump
+  cancel-in-progress: false
+
+jobs:
+  check-and-bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Detect newer spec release tag
+        id: detect
+        run: |
+          set -euo pipefail
+          LATEST=$(git ls-remote --tags https://github.com/ai-contributors/ai-contributor-spec.git 'v*' \
+            | awk '{print $2}' \
+            | grep -E '^refs/tags/v[0-9]+\.[0-9]+(\.[0-9]+)?$' \
+            | sed 's|refs/tags/||' \
+            | sort -V | tail -1)
+          if [ -z "${LATEST}" ]; then
+            echo "::error::no release tags found on the spec repo" >&2
+            exit 1
+          fi
+          git -C external/ai-contributor-spec fetch --tags --quiet origin
+          PINNED=$(git -C external/ai-contributor-spec rev-parse HEAD)
+          TARGET=$(git -C external/ai-contributor-spec rev-parse "${LATEST}^{commit}")
+          echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
+          if [ "${PINNED}" = "${TARGET}" ]; then
+            echo "Submodule already pinned to ${LATEST} (${TARGET})."
+            echo "bump=false" >> "$GITHUB_OUTPUT"
+          elif git ls-remote --exit-code --heads origin "spec-bump/${LATEST}" >/dev/null 2>&1; then
+            echo "Bump branch spec-bump/${LATEST} already exists; leaving the open PR alone."
+            echo "bump=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Pinned ${PINNED} differs from ${LATEST} (${TARGET}); opening a bump PR."
+            echo "bump=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup pnpm
+        if: steps.detect.outputs.bump == 'true'
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node
+        if: steps.detect.outputs.bump == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Bump submodule and regenerate
+        if: steps.detect.outputs.bump == 'true'
+        run: |
+          set -euo pipefail
+          git -C external/ai-contributor-spec checkout --quiet "${{ steps.detect.outputs.latest }}"
+          pnpm install --frozen-lockfile
+          pnpm validate:spec
+          pnpm prepare:spec
+
+      - name: Open bump pull request
+        if: steps.detect.outputs.bump == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LATEST: ${{ steps.detect.outputs.latest }}
+        run: |
+          set -euo pipefail
+          BRANCH="spec-bump/${LATEST}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c "${BRANCH}"
+          git add -A
+          git commit -m "Bump spec submodule to ${LATEST} and regenerate content"
+          git push -u origin "${BRANCH}"
+          gh pr create \
+            --base main \
+            --head "${BRANCH}" \
+            --title "Bump spec submodule to ${LATEST}" \
+            --body "$(cat <<EOF
+          ## What Changed
+
+          Scheduled bump (SP-1.6): \`external/ai-contributor-spec\` moves to the newest spec release tag \`${LATEST}\`, with generated spec pages and data regenerated via \`pnpm prepare:spec\`.
+
+          ## Why
+
+          The spec repo published a release newer than the pinned submodule. Per SP-1.2 this PR MUST NOT auto-merge — a human reviewer approves after CI and the deploy preview pass.
+
+          ## How Validated
+
+          \`pnpm validate:spec\` and \`pnpm prepare:spec\` ran in this workflow; the full gate (build, tests, doc-nav, Lighthouse) runs on this PR's CI.
+
+          ## AI Authorship & Agent Trace
+
+          - **AI-Authored:** no (deterministic scheduled workflow)
+          - **Prompt-Audit:** none
+          - **Subagent-Trace:** none
+          - [x] License confirmation: content in this PR is spec-repo material relayed under its existing licenses (CC BY 4.0 docs, Apache-2.0 tooling); no new material is introduced.
+          EOF
+          )"

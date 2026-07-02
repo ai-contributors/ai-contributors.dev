@@ -1,11 +1,11 @@
 /* GENERATED FILE — do not edit by hand.
- * Source: external/ai-contributor-spec/AI-CONTRIBUTOR-RULE-CATALOG.json (spec v0.1.2)
+ * Source: external/ai-contributor-spec/AI-CONTRIBUTOR-RULE-CATALOG.json (spec v0.1.3)
  * Intents: src/data/spec-intents.json
  * Run: pnpm prepare:spec
  */
 export const SPEC = {
-  "version": "v0.1.2",
-  "specVersion": "0.1.2",
+  "version": "v0.1.3",
+  "specVersion": "0.1.3",
   "schemaVersion": "0.1",
   "pillars": [
     {

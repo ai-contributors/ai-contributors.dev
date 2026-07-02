@@ -66,21 +66,30 @@ if (!existsSync(llmsPath)) {
 if (!existsSync(llmsFullPath)) {
   // Read the committed ported copies under src/content/generated-spec/ so
   // the build never touches the spec submodule; a clean clone without
-  // submodules must still build (AIC-clean-clone-bootstrap). The ported
-  // files carry the upstream H1/lede as frontmatter — fold the title back
-  // into a heading so each section stays self-describing.
+  // submodules must still build (AIC-clean-clone-bootstrap). The porter
+  // strips each upstream H1 + lede into `title:` / `deck:` frontmatter
+  // (scripts/spec-content.mjs buildFrontmatter), so fold both back — title
+  // as the heading and deck as the intro paragraph — to keep llms-full.txt
+  // actually full.
+  const yamlUnescape = (value) => value.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+  const frontmatterField = (fm, key) => {
+    const m = fm.match(new RegExp(`^${key}: "((?:[^"\\\\]|\\\\.)*)"\\s*$`, 'm'));
+    return m ? yamlUnescape(m[1]) : null;
+  };
   const sections = [];
   for (const route of SOURCE_ROUTES) {
     const raw = await readFile(path.join(GENERATED_DOCS_ROOT, route.file), 'utf8');
     const fm = raw.match(/^---\n([\s\S]*?)\n---\n?/);
     let body = raw;
     let title = route.source;
+    let deck = null;
     if (fm) {
       body = raw.slice(fm[0].length);
-      const t = fm[1].match(/^title:\s*["']?(.+?)["']?\s*$/m);
-      if (t) title = t[1];
+      title = frontmatterField(fm[1], 'title') ?? title;
+      deck = frontmatterField(fm[1], 'deck');
     }
-    sections.push(`# ${title}\n\nSource: ${route.source}\n\n${body}`);
+    const intro = deck ? `${deck}\n\n` : '';
+    sections.push(`# ${title}\n\nSource: ${route.source}\n\n${intro}${body}`);
   }
   await writeFileIfAbsent(llmsFullPath, `${sections.join('\n\n---\n\n')}\n`);
 }

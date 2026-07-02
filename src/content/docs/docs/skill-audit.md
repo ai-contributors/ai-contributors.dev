@@ -46,7 +46,7 @@ The job is simple: establish the owner profile first, collect evidence, stamp me
 
 Audit artifacts are not standalone documents for agents to patch. If a user asks to refresh a status, remove a backlog row, or update the root audit summary, run the audit flow first (`audit-collect` → `audit-stamp` → evidence review for judgment-required rows → `audit-stamp` → `audit-validate`) and let the scripts rewrite derived cells. Agents may edit only auditor-owned cells after current-run evidence exists, then must re-run stamp and validate.
 
-The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
+The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.4/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
 
 The owner profile at `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` is the default input for owner-confirmed applicability answers and should be prepared before collection starts. Run the `ai-contributor-audit-profile` companion skill first when the agent supports skills. Otherwise, copy `references/audit-profile-template.md` before the audit, draft answers from repository evidence, and ask the owner to confirm or correct them. Profile answers can explain applicability, but they do not make rows `Fulfilled` unless the row explicitly allows owner attestation or policy text as fulfillment evidence.
 
@@ -121,10 +121,11 @@ Use the lower-level commands when you need to inspect or recover one phase. The 
 
    Prints audit metadata, status counts, the list of collector-decisive rules with their status, and the list of collector-judgment-required rules with their reason. Useful for understanding what the collector decided before filling auditor-owned rows. No mutation; safe to run any time after `audit:collect`.
 
-4. **Validate** the filled pair (read-only — never mutates):
+4. **Validate** the filled pair (read-only — never mutates). On a re-audit, extract the previous committed checklist first and pass it via `--previous` — without it the `AUDIT070`–`AUDIT072` status-change rationale check is silently skipped (`audit-run.ts` does this automatically; omit it on a first audit):
 
    ```sh
-   npm --prefix tools run audit:validate
+   git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md > /tmp/previous-checklist.md
+   npm --prefix tools run audit:validate -- --previous /tmp/previous-checklist.md
    ```
 
 The convenience `npm --prefix tools run audit` is the preferred vendored entry point.
@@ -158,9 +159,13 @@ npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-stamp
   --auditor "AGENT | MODEL | REASONING_EFFORT" \
   --runner-agent "<runner>" \
   --runner-model "<model>"
+git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md > /tmp/previous-checklist.md
 npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-validate.ts" \
-  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md
+  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md \
+  --previous /tmp/previous-checklist.md
 ```
+
+On a re-audit, `--previous` enables the `AUDIT070`–`AUDIT072` status-change rationale check; omit the `git show` line and the flag on a first audit (no checklist committed at `HEAD` yet).
 
 When using the copy-and-paste prompt instead of an installed skill, fetch `bootstrap.ts` from the same pinned `spec_source` and let it materialize the runbook:
 
@@ -182,11 +187,11 @@ npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.t
 
 ## Required Workflow
 
-Follow the complete protocol in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/references/audit-protocol.md). Do not skip steps.
+Follow the complete protocol in [`references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.4/skills/ai-contributor-audit/references/audit-protocol.md). Do not skip steps.
 
 ## Evidence Rules
 
-Follow [`references/evidence-rules.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/references/evidence-rules.md) when deciding statuses and writing comments.
+Follow [`references/evidence-rules.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.4/skills/ai-contributor-audit/references/evidence-rules.md) when deciding statuses and writing comments.
 
 Core rules:
 
@@ -214,7 +219,8 @@ Before reporting the audit complete, you MUST verify:
 
 1. **Template-only blocks removed.** Search the filled `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` for `TEMPLATE-ONLY` — there must be zero matches. The blank template wraps instructional sections (`Where these assets live`, `Re-audit protocol`, `How to use this checklist`, `Quick audit`, `Deterministic audit boundary`, `Validating this checklist`) in `<!-- BEGIN:TEMPLATE-ONLY -->` … `<!-- END:TEMPLATE-ONLY -->` markers. `audit-run.ts --reset-templates` strips these blocks automatically; pass `--keep-template-instructions` to keep them (and remove them by hand later). The validator (`AUDIT053`) fails if any marker remains.
 2. **Placeholder tokens replaced.** Search for `<FILL_` — there must be zero matches. The conformance summary table ships with `<FILL_STATUS>`, `<FILL_DATE>`, `<FILL_NOTES>` tokens; replace each with the audited value (`✅ Yes` / `❌ No` / `⚠️ Partial`, an ISO date or `—`, the blocker notes or `—`). The validator (`AUDIT054`) fails on any surviving token.
-3. **Conformance summary fully filled.** Every level row has Status and Notes populated, each `✅ Yes` level has Date reached populated, non-reached levels have no Date reached value, and the `conformance_level` frontmatter value matches the highest `✅ Yes` row (or `none`).
-4. **Validator exits 0.** Run `audit-stamp.ts` (stamps derivable cells), then `audit-validate.ts` (read-only check) over both files, and resolve every error and warning before declaring the audit complete.
+3. **Status changes from the previous audit carry rationales.** When the target repository has a previously committed checklist, `audit-run.ts` passes it to the validator via `--previous`; any auditor-owned row whose Status changed must say `Changed from <old status> to <new status> because <reason>` in its Comment with a backticked current-run citation. The validator (`AUDIT070`/`AUDIT071`) fails otherwise; collector-derived and owner-profile stamped rows are exempt.
+4. **Conformance summary fully filled.** Every level row has Status and Notes populated, each `✅ Yes` level has Date reached populated, non-reached levels have no Date reached value, and the `conformance_level` frontmatter value matches the highest `✅ Yes` row (or `none`).
+5. **Validator exits 0.** Run `audit-stamp.ts` (stamps derivable cells), then `audit-validate.ts` (read-only check) over both files, and resolve every error and warning before declaring the audit complete.
 
 A self-check pass that surfaces remaining issues is part of the audit, not an optional polish step.

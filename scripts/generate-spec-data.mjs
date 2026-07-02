@@ -155,3 +155,21 @@ await writeFile(OUT, banner, 'utf8');
 console.log(
   `Generated ${path.relative(repoRoot, OUT)} from spec ${out.version} (${catalog.clauses.length} clauses, ${catalog.rules.length} rules)`,
 );
+
+// The stamped-audit page renders the spec repo's audit artifacts. Port them
+// into a committed generated file so `pnpm build` never reads the submodule
+// (a clean clone without submodules must still build — AIC-clean-clone-bootstrap).
+const AUDIT_ARTIFACT_PATHS = [
+  'AI-CONTRIBUTOR-AUDIT.md',
+  '.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md',
+  '.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md',
+];
+const AUDIT_OUT = path.join(repoRoot, 'src/data/audit-artifacts.generated.json');
+const auditArtifacts = {};
+for (const rel of AUDIT_ARTIFACT_PATHS) {
+  auditArtifacts[rel] = await readFile(path.join(getSpecRoot(), rel), 'utf8');
+}
+await writeFile(AUDIT_OUT, `${JSON.stringify({ artifacts: auditArtifacts }, null, 2)}\n`, 'utf8');
+console.log(
+  `Generated ${path.relative(repoRoot, AUDIT_OUT)} (${AUDIT_ARTIFACT_PATHS.length} audit artifacts) from spec ${out.version}`,
+);

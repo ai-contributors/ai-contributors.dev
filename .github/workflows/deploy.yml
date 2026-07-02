@@ -53,6 +53,7 @@ jobs:
           if ! git diff --exit-code -- \
             src/content/generated-spec \
             src/data/spec.generated.ts \
+            src/data/audit-artifacts.generated.json \
             src/data/spec-source.generated.json \
             src/lib/starlight-sidebar.generated.ts; then
             echo "::error::Committed generated files are stale. Run 'pnpm prepare:spec' locally and commit the result." >&2

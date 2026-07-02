@@ -198,7 +198,11 @@ jobs:
       id-token: write
       pull-requests: write
     environment:
-      name: github-pages
+      # Previews are low-stakes and PR-scoped; they deploy through the
+      # unprotected github-pages-preview environment so they do not need
+      # the production reviewer approval (which also caused waiting jobs
+      # to cancel each other in the shared pages-deploy group).
+      name: github-pages-preview
       url: https://ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
     steps:
       - name: Checkout
@@ -296,7 +300,7 @@ jobs:
       pages: write
       id-token: write
     environment:
-      name: github-pages
+      name: github-pages-preview
     steps:
       - name: Checkout
         uses: actions/checkout@v6

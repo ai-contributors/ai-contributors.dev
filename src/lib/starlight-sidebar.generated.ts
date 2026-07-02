@@ -17,6 +17,18 @@ export const STARLIGHT_SIDEBAR = [
       {
         "label": "Adoption guide",
         "slug": "docs/adoption-guide"
+      },
+      {
+        "label": "ai-contributor-audit-profile",
+        "slug": "docs/skill-profile"
+      },
+      {
+        "label": "ai-contributor-audit",
+        "slug": "docs/skill-audit"
+      },
+      {
+        "label": "ai-contributor-audit-fix",
+        "slug": "docs/skill-fix"
       }
     ]
   },
@@ -46,6 +58,10 @@ export const STARLIGHT_SIDEBAR = [
       {
         "label": "Threat model template",
         "slug": "docs/threat-model"
+      },
+      {
+        "label": "Glossary",
+        "slug": "docs/glossary"
       }
     ]
   },
@@ -71,23 +87,6 @@ export const STARLIGHT_SIDEBAR = [
     ]
   },
   {
-    "label": "Skills",
-    "items": [
-      {
-        "label": "ai-contributor-audit-profile",
-        "slug": "docs/skill-profile"
-      },
-      {
-        "label": "ai-contributor-audit",
-        "slug": "docs/skill-audit"
-      },
-      {
-        "label": "ai-contributor-audit-fix",
-        "slug": "docs/skill-fix"
-      }
-    ]
-  },
-  {
     "label": "Project",
     "items": [
       {
@@ -109,10 +108,6 @@ export const STARLIGHT_SIDEBAR = [
       {
         "label": "Security policy",
         "slug": "docs/security-policy"
-      },
-      {
-        "label": "Glossary",
-        "slug": "docs/glossary"
       },
       {
         "label": "Published pages",

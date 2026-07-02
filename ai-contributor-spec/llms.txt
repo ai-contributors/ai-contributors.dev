@@ -9,6 +9,9 @@
 - [Overview](https://ai-contributors.dev/ai-contributor-spec/docs/)
 - [Quickstart](https://ai-contributors.dev/ai-contributor-spec/docs/quickstart)
 - [Adoption guide](https://ai-contributors.dev/ai-contributor-spec/docs/adoption-guide)
+- [ai-contributor-audit-profile](https://ai-contributors.dev/ai-contributor-spec/docs/skill-profile)
+- [ai-contributor-audit](https://ai-contributors.dev/ai-contributor-spec/docs/skill-audit)
+- [ai-contributor-audit-fix](https://ai-contributors.dev/ai-contributor-spec/docs/skill-fix)
 
 ### Specification
 
@@ -18,6 +21,7 @@
 - [Coverage map](https://ai-contributors.dev/ai-contributor-spec/docs/coverage-map)
 - [Rule catalog](https://ai-contributors.dev/ai-contributor-spec/docs/rule-catalog)
 - [Threat model template](https://ai-contributors.dev/ai-contributor-spec/docs/threat-model)
+- [Glossary](https://ai-contributors.dev/ai-contributor-spec/docs/glossary)
 
 ### Audit
 
@@ -26,12 +30,6 @@
 - [No-install prompt](https://ai-contributors.dev/ai-contributor-spec/audit/prompt)
 - [A stamped audit](https://ai-contributors.dev/ai-contributor-spec/docs/stamped-audit)
 
-### Skills
-
-- [ai-contributor-audit-profile](https://ai-contributors.dev/ai-contributor-spec/docs/skill-profile)
-- [ai-contributor-audit](https://ai-contributors.dev/ai-contributor-spec/docs/skill-audit)
-- [ai-contributor-audit-fix](https://ai-contributors.dev/ai-contributor-spec/docs/skill-fix)
-
 ### Project
 
 - [Release Changelog](https://ai-contributors.dev/ai-contributor-spec/docs/releases)
@@ -39,5 +37,4 @@
 - [Authors](https://ai-contributors.dev/ai-contributor-spec/docs/authors)
 - [Tooling](https://ai-contributors.dev/ai-contributor-spec/docs/tooling)
 - [Security policy](https://ai-contributors.dev/ai-contributor-spec/docs/security-policy)
-- [Glossary](https://ai-contributors.dev/ai-contributor-spec/docs/glossary)
 - [Published pages](https://ai-contributors.dev/ai-contributor-spec/docs/doc-coverage)

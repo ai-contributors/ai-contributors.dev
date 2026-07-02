@@ -8,7 +8,7 @@ Source: README.md
 >
 > This specification treats AI as a system actor and defines reviewable guardrails for agent, harness, and tool behavior.
 
-**Version:** 0.1.2 · **License:** docs/specs [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); starter template, repo tooling, and audit runtime scripts [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
+**Version:** 0.1.3 · **License:** docs/specs [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); starter template, repo tooling, and audit runtime scripts [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Why This Exists
 
@@ -22,14 +22,33 @@ This project gives you:
   evidence for owner confirmation,
 - a runnable audit skill that finds gaps,
 - a fix skill that helps close one gap at a time,
-- a manual checklist path if you are not ready to let an agent work on the repo.
+- an agent-free path: run the audit scripts yourself, or read the checklist by
+  hand for early gap analysis.
 
 The workflow is deliberately incremental: run the audit profile skill, confirm
 the profile answers, run the audit, get a sorted backlog, fix the rows needed
 for the next level, rerun the audit, and repeat until the repository reaches
 the level you need.
 
-## How The Audit Runs
+It is written for engineering leads, platform teams, harness engineers,
+security reviewers, and developers who want to use AI agents on real codebases
+without guessing which guardrails should exist. The target is one repository:
+the same checklist works for solo projects, team repositories, and monorepos,
+and the level depends on repository controls and AI risk, not team size. Use
+ownership, required reviews, branch protection, and path-scoped rules at the
+level of formality your repository needs.
+
+The scope is repository-side AI-assisted delivery: setup, policy, CI,
+verification, review, release controls, agent instructions, shared skills,
+MCP servers, AI provenance, and incident handling. The specification is
+vendor-neutral. It does not fully cover consumer-facing AI runtime safety for
+products such as in-product chatbots or end-user agent workflows; if your
+product exposes AI to users, you still need product-specific AI safety
+controls.
+
+<!-- doc-site:extract:quickstart -->
+
+## The Audit Process
 
 ```text
 +--------------------------+
@@ -60,28 +79,22 @@ the level you need.
                                                                                         +-----------+   +---------------------------+
 ```
 
-The audit scripts own mechanical evidence, timestamps, derived rows, and the
-root summary. The auditor, whether an agent or a human, owns judgment-required
-rows and manual evidence after current-run evidence exists. A human or named
-accountable owner reviews and accepts these artifacts before a repository
-publishes a conformance claim. The optional fix-skill loop is for improving
-gaps found by the audit, then rerunning the audit. The detailed protocol covers
-the internal stamp, evidence-review, second stamp, and validation sequence.
+The audit is scripted. `audit-collect.ts`, `audit-stamp.ts`, and
+`audit-validate.ts` own mechanical evidence, timestamps, derived fields, and
+the root summary; the auditor — a human or an agent — owns the
+judgment-required rows and manual evidence. Both auditor choices produce the
+same artifacts and the same evidence chain, and a human or named accountable
+owner reviews and accepts the artifacts before the repository publishes a
+conformance claim. The optional fix-skill loop addresses gaps found by the
+audit, then the audit runs again.
 
-<!-- doc-site:extract:quickstart -->
-
-## Process Options
-
-| Process | What it means | Best use |
-| --- | --- | --- |
-| **Manual self-assessment** | A human reads the checklist and records findings by hand, without scripts or an agent. | Early gap analysis and planning. |
-| **Scripted human audit** | A human makes the judgment calls while `audit-collect.ts`, `audit-stamp.ts`, and `audit-validate.ts` handle evidence, derived fields, and consistency. | Recommended minimum for conformance claims. |
-| **Agent-assisted audit** | An agent follows the audit protocol, fills judgment-required rows from current evidence, and uses the scripts for collection, stamping, and validation. | Faster repeatable audits, with human/accountable-owner acceptance before a claim. |
-
-A script-free checklist pass is useful, but it is not the reproducible audit
-path: timestamps, summaries, derived level status, and evidence completeness are
-not mechanically checked. Use a scripted human audit or agent-assisted audit
-before publishing a conformance claim.
+Before adopting the tooling, you can read the specification and checklist by
+hand for gap analysis: treat the rows you would mark `Alarm` or `Warning` as
+your backlog, and revisit the target level after each group of fixes. That
+manual pass is useful for planning, but it is not audit evidence: timestamps,
+summaries, derived level status, and evidence completeness are not
+mechanically checked. Publishing a conformance claim requires a scripted
+audit.
 
 ## Start Here
 
@@ -101,9 +114,10 @@ before publishing a conformance claim.
 6. Have a human or named accountable owner review the
    [audit evidence](AI-CONTRIBUTOR-AUDIT-MODEL.md) before claiming a level.
 
-If you are hesitant to start with an agent, use the [manual path](#manual-path)
-first. That gives you the same hardening path without letting an agent inspect
-the repository.
+The audit also runs without an agent: run the audit scripts yourself and fill
+the judgment-required rows by hand, or start with a script-free read of the
+specification and checklist for gap analysis (see
+[The Audit Process](#the-audit-process)).
 
 Using TypeScript, pnpm, and GitHub? Follow the concrete adoption path in
 [`AI-CONTRIBUTOR-GUIDE.md`](AI-CONTRIBUTOR-GUIDE.md).
@@ -111,9 +125,9 @@ Using TypeScript, pnpm, and GitHub? Follow the concrete adoption path in
 Maintaining this repository? See [`TOOLING.md`](TOOLING.md) for the tooling
 architecture, command map, and directory responsibilities.
 
-## Audit Prerequisites
+## Install The Skills
 
-For the automated audit path, have:
+For the scripted audit, have:
 
 - `git`, Node.js 24.x, and `npm` / `npx` available.
 - Network access to fetch the pinned specification and runbook tooling. The
@@ -129,7 +143,7 @@ Without GitHub CLI access, the audit still runs, but hosted controls such as
 branch protection, required reviews, secret scanning, push protection, and
 dependency alerts may remain `Warning` / verification gaps.
 
-## Install The Skills
+Install the skills:
 
 ```sh
 npx skills add ai-contributors/ai-contributor-spec --skill ai-contributor-audit-profile ai-contributor-audit ai-contributor-audit-fix
@@ -198,18 +212,6 @@ guardrails are strong enough for the AI workflow level you want to claim.
 
 <!-- /doc-site:extract:quickstart -->
 
-## Manual Path
-
-For a human-only hardening pass:
-
-1. Read [`AI-CONTRIBUTOR-SPECIFICATION.md`](AI-CONTRIBUTOR-SPECIFICATION.md).
-2. Fill [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md).
-3. Use the checklist rows with `Alarm` or `Warning` as your backlog.
-4. Revisit the target level after each group of fixes.
-
-The automated path gives you more structure: pinned tooling, collected evidence,
-generated audit output, and a sorted backlog that can be fixed piece by piece.
-
 ## Pillars
 
 The 29 clauses are grouped into seven pillars. This grouping is a reader's map;
@@ -224,17 +226,6 @@ conformance is still checked clause by clause in the specification and checklist
 | 🤖 **AI Agents** | §17–20 | How AI agents, shared skills, MCP servers, and delegated agents are governed in the repository. |
 | ⚠️ **AI Risk** | §21–22 | AI-specific risks (prompt injection, untrusted input, capability scoping, allowlists, cost ceilings) and data protection for AI workflows. |
 | 🧭 **Oversight** | §23–29 | Human approval, guardrail evidence, policy ownership, AI licensing and attribution, AI credential lifecycle, model/provider changes, and AI incident response. |
-
-## Who It Is For
-
-This repository is for engineering leads, platform teams, harness engineers,
-security reviewers, and developers who want to use AI agents on real codebases
-without guessing which guardrails should exist.
-
-The target is one repository. The same checklist works for solo projects,
-team repositories, and monorepos; the level depends on repository controls and
-AI risk, not team size. Use ownership, required reviews, branch protection, and
-path-scoped rules at the level of formality your repository needs.
 
 ## Documentation Map
 
@@ -259,29 +250,19 @@ Contributor badge.
 
 | Level | Badge |
 |---|---|
-| Level 1 — Hardened | [![AI Contributor: Level 1 Hardened](https://img.shields.io/badge/AI%20Contributor-Level%201%20Hardened-blue)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
-| Level 2 — AI Assisted | [![AI Contributor: Level 2 AI Assisted](https://img.shields.io/badge/AI%20Contributor-Level%202%20AI%20Assisted-green)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
-| Level 3 — AI Authored | [![AI Contributor: Level 3 AI Authored](https://img.shields.io/badge/AI%20Contributor-Level%203%20AI%20Authored-brightgreen)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
-| Level 4 — AI Autonomous | [![AI Contributor: Level 4 AI Autonomous](https://img.shields.io/badge/AI%20Contributor-Level%204%20AI%20Autonomous-blueviolet)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
+| Level 1 — Hardened | [![AI Contributor: Level 1 Hardened](https://img.shields.io/badge/AI%20Contributor-Level%201%20Hardened-blue)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
+| Level 2 — AI Assisted | [![AI Contributor: Level 2 AI Assisted](https://img.shields.io/badge/AI%20Contributor-Level%202%20AI%20Assisted-green)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
+| Level 3 — AI Authored | [![AI Contributor: Level 3 AI Authored](https://img.shields.io/badge/AI%20Contributor-Level%203%20AI%20Authored-brightgreen)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
+| Level 4 — AI Autonomous | [![AI Contributor: Level 4 AI Autonomous](https://img.shields.io/badge/AI%20Contributor-Level%204%20AI%20Autonomous-blueviolet)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels) |
 
 Paste the Markdown for your achieved level into your repository's README.
 
 ```markdown
-[![AI Contributor: Level 1 Hardened](https://img.shields.io/badge/AI%20Contributor-Level%201%20Hardened-blue)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
-[![AI Contributor: Level 2 AI Assisted](https://img.shields.io/badge/AI%20Contributor-Level%202%20AI%20Assisted-green)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
-[![AI Contributor: Level 3 AI Authored](https://img.shields.io/badge/AI%20Contributor-Level%203%20AI%20Authored-brightgreen)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
-[![AI Contributor: Level 4 AI Autonomous](https://img.shields.io/badge/AI%20Contributor-Level%204%20AI%20Autonomous-blueviolet)](./AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
+[![AI Contributor: Level 1 Hardened](https://img.shields.io/badge/AI%20Contributor-Level%201%20Hardened-blue)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
+[![AI Contributor: Level 2 AI Assisted](https://img.shields.io/badge/AI%20Contributor-Level%202%20AI%20Assisted-green)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
+[![AI Contributor: Level 3 AI Authored](https://img.shields.io/badge/AI%20Contributor-Level%203%20AI%20Authored-brightgreen)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
+[![AI Contributor: Level 4 AI Autonomous](https://img.shields.io/badge/AI%20Contributor-Level%204%20AI%20Autonomous-blueviolet)](https://github.com/ai-contributors/ai-contributor-spec/blob/main/AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels)
 ```
-
-## Scope
-
-This specification is for repository-side AI-assisted delivery: setup, policy,
-CI, verification, review, release controls, agent instructions, shared skills,
-MCP servers, AI provenance, and incident handling.
-
-It is vendor-neutral. It does not fully cover consumer-facing AI runtime safety
-for products such as in-product chatbots or end-user agent workflows. If your
-product exposes AI to users, you still need product-specific AI safety controls.
 
 ## Contributing
 
@@ -316,7 +297,7 @@ Source: AI-CONTRIBUTOR-GUIDE.md
 
 # AI Contributor Adoption Guide
 
-> **Version:** 0.1.2 · **Reference specification:** [`AI-CONTRIBUTOR-SPECIFICATION.md`](AI-CONTRIBUTOR-SPECIFICATION.md) v0.1.2 · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
+> **Version:** 0.1.3 · **Reference specification:** [`AI-CONTRIBUTOR-SPECIFICATION.md`](AI-CONTRIBUTOR-SPECIFICATION.md) v0.1.3 · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
 
 A step-by-step adoption path for small teams and solo developers building TypeScript web applications on GitHub. Follow it from top to bottom. Each phase moves the repository to the next level: Phase 0 → Level 0, Phase 1 → Level 1 and simple Level 2 workflows, Phase 2 → Level 3, Phase 3 → Level 4.
 
@@ -1059,13 +1040,372 @@ If you're contributing a parallel guide for another stack (Python + uv, Go, Rust
 
 ---
 
+# skills/ai-contributor-audit-profile/SKILL.md
+
+Source: skills/ai-contributor-audit-profile/SKILL.md
+
+---
+name: ai-contributor-audit-profile
+description: Draft, confirm, and write .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md applicability answers for an AI Contributor audit. Use when a user wants to create, fill, revise, or explain owner applicability answers for an AI Contributor audit. Do not use for running the audit itself, stamping generated audit artifacts, or fixing checklist findings.
+---
+
+# AI Contributor Audit Profile
+
+Create or update `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`, the owner-confirmed applicability input for AI Contributor audits.
+
+The profile steers applicability only:
+
+- `yes` means the affected checks are in scope and still need normal evidence.
+- `no` can support `Not relevant` only when the mapped checklist row allows it.
+- Blank means the collector and auditor decide from repository evidence.
+
+Profile answers are not waivers and do not make rows `Fulfilled` unless the checklist row explicitly accepts owner attestation or policy text as fulfillment evidence.
+
+The profile is prepared before an audit run and is not a temporary note file for
+the audit. If an audit later finds a missing or contradictory owner fact, the
+audit should report `Warning` or a verification gap and ask the owner to update
+the profile in a separate profile step, then rerun the audit.
+
+## Workflow
+
+1. Always read `skills/ai-contributor-audit/references/audit-profile-template.md` first and extract the canonical applicability questions and affected checks.
+2. Capture the starting status of profile and generated audit artifacts before editing:
+   - run `git status --short -- AI-CONTRIBUTOR-AUDIT.md .ai-contributor-audit` when the target is a git repo,
+   - explicitly report any existing modifications or deletions of generated audit outputs,
+   - distinguish a tracked profile deletion (`D` status for `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`) from a profile that never existed,
+   - do not describe generated audit output changes as caused by the profile step unless they appeared after your edit.
+3. If the profile is deleted in the worktree but exists at `HEAD`, treat the tracked deletion as a fresh-start signal: the owner deliberately removed the file and the default action is to start from the canonical blank template. Do not silently restore the committed profile. State clearly that you are starting fresh because the profile is a tracked deletion, and offer the restore path as an explicit alternative the owner can request — proceed with fresh unless they ask otherwise. You may inspect `git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` for context (e.g. to surface prior owner-only facts the owner might want to re-supply), but name it as the committed profile, not as an existing file, and do not lift its answers into the draft without owner direction.
+4. If `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` exists in the worktree, compare its question text against the canonical template before reviewing evidence:
+   - report the canonical question count and existing profile question count,
+   - list missing canonical questions by exact text,
+   - list unsupported or obsolete existing questions by exact text,
+   - treat missing canonical questions as review blockers until they are added to the draft.
+5. If the profile does not exist and is not a tracked deletion, start from the canonical template.
+6. Build the draft profile in canonical question order. Preserve existing answers and evidence only for exact canonical question-text matches from the selected baseline. Insert missing canonical rows with a drafted answer, evidence, and confidence instead of leaving them invisible.
+7. Explain the applicability-only semantics before asking questions.
+8. Inspect the target repo lightly for obvious shape signals: manifests, source roots, UI files, deployment workflows, package/release workflows, `AGENTS.md`, MCP config, shared skills, prompt/session archives, and policy docs. Do not run a full audit. While inspecting, also look for **competing AI-instruction files**: if `AGENTS.md` (or another authoritative instruction file) exists alongside `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, `GEMINI.md`, or other tool-specific files that are non-trivial (more than a short pointer block back to the authoritative file), surface this in the owner review as a Single AI Source (`AIC-tool-specific-pointer-only`) concern. The audit will catch this; flagging it now lets the owner fix it before the audit runs.
+9. Draft each applicability answer from evidence before asking the owner. Use `yes` when repository evidence shows the scope is present, `no` when repository evidence clearly shows the scope is absent, and blank when the answer is uncertain or depends on owner-only facts.
+10. Present the proposed change as a **rendered diff against the current worktree profile**, not a fresh review table. Group changes into three buckets so the owner can scan them quickly: **rows added** (new canonical questions inserted), **rows changed** (answer or evidence text differs from the worktree — show old vs new for both columns), and **rows whose `Owner (re)confirmed YYYY-MM-DD` date will move because answer or evidence changed in this run**. Do not list unchanged rows; their omission is the signal that nothing about them moved. For first-time profile creation (no worktree file to diff against), present the full draft table with a short note explaining why a diff is unavailable. The owner confirms or corrects from the diff. A persistent `Confidence` column (`high` / `medium` / `owner-confirm`) MAY accompany changed and added rows in the chat-rendered diff to mark which rows the owner should look at most closely; this column is **chat-only** — it MUST NOT appear in the persisted profile file.
+11. Require explicit owner confirmation for low-confidence rows, newly inserted canonical rows, sensitive/regulatory/production-data rows, and any row where a `no` answer depends mostly on absence of evidence.
+12. Accept only `yes`, `no`, or blank/unknown for the Answer cell. Capture short evidence or rationale, preferring repository paths/commands for agent-detected facts and owner rationale for owner-only facts.
+13. Before writing, state whether the write will create a new profile, update an existing worktree profile, or restore a tracked deletion. If the owner asked to delete/reset the profile and has not chosen restore, do not write it back.
+14. Write the Markdown profile table only after confirmation, preserving canonical question order and including every canonical question. Leave uncertain rows blank with rationale that names the missing owner fact.
+15. **Do not bump `Owner (re)confirmed YYYY-MM-DD` dates on rows whose answer and evidence text are unchanged.** Refresh the date only on rows whose answer or evidence actually changed during this run, and on newly inserted canonical rows. A no-op date refresh creates churn in version control, weakens the meaning of "reconfirmed", and makes `git blame` lie about when the owner last engaged with the row. The diff in step 10 is what enforces this — if a row appears in the diff but only its date moved, drop the change.
+16. Do not run the target repository's formatter on the profile file from inside this skill. The skill writes a structurally-correct table; cosmetic formatting (column alignment, line wrapping, end-of-file handling) is the target repository's responsibility through its pre-commit hook or CI. Invoking `prettier`, `pnpm format`, or any equivalent here couples the skill to whatever formatter the target happens to use, can fight `markdownlint` rules, and produces target-dependent output for an otherwise deterministic skill.
+17. Run the read-only profile validator, not the audit validator. The validator prints a `skill version: ...` banner on its first line — capture that line in your run report so the Prompt Audit Trail records which skill version produced this profile:
+
+    ```sh
+    npx --yes tsx@4.21.0 <path-to-this-skill>/scripts/profile-validate.ts <target-repo-path>
+    ```
+
+18. Capture final `git status --short -- AI-CONTRIBUTOR-AUDIT.md .ai-contributor-audit` and report:
+    - whether the profile changed,
+    - whether the profile was created, updated, restored from a tracked deletion, or intentionally left deleted,
+    - whether generated audit outputs were already modified/deleted before the profile step,
+    - whether any generated audit output changed during the profile step.
+19. Summarize which `no` answers may make mapped checks `Not relevant` and name any blank rows that still require owner facts.
+
+## Guardrails
+
+- Do not edit generated audit outputs: `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, or `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
+- Do not run `audit-collect.ts`, `audit-stamp.ts`, or `audit-validate.ts` unless the user asks for an audit after profile creation.
+- Do not use generated audit-output deletions or modifications as profile evidence. Preserve and report them separately.
+- Treat a tracked deletion of `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` as the owner's fresh-start signal. Default to the canonical blank template; do not lift answers from `git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` unless the owner explicitly asks to restore.
+- Do not silently update the profile during an audit. If the owner gives new answers while an audit is running, finish the profile update first and rerun the audit from collection.
+- Do not infer sensitive-data, production-data, or regulated-data answers from absence alone if the owner is unsure.
+- Do not change checklist scopes while filling a target repo profile; checklist scope changes belong in this spec repo.
+- Keep every decision question phrased in the same direction: `yes` enables affected checks, `no` disables them only when `Not relevant` is allowed.
+- Do not describe a profile review as current, complete, or ready for final confirmation while any canonical template question is missing from the draft. Name the missing question and include it in the owner review table first.
+- Do not bump `Owner (re)confirmed YYYY-MM-DD` dates on rows whose answer and evidence text did not change during this run. Date-only refreshes are forbidden because they create empty version-control churn and erode the meaning of "reconfirmed".
+- Do not write a `Confidence` column to the persisted profile file. Confidence is a chat-only signal that helps the owner triage which rows need close attention during the rendered-diff review; once the owner confirms, the file records only the canonical columns (Area, Question, Answer, Evidence, Affected checks).
+- Do not run the target repository's formatter (`prettier`, `pnpm format`, `npm run format`, equivalents) on the profile file from inside this skill. The target's pre-commit hook or CI handles formatting; auto-formatting here couples the skill to whatever formatter is installed and produces target-dependent output.
+
+
+---
+
+# skills/ai-contributor-audit/SKILL.md
+
+Source: skills/ai-contributor-audit/SKILL.md
+
+---
+name: ai-contributor-audit
+description: Audit, re-audit, or score a repository against the AI Contributor Specification. Use this skill when a user asks for AI Contributor conformance, repository audit evidence, checklist scoring, or refreshing .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md / .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md. SKIP for generic security review, generic code review, dependency audit, license audit, repo-health roasts, or any "audit my repo" request that is not specifically about AI Contributor Specification conformance — those are different tasks and produce a different shape of output.
+---
+
+# AI Contributor Audit
+
+> **Preflight (echo this to the user before doing anything):** "This is an AI Contributor Specification conformance audit. I will show the discovered `spec_version` and audit tool versions from the files being used, then pin the spec source, collect machine-readable evidence from the target repository, stamp mechanical fields, fill judgment-required rows from current evidence, stamp again, and run the structural validator. Tooling: `audit-run.ts` orchestrates `audit-collect.ts`, `audit-stamp.ts`, and `audit-validate.ts`; `bootstrap.ts` is used only when the target repo has not vendored the tooling. The collector checks local tools such as `git`, `gh`, `node`, `pnpm`, and `npm` when available. This produces reviewable audit artifacts; a human or named accountable owner should accept them before publishing a conformance claim. It is NOT a generic security review, code review, dependency audit, license audit, or repo-health assessment."
+
+Run a reproducible conformance audit against the [AI Contributor Specification](https://github.com/ai-contributors/ai-contributor-spec).
+
+The audit writes one root summary and three audit output artifacts in
+`.ai-contributor-audit/`. It also reads one optional owner profile input
+that the profile skill (or owner) authors before the audit runs:
+
+Audit output (written by the audit):
+
+- `AI-CONTRIBUTOR-AUDIT.md` — root summary
+- `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`
+- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`
+- `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`
+
+Owner profile input (read by the audit, never overwritten):
+
+- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`
+
+Treat the filled checklist and audit log as reviewable audit output, not final acceptance. A human or named accountable owner should spot-check `Fulfilled` rows and scrutinize every `Not relevant` row before committing or publishing the result.
+
+## What This Does
+
+The skill answers:
+
+- Which AI Contributor conformance level can this repository claim?
+- Which rows are `Fulfilled`, `Warning`, `Alarm`, or `Not relevant`?
+- Which evidence supports each status?
+- Which gaps should be fixed first?
+
+It is stricter than a readiness report. It pins the specification source, pins the audited commit, records command evidence, and runs the audit validator before handoff.
+
+## Plain-language Workflow
+
+The job is simple: establish the owner profile first, collect evidence, stamp mechanical fields, review current-run evidence and fill judgment-required gaps, stamp again, validate the pair, and hand the result to a human or named accountable owner. Do not treat memory, prior audit files, or unrecorded tool output as evidence.
+
+Audit artifacts are not standalone documents for agents to patch. If a user asks to refresh a status, remove a backlog row, or update the root audit summary, run the audit flow first (`audit-collect` → `audit-stamp` → evidence review for judgment-required rows → `audit-stamp` → `audit-validate`) and let the scripts rewrite derived cells. Agents may edit only auditor-owned cells after current-run evidence exists, then must re-run stamp and validate.
+
+The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
+
+The owner profile at `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` is the default input for owner-confirmed applicability answers and should be prepared before collection starts. Run the `ai-contributor-audit-profile` companion skill first when the agent supports skills. Otherwise, copy `references/audit-profile-template.md` before the audit, draft answers from repository evidence, and ask the owner to confirm or correct them. Profile answers can explain applicability, but they do not make rows `Fulfilled` unless the row explicitly allows owner attestation or policy text as fulfillment evidence.
+
+If the profile is a tracked deletion at audit time (the file is removed from the worktree but tracked at `HEAD`), `audit-run.ts` treats that as the owner's deliberate fresh-start signal and proceeds with no owner applicability input. The preflight surfaces this on stderr and the root summary records a "Boundary note" so a reader of the committed audit can see the audit ran without an owner profile. Restore the prior profile with `git restore -- .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` before audit-run if that was unintended.
+
+Do not silently edit the owner profile during an audit. If collection or row review exposes a missing, ambiguous, or contradictory owner fact, mark the affected row `⚠️ Warning` or add a verification gap that names the needed profile answer. If the owner explicitly supplies a new answer, treat that as a profile update and rerun the audit from collection so the evidence chain includes the updated profile.
+
+## Quick Run
+
+Use the pinned spec source requested by the user. If the user did not name one, resolve the upstream default branch to a full commit SHA before fetching anything:
+
+```sh
+git ls-remote https://github.com/ai-contributors/ai-contributor-spec.git refs/heads/main
+```
+
+Fetch every specification file, template, and runbook from that same immutable ref. Do not mix refs in one audit.
+
+Do not auto-update the installed skill during an audit. The audit skill and specification are coupled, and silent updates would hurt reproducibility. If the installed skill itself needs refreshing, stop before starting the audit and run:
+
+```sh
+npx skills update ai-contributor-audit
+```
+
+Actual audits still run from a pinned release tag or full commit SHA. Prefer release tags for released specification versions; use a full commit SHA only when intentionally auditing against an unreleased source revision. `bootstrap.ts` emits a non-fatal warning when it can safely compare the requested ref and sees that the installed skill/runbook ref is behind upstream `main` or the latest release tag.
+
+The umbrella command runs collect, initial stamp, an edit pause when interactive, final stamp, then validate. In non-interactive shells it stops after the initial stamp and prints the exact stamp/validate commands to run after judgment-required edits are complete. Pass `--no-pause` only when intentionally skipping that edit checkpoint:
+
+```sh
+npm --prefix tools run audit -- \
+  --auditor "AGENT | MODEL | REASONING_EFFORT" \
+  --runner-agent "<runner>" \
+  --runner-model "<model>"
+```
+
+By default `audit-run` enables the clean-clone bootstrap smoke test (the Clean Setup row stays judgment-required without it). The smoke test installs and runs documented setup steps in a temporary clone, so it can take several minutes; pass `--no-bootstrap-smoke` to skip it (e.g. quick local iterations) or `--bootstrap-smoke-timeout-ms <n>` to adjust the cap. The lower-level `audit-collect.ts` keeps its `--enable-bootstrap-smoke` opt-in default unchanged.
+
+For a fresh re-audit from blank pinned templates, add `--reset-templates`; it resets only `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, and `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, preserving the owner profile and evidence JSON. This requires a vendored or bootstrapped runbook that includes the templates; otherwise pass `--template-root <path>`.
+
+Before collecting evidence, the umbrella command checks whether the active `gh` login can read the target GitHub repository. If it cannot verify read access, it warns that hosted checks may remain `Warning` / Verification gaps instead of `Fulfilled` and asks before continuing. Do not add `--allow-missing-host-access` on the first run. If the preflight fails, stop and ask the user whether to switch `gh` accounts or continue with lower-confidence hosted evidence. In non-interactive runs, pass `--allow-missing-host-access` only after that choice is explicit.
+
+When checking or switching GitHub identity by hand, prefer bounded API probes over a broad `gh auth status` scan. Use `gh api user --jq .login` to confirm the active account and `gh api repos/<owner>/<repo> --jq .full_name` to confirm repository read access. `gh auth status` is useful for token scopes, but it can hang on unrelated stored hosts or accounts.
+
+Use the lower-level commands when you need to inspect or recover one phase. The full order is collect, stamp, fill judgment-required rows from current evidence, stamp again, then validate:
+
+1. **Collect** evidence into `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`:
+
+   ```sh
+   npm --prefix tools run audit:collect
+   ```
+
+2. **Stamp** derivable values (mechanical frontmatter, timestamps, versions, automated row `A` + Status + Comment for collector-derived and owner-profile-derived rows, conformance summary, `conformance_level`, backlog) into `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, and `AI-CONTRIBUTOR-AUDIT.md`:
+
+   ```sh
+   npm --prefix tools run audit:stamp -- \
+     --auditor "AGENT | MODEL | REASONING_EFFORT" \
+     --runner-agent "<runner>" \
+     --runner-model "<model>"
+   ```
+
+   Add `-- --diff` to preview the stamper's changes without writing files. Add `-- --check` for a CI-friendly read-only dry run that exits `3` and prints a one-line summary when stamping would change anything (for gating "audit out of date" without depending on the validator). The check ignores wall-clock-only frontmatter drift (`assessment_completed_at`, `assessment_duration`).
+
+   After a successful stamp the stamper writes two stderr advisories that batch-surface remaining auditor work in one place (each is non-fatal — the validator is still the authority on completeness):
+
+   - `[audit-stamp] needs-evidence: …` — Warning/Alarm rows whose Comment lacks a backticked file/path/command citation (validator AUDIT034 will fail until each is fixed).
+   - `[audit-stamp] needs-status: …` — non-optional rows whose Status is still empty (validator AUDIT015), each annotated with the matching collector rule's reason from `AI-CONTRIBUTOR-EVIDENCE.json` (`judgment-required: …`, `collector: …`, or `no collector coverage`). Use this list to fill all blank rows in one batch instead of discovering them one validate call at a time.
+
+3. **Inspect** the collector's evidence (read-only, optional):
+
+   ```sh
+   npm --prefix tools run audit:summary
+   ```
+
+   Prints audit metadata, status counts, the list of collector-decisive rules with their status, and the list of collector-judgment-required rules with their reason. Useful for understanding what the collector decided before filling auditor-owned rows. No mutation; safe to run any time after `audit:collect`.
+
+4. **Validate** the filled pair (read-only — never mutates):
+
+   ```sh
+   npm --prefix tools run audit:validate
+   ```
+
+The convenience `npm --prefix tools run audit` is the preferred vendored entry point.
+
+If the target repo has not vendored the tooling, use the installed skill only to bootstrap the full runbook from the same pinned `SPEC_SHA`, then run the scripts from that bootstrapped directory. Do not run installed scripts with manually fetched templates; that mixes script and template refs and can reproduce stale collector behavior.
+
+```sh
+SPEC_SHA="<the same SHA recorded in spec_source>"
+RUNBOOK="/tmp/ai-contributor-audit-${SPEC_SHA}"
+npx --yes tsx@4.21.0 <path-to-this-skill>/scripts/bootstrap.ts "${SPEC_SHA}" --out="${RUNBOOK}"
+npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.ts" . \
+  --reset-templates \
+  --template-root "${RUNBOOK}" \
+  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
+  --auditor "AGENT | MODEL | REASONING_EFFORT" \
+  --runner-agent "<runner>" \
+  --runner-model "<model>"
+```
+
+The `npx --yes tsx@4.21.0` invocation acquires the TypeScript executor for
+bootstrap/startup. Once `audit-run.ts` is running, its collect/stamp/validate
+child phases invoke `tsx` from `PATH` and do not invoke `npm` or `npx` again.
+
+Or run the phases directly from the bootstrapped runbook:
+
+```sh
+npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-collect.ts" .
+npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-stamp.ts" \
+  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md \
+  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
+  --auditor "AGENT | MODEL | REASONING_EFFORT" \
+  --runner-agent "<runner>" \
+  --runner-model "<model>"
+npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-validate.ts" \
+  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md
+```
+
+When using the copy-and-paste prompt instead of an installed skill, fetch `bootstrap.ts` from the same pinned `spec_source` and let it materialize the runbook:
+
+```sh
+SPEC_SHA="<the same SHA recorded in spec_source>"
+curl -fsSL \
+  "https://raw.githubusercontent.com/ai-contributors/ai-contributor-spec/${SPEC_SHA}/skills/ai-contributor-audit/scripts/bootstrap.ts" \
+  -o /tmp/aic-bootstrap.ts
+RUNBOOK="/tmp/ai-contributor-audit-${SPEC_SHA}"
+npx --yes tsx@4.21.0 /tmp/aic-bootstrap.ts "${SPEC_SHA}" --out="${RUNBOOK}"
+npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.ts" . \
+  --reset-templates \
+  --template-root "${RUNBOOK}" \
+  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
+  --auditor "AGENT | MODEL | REASONING_EFFORT" \
+  --runner-agent "<runner>" \
+  --runner-model "<model>"
+```
+
+## Required Workflow
+
+Follow the complete protocol in [`references/audit-protocol.md`](references/audit-protocol.md). Do not skip steps.
+
+## Evidence Rules
+
+Follow [`references/evidence-rules.md`](references/evidence-rules.md) when deciding statuses and writing comments.
+
+Core rules:
+
+- Every non-blank checklist row needs independently reviewable evidence.
+- Every command cited in a checklist Comment must appear in the current `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`.
+- Collector-derived `Fulfilled` rows cite `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
+- Hosted settings such as branch protection, secret scanning, push protection, CODEOWNERS enforcement, and environment protection need host API evidence for `Fulfilled`.
+- `Not relevant` needs evidence that the applicability trigger does not hold.
+- Under uncertainty, use `Warning`, not `Fulfilled`.
+
+## What Not To Do
+
+- Do not invent evidence.
+- Do not update `AI-CONTRIBUTOR-AUDIT.md`, automated checklist Status/Comment cells, conformance summary Status cells, backlog derived columns, or stamped audit-log blocks by direct Markdown edits.
+- Do edit auditor-owned checklist Status/Comment cells, conformance summary Notes cells, newly reached Date reached cells, and backlog Next action/Owner/Target date cells only after current-run evidence exists, then re-run stamp and validate.
+- Do not copy statuses, comments, backlog rows, or audit-log rows from a prior audit.
+- Do not fetch templates or validators from mutable `main` after resolving `spec_source`.
+- Do not leave any non-optional checklist row blank. Optional MAY rows may remain blank — the validator allows this. If you set a status on an optional row, it must carry evidence like any other.
+- Do not mark hosted settings `Fulfilled` from local files alone.
+- Do not hand off until the validator exits 0.
+
+## Before Declaring Done
+
+Before reporting the audit complete, you MUST verify:
+
+1. **Template-only blocks removed.** Search the filled `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` for `TEMPLATE-ONLY` — there must be zero matches. The blank template wraps instructional sections (`Where these assets live`, `Re-audit protocol`, `How to use this checklist`, `Quick audit`, `Deterministic audit boundary`, `Validating this checklist`) in `<!-- BEGIN:TEMPLATE-ONLY -->` … `<!-- END:TEMPLATE-ONLY -->` markers. `audit-run.ts --reset-templates` strips these blocks automatically; pass `--keep-template-instructions` to keep them (and remove them by hand later). The validator (`AUDIT053`) fails if any marker remains.
+2. **Placeholder tokens replaced.** Search for `<FILL_` — there must be zero matches. The conformance summary table ships with `<FILL_STATUS>`, `<FILL_DATE>`, `<FILL_NOTES>` tokens; replace each with the audited value (`✅ Yes` / `❌ No` / `⚠️ Partial`, an ISO date or `—`, the blocker notes or `—`). The validator (`AUDIT054`) fails on any surviving token.
+3. **Conformance summary fully filled.** Every level row has Status and Notes populated, each `✅ Yes` level has Date reached populated, non-reached levels have no Date reached value, and the `conformance_level` frontmatter value matches the highest `✅ Yes` row (or `none`).
+4. **Validator exits 0.** Run `audit-stamp.ts` (stamps derivable cells), then `audit-validate.ts` (read-only check) over both files, and resolve every error and warning before declaring the audit complete.
+
+A self-check pass that surfaces remaining issues is part of the audit, not an optional polish step.
+
+
+---
+
+# skills/ai-contributor-audit-fix/SKILL.md
+
+Source: skills/ai-contributor-audit-fix/SKILL.md
+
+---
+name: ai-contributor-audit-fix
+description: Guides agents through fixing one AI Contributor audit finding at a time without changing audit results by hand. Use when the user asks to fix, close, remediate, plan, or verify AI Contributor audit rows such as Human Review Required, Secret Scanning, Dependency Security, SAST, Security Policy, CI Gates, CODEOWNERS, AI Authorship Traceability, Prompt Audit Trail, MCP Root Scoping, or Level 4 SHOULD evidence gaps.
+---
+
+# AI Contributor Audit Fix
+
+## Purpose
+
+Use this skill to fix exactly one AI Contributor audit finding from the root backlog in `AI-CONTRIBUTOR-AUDIT.md`. It complements `ai-contributor-audit`: this skill changes only the target repository evidence or hosted settings needed for the selected fix. The audit skill reruns evidence collection, stamping, and validation.
+
+Do not edit generated audit results. This includes statuses, summaries, conformance levels, checklist rows, evidence JSON, and backlog rows.
+
+## Workflow
+
+1. Start from the root audit summary `AI-CONTRIBUTOR-AUDIT.md`. Its `## Backlog — what to address first` table is the action queue for fixes.
+2. Select the row:
+   - If the user names a rule, select that rule.
+   - Otherwise, take the first backlog row by current order: lowest `Level`, then lowest `Priority`, then table order.
+   - Do not maintain a separate backlog parser. The audit backlog table is already stamped and sorted by `audit-stamp.ts`; read the table directly from `AI-CONTRIBUTOR-AUDIT.md`.
+3. Stop after selecting one row. Tell the user which single finding will be addressed and ask whether to do it in a separate git worktree before making repository or hosted-setting changes.
+4. Read the matching checklist row in `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` and its `Comment` before editing. The root backlog `Next action` is the task. The checklist `Comment` and `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` explain the evidence gap.
+5. Classify the fix:
+   - Hosted GitHub control: branch rules, reviews, secret scanning, push protection, deployment protection, Dependabot alerts, CODEOWNERS enforcement.
+   - Repository file/config: workflows, policy docs, CodeQL/Semgrep, lint/type/test tooling, runtime validation, ownership docs.
+   - AI governance: `AGENTS.md`, AI contribution policy, provenance, prompt retention, redaction, MCP scoping, incident process.
+   - Level 4 SHOULD: either implement the control or add a documented reason that the repository intentionally defers it.
+6. Make the smallest change that creates real evidence for only the selected finding. Repository fixes may edit normal source, config, workflow, or policy files; they must not edit audit output files. Hosted fixes may change repository settings only after the user confirms the change.
+7. Verify with the command or API evidence the audit expects. Prefer the same command family named in the checklist comment or audit evidence.
+8. Stop after the selected finding is fixed or blocked. Do not continue to the next backlog row in the same run unless the user explicitly asks.
+9. Offer the user next-step choices appropriate to the current state: leave changes uncommitted, commit directly, create a branch and commit, push, or create a PR. Do not perform git publish actions without the user asking for them.
+10. Always advise the user to rerun the AI Contributor audit to refresh results. If the user asks to rerun it now:
+    - For pre-commit verification, run the audit collector in `--working-tree` mode.
+    - For claimable release evidence, commit the fix first, then run the SHA-pinned audit flow.
+    - Always run stamp and validate after collection.
+11. Final response: name the one addressed rule, list files or hosted settings changed, include verification commands, recommend rerunning the audit, and call out whether the selected finding is fixed, blocked, or awaiting hosted-setting confirmation.
+
+## Guardrails
+
+- Fix one finding at a time. Do not bundle unrelated backlog rows into a single fix pass.
+- Never edit `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`, or other generated audit result files as part of a fix.
+- Do not treat a document-only policy as satisfying an executable control unless the rule allows process evidence.
+- Keep broad Level 4 SHOULD work separate from L1/L2 blockers unless the user asks for Level 4 closure.
+
+
+---
+
 # AI-CONTRIBUTOR-SPECIFICATION.md
 
 Source: AI-CONTRIBUTOR-SPECIFICATION.md
 
 # AI Contributor Specification
 
-> **Version:** 0.1.2 · **Owner:** _Set per adopting repository_ · **License:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
+> **Version:** 0.1.3 · **Owner:** _Set per adopting repository_ · **License:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · **Change history:** [`CHANGELOG.md`](CHANGELOG.md)
 >
 > Change history is maintained in the repository's version-control log. Adopters `MUST` satisfy the change-control requirements in §25 for their copy of this document.
 
@@ -1884,7 +2224,7 @@ Source: AI-CONTRIBUTOR-COVERAGE.md
 
 # AI Contributor Specification — Coverage map
 
-> **Version:** 0.1.2 · **Source catalog:** [`AI-CONTRIBUTOR-RULE-CATALOG.json`](AI-CONTRIBUTOR-RULE-CATALOG.json)
+> **Version:** 0.1.3 · **Source catalog:** [`AI-CONTRIBUTOR-RULE-CATALOG.json`](AI-CONTRIBUTOR-RULE-CATALOG.json)
 
 **Non-normative.** This file shows how [`AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md) is distributed across pillars, scopes (`MUST` / `MUST when applicable` / `SHOULD` / `MAY`), and minimum levels. Use it to estimate audit effort. Use the checklist itself for scoring.
 
@@ -2327,6 +2667,133 @@ If your repo handles regulated data, the spec's domain overlays add specific thr
 
 > [!IMPORTANT]
 > **Lowest-priority deliverable.** The spec leaves this optional and the audit rule catalog accepts a documented deferral as evidence at L3 SHOULD. If you're at L1 or L2, this template is informational — fill it when you start the climb to L3, not before. Time spent on a threat model for a single-maintainer L0 repo is time not spent on the controls that actually move the audit needle.
+
+
+---
+
+# docs/glossary.md
+
+Source: docs/glossary.md
+
+# Glossary
+
+Terms used across the spec, the audit pipeline, the rule catalog, and the conformance ladder — defined once so the rest of the docs can be terse. Words like _profile_, _stamp_, and _evidence_ have specific load-bearing meanings here; this page is the index.
+
+## A · Spec structure
+
+**Specification** (`AI-CONTRIBUTOR-SPECIFICATION.md`). The single normative document. 29 clauses across 7 pillars, with a 5-rung conformance ladder. Within a major version, a clause id (e.g. `P03.C2`) is stable. See [`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md).
+
+**Pillar** (P01 … P07). A named group of clauses sharing a concern: _Engineering Foundation_, _Security_, _Quality & Reliability_, _Release_, _AI Agents_, _AI Risk_, _Oversight_. Pillars are organisational, not normative — the clauses are.
+
+**Clause** (`P<pillar>.C<n>`). A single normative statement: an obligation, prohibition, or recommendation. Each clause has a stable id, a strength (`MUST` / `MUST when applicable` / `SHOULD` / `MAY`), an applicability scope, and an evidence path. Clause ids are pinned within a major version.
+
+**Conformance level** (L0 … L4). A cumulative tier on the autonomy ladder: **L0** baseline hygiene, **L1** hardened, **L2** AI-assisted, **L3** AI-authored, **L4** AI-autonomous. L_n_ includes every requirement of L_n−1_. Pick the level that matches what AI is actually doing in the repo today, not the aspiration.
+
+**`MUST` / `MUST when applicable` / `SHOULD` / `MAY`.** RFC 2119 keywords. **`MUST`** is unconditional. **`MUST when applicable`** is unconditional inside a stated scope (e.g. "MUST when the project ships a UI"). **`SHOULD`** is recommended; deviating needs a documented reason. **`MAY`** is permitted; the audit doesn't penalise its absence.
+
+**Applicability scope.** The condition under which a `MUST when applicable` clause applies — usually answered by a _Profile_ question. Examples: _processes regulated data_, _publishes artifacts_, _allows AI to merge_. Out-of-scope clauses are marked _Not relevant_ in the audit, never _Fail_.
+
+**Domain overlay.** An additional set of obligations layered on top of the base spec when the project handles regulated data — HIPAA, PCI-DSS, FedRAMP, GDPR, COPPA. Activated by Profile answers, not selected manually.
+
+**Spec rev.** The version of the spec a given audit was stamped against (SemVer at the doc level). Patch (typo / clarification), minor (added or refined clauses), major (clause renumbering or breaking semantics). Audits remain valid against the rev they were stamped against, even after newer revs ship.
+
+## B · Audit pipeline
+
+**Audit.** The five-phase loop that turns a repo state into stamped audit artifacts: **profile → collect → stamp → judge → validate**. Producible by three skills, by the no-install prompt, or by hand. Output is a root summary plus the detailed checklist, audit log, evidence JSON, and optional owner profile under `.ai-contributor-audit/`.
+
+**Profile** (`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`). The owner-confirmed applicability table. Answers the canonical questions (UI? regulated data? autonomous AI?) so the collector can mark out-of-scope rows _Not relevant_. Skipping the profile is the largest source of avoidable `Warning` rows.
+
+**Collect.** Phase 2. Walks the worktree and gathers evidence per clause — file paths, hashes, command outputs, parsed configs, hosted settings when available, and profile answers. Produces `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`. Read-only on the repo.
+
+**Preflight** (audit-collect setup rows). Setup activity that runs _before_ evidence collection proper — bootstrapping the collector from `spec_source`, recording original worktree status, disclosing tokens. Preflight rows in the audit log carry `<preflight>` in the _Rules_ column and may leave _Spec IDs_ blank. Distinguishing preflight from evidence keeps the rule-citation contract clean.
+
+**Evidence** (`.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`). A structured machine-readable record of what the collector saw: rules, commands, input paths, profile answers, hosted settings, raw signals, and verification gaps. The stamper reads this to fill mechanical rows; auditors read it before judging rows automation cannot decide.
+
+**Stamp.** Phase 3. Runs `audit-stamp.ts` to write derivable audit metadata and projections: synchronized checklist/audit-log frontmatter, collector-derived checklist rows, stamped audit-log rows, verification-gap blocks, conformance summary, backlog, and the root summary. Non-empty stamped blocks carry checksums so hand edits are detectable.
+
+**Judge.** Phase 4. Maps evidence to a per-clause status: _Fulfilled_, _Warning_, _Fail_, _Not relevant_, _Verification gap_. Deterministic — same evidence + same rule catalog produces the same verdicts.
+
+**Validate.** Phase 5. Cross-checks the stamped report against the rule catalog and the audit log. Catches bypassed phases, hand-edited stamps, profile drift, and out-of-spec status values. Exits non-zero if anything is off.
+
+**Audit report** (`AI-CONTRIBUTOR-AUDIT.md`). The root-level summary projection of the current checklist conformance summary and backlog. It is for readers who do not need the full evidence trail; detailed row status lives in the checklist and audit log.
+
+**Audit log** (`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`). An append-only record of audit runs — who, when, what spec rev, which phases, which commands, and which manual judgments. Lets you see the trajectory of the repo's level over time.
+
+**Checklist** (`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`). The detailed conformance and scoring surface. Collector-derived cells are stamped from evidence JSON; judgment-required rows are filled by the auditor and then validated against the audit log.
+
+## C · Row statuses
+
+**Fulfilled.** The evidence shows the clause is satisfied. The clause won't block the target level.
+
+**Warning.** The evidence is ambiguous or partial. The audit can't conclude either way without owner input or extra signals. Most first-time audits open with a stack of these — the Profile is the main fix.
+
+**Fail** (also: 🚨 Alarm). The evidence shows the clause is not satisfied at the target level. Blocks conformance. Resolve by either changing the repo or, where applicable, lowering the target level. The audit toolchain renders this status as **Alarm** with the 🚨 emoji in the checklist; _Fail_ is the colloquial name in the docs and the JSON catalog. Both names refer to the same status.
+
+**Alarm** (🚨 — checklist status). The checklist's spelling of _Fail_. Requires a specific negative finding (e.g. `.env` tracked in git, default branch unprotected, dependency audit reports critical CVEs) — not absence of evidence. Sorted to the top of the backlog: `MUST`-at-Alarm is priority tier 1.
+
+**Not relevant.** The clause's applicability scope evaluates to false for this repo (e.g. accessibility clauses on a no-UI library). Doesn't block the level. Only assigned when the checklist row explicitly permits it — never as a silent waiver.
+
+**Verification gap.** The evidence is missing in a way the collector can't repair from the worktree alone — usually because a tool wasn't installed, a network resource wasn't reachable, or an owner-only fact wasn't supplied. Treated like a soft _Warning_.
+
+**Evidence row.** A rule-level entry in `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` describing what the collector saw: rule id, input paths, raw command output, derived status, and reason such as `collector`, `judgment-required`, or `no collector coverage`. Read by the stamper, never edited by hand.
+
+**Judgment row** (judgment-required). A checklist row whose status the collector cannot decide mechanically — it needs auditor reasoning over the evidence (e.g. "is this remediation note adequate?"). After the initial stamp, the auditor fills the Status/Comment, then re-runs stamp + validate. The stamper's `needs-status:` stderr advisory enumerates these in one batch.
+
+## D · Tooling & artifacts
+
+**Skill** (`skills/ai-contributor-audit*`). A self-contained set of instructions plus scripts that an AI tool can load to run a phase of the audit. Three are shipped: `ai-contributor-audit-profile` (Profile), `ai-contributor-audit` (collect → stamp → judge → validate), `ai-contributor-audit-fix` (remediate flagged rows).
+
+**Collector** (`audit-collect.ts`, `COLLECTOR_VERSION`). The script that performs the _collect_ phase. Extracts `audited_commit` into a temporary `git worktree`, runs the canonical evidence commands there, and writes `AI-CONTRIBUTOR-EVIDENCE.json`. Its baked-in `COLLECTOR_VERSION` is stamped into both the checklist and audit-log frontmatter.
+
+**Stamper** (`audit-stamp.ts`). The script that performs the _stamp_ phase. Rewrites mechanical frontmatter (`spec_source`, `audited_commit`, timestamps), automated checklist _Status_/_Comment_ cells, the conformance-level summary, the backlog, the verification-gap stamped rows, and the root `AI-CONTRIBUTOR-AUDIT.md` projection — all from the evidence JSON. It owns specific stamped blocks; hand-edits inside them fail validation by checksum.
+
+**Validator** (`audit-validate.ts`, `VALIDATOR_VERSION`). The script that performs the _validate_ phase. Read-only structural cross-check: every checklist `command` citation must match an audit-log _Command_ cell, every stamped block's checksum must hold, every _Spec IDs_ entry must reference a real `AIC-*` ID, frontmatter must be in sync between the two files. Exit 0 means mechanically consistent; exit 1 prints every defect with a stable `AUDITxxx` code.
+
+**Fix loop** (`ai-contributor-audit-fix`). The remediation skill. Reads the freshly-stamped checklist, picks the highest-priority _Alarm_/_Warning_ row, proposes a minimal change, applies it, then re-runs collect → stamp → validate to confirm the row resolved. Repeated until the target level's blockers clear. The loop never edits stamped blocks directly — it edits source files and lets the stamper rewrite the projection.
+
+**No-install prompt.** A single self-contained prompt you paste into any tool-using agent. Produces the same artifacts as the skills, with no `npx`, no clone, no toolchain. Slower and slightly less precise than the skill flow, but works anywhere. See [`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](../AI-CONTRIBUTOR-AUDIT-PROMPT.md).
+
+**Rule catalog** (`AI-CONTRIBUTOR-RULE-CATALOG.json`). The machine-readable canon. Each rule entry represents one stable `AIC-*` rule ID and carries the checklist metadata used to render and score audit rows; multiple rule IDs can contribute to the same checklist row. Generated projections consume this file — never scrape generated Markdown. Tool authors pin a rev and integrate against this.
+
+**Coverage map** (`AI-CONTRIBUTOR-COVERAGE.md`). A grid of clauses × audit phases showing which clauses the collector evaluates mechanically, which need owner attestation, and which are out of audit scope. The map is regenerated, not authored.
+
+**Stamp** (verb · the act of). As a verb: to run `audit-stamp.ts`, which rewrites every mechanical cell, frontmatter field, conformance summary line, backlog row, and root `AI-CONTRIBUTOR-AUDIT.md` projection from the evidence JSON. As a noun, stamped content means the mechanical frontmatter fields, status/comment cells, and checksum-protected blocks written by the stamper. Reproducibility is pinned by `spec_source`, `audited_commit`, tool versions, timestamps, and `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
+
+**`spec_source`** (frontmatter · audit log). The pinned URL of the specification revision the audit was run against — either a release tag (`.../tree/v0.1.2`) or a full commit SHA (`.../tree/<sha>`). Set once at the start of an audit; every fetch of templates, validators, and rule catalog uses this exact ref. Mixing refs inside one audit is forbidden.
+
+**`audited_commit`** (frontmatter · audit log). The full commit SHA of the target repository the audit was stamped against. The collector extracts this commit into a temporary `git worktree` and runs every evidence command there — so the audit is reproducible at the same SHA forever, regardless of subsequent worktree state.
+
+**`runner_agent`** (`--runner-agent` flag). The name of the AI agent that drove this audit run (e.g. `claude-code`, `cursor`, `copilot-cli`). Recorded in the audit log so a reader of the stamped artifact can see _which_ agent's interpretation produced the judgment-row verdicts.
+
+**`runner_model`** (`--runner-model` flag). The model id behind the runner agent (e.g. `claude-sonnet-4.5`, `gpt-4.1`). Pairs with `runner_agent` in the audit-log frontmatter so a future re-audit can compare verdicts across models or detect a model swap mid-stream.
+
+**Doc-check suite.** The set of TypeScript scripts under `tools/doc-checks/` that gate every PR — link integrity, clause refs, version coherence, evergreen text, stamped-block freshness, and so on. Run via `npm --prefix tools run check`.
+
+**Golden audit.** A synthetic repo plus expected outputs at `examples/golden-audit/`. Locks audit behaviour against regressions: every spec or tooling change must keep the golden run reproducing byte-for-byte.
+
+## E · Repo governance
+
+**Accountable owner.** The named human (or rotating role) who owns the repo's audit answers and is reachable when the audit raises a question. Not necessarily the most active contributor — the one whose attestation the audit treats as authoritative.
+
+**`AGENTS.md`** (a.k.a. authoritative AI instruction file). The single file in the repo that tells AI agents how to behave: scope, capabilities, allowlists, formatting rules, escalation paths. Other tool-specific files (`CLAUDE.md`, `.cursorrules`, `GEMINI.md`) should be short pointers to this one — see _Single AI Source_.
+
+**Single AI Source.** The principle that AI instructions live in exactly one authoritative file. Competing non-trivial instruction files in the same repo are a foot-gun the spec flags (`AIC-tool-specific-pointer-only`) — agents pick whichever they were configured for and behave inconsistently.
+
+**Capability scoping.** Restricting what an AI agent can do — file paths, network endpoints, shell commands, tools — to the minimum needed for its task. Spec requires explicit scoping at L2 and tightens at higher levels.
+
+**Allowlist.** An explicit, enumerated list of what an AI agent is permitted to do (commands it can run, hosts it can fetch, dependencies it can add). Default-deny. The opposite is a denylist; the spec prefers allowlists.
+
+**Cost ceiling.** A hard upper bound on tokens, requests, or wall-clock time an AI agent may consume per task or per day. Required at L3+ to bound autonomous-loop blast radius.
+
+**Untrusted input.** Any text an AI agent reads that originated outside the codebase or trusted contributors — PR descriptions, issue bodies, customer messages, fetched web pages. Treated as adversarial; the AI Risk pillar specifies how it must be handled.
+
+**Prompt injection.** An attack where untrusted input contains instructions intended to override the AI agent's actual instructions. Mitigations include capability scoping, content sandboxing in prompts, and human approval on side-effects.
+
+**DCO** (Developer Certificate of Origin). A lightweight contributor sign-off some projects require via `Signed-off-by:` trailers. This repo's required AI-authorship metadata is the `Co-Authored-By:` trailer plus the PR trace block; DCO-style sign-off is not required for every commit here.
+
+**RFC** (request for comments). A numbered Markdown proposal in `rfcs/` describing a non-trivial spec change before it lands. Spec PRs that bypass the RFC step are usually asked to start one.
+
+**Attribution.** Recording, in the commit or PR, that AI participated in a change and how (suggested, drafted, authored, merged). Required from L2; the form is repo-defined but the presence is mandatory.
 
 
 ---
@@ -3010,365 +3477,6 @@ Once a rule reaches `Fulfilled` or `Not relevant` in the checklist, it disappear
 
 ---
 
-# skills/ai-contributor-audit-profile/SKILL.md
-
-Source: skills/ai-contributor-audit-profile/SKILL.md
-
----
-name: ai-contributor-audit-profile
-description: Draft, confirm, and write .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md applicability answers for an AI Contributor audit. Use when a user wants to create, fill, revise, or explain owner applicability answers for an AI Contributor audit. Do not use for running the audit itself, stamping generated audit artifacts, or fixing checklist findings.
----
-
-# AI Contributor Audit Profile
-
-Create or update `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`, the owner-confirmed applicability input for AI Contributor audits.
-
-The profile steers applicability only:
-
-- `yes` means the affected checks are in scope and still need normal evidence.
-- `no` can support `Not relevant` only when the mapped checklist row allows it.
-- Blank means the collector and auditor decide from repository evidence.
-
-Profile answers are not waivers and do not make rows `Fulfilled` unless the checklist row explicitly accepts owner attestation or policy text as fulfillment evidence.
-
-The profile is prepared before an audit run and is not a temporary note file for
-the audit. If an audit later finds a missing or contradictory owner fact, the
-audit should report `Warning` or a verification gap and ask the owner to update
-the profile in a separate profile step, then rerun the audit.
-
-## Workflow
-
-1. Always read `skills/ai-contributor-audit/references/audit-profile-template.md` first and extract the canonical applicability questions and affected checks.
-2. Capture the starting status of profile and generated audit artifacts before editing:
-   - run `git status --short -- AI-CONTRIBUTOR-AUDIT.md .ai-contributor-audit` when the target is a git repo,
-   - explicitly report any existing modifications or deletions of generated audit outputs,
-   - distinguish a tracked profile deletion (`D` status for `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`) from a profile that never existed,
-   - do not describe generated audit output changes as caused by the profile step unless they appeared after your edit.
-3. If the profile is deleted in the worktree but exists at `HEAD`, treat the tracked deletion as a fresh-start signal: the owner deliberately removed the file and the default action is to start from the canonical blank template. Do not silently restore the committed profile. State clearly that you are starting fresh because the profile is a tracked deletion, and offer the restore path as an explicit alternative the owner can request — proceed with fresh unless they ask otherwise. You may inspect `git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` for context (e.g. to surface prior owner-only facts the owner might want to re-supply), but name it as the committed profile, not as an existing file, and do not lift its answers into the draft without owner direction.
-4. If `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` exists in the worktree, compare its question text against the canonical template before reviewing evidence:
-   - report the canonical question count and existing profile question count,
-   - list missing canonical questions by exact text,
-   - list unsupported or obsolete existing questions by exact text,
-   - treat missing canonical questions as review blockers until they are added to the draft.
-5. If the profile does not exist and is not a tracked deletion, start from the canonical template.
-6. Build the draft profile in canonical question order. Preserve existing answers and evidence only for exact canonical question-text matches from the selected baseline. Insert missing canonical rows with a drafted answer, evidence, and confidence instead of leaving them invisible.
-7. Explain the applicability-only semantics before asking questions.
-8. Inspect the target repo lightly for obvious shape signals: manifests, source roots, UI files, deployment workflows, package/release workflows, `AGENTS.md`, MCP config, shared skills, prompt/session archives, and policy docs. Do not run a full audit. While inspecting, also look for **competing AI-instruction files**: if `AGENTS.md` (or another authoritative instruction file) exists alongside `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, `GEMINI.md`, or other tool-specific files that are non-trivial (more than a short pointer block back to the authoritative file), surface this in the owner review as a Single AI Source (`AIC-tool-specific-pointer-only`) concern. The audit will catch this; flagging it now lets the owner fix it before the audit runs.
-9. Draft each applicability answer from evidence before asking the owner. Use `yes` when repository evidence shows the scope is present, `no` when repository evidence clearly shows the scope is absent, and blank when the answer is uncertain or depends on owner-only facts.
-10. Present the proposed change as a **rendered diff against the current worktree profile**, not a fresh review table. Group changes into three buckets so the owner can scan them quickly: **rows added** (new canonical questions inserted), **rows changed** (answer or evidence text differs from the worktree — show old vs new for both columns), and **rows whose `Owner (re)confirmed YYYY-MM-DD` date will move because answer or evidence changed in this run**. Do not list unchanged rows; their omission is the signal that nothing about them moved. For first-time profile creation (no worktree file to diff against), present the full draft table with a short note explaining why a diff is unavailable. The owner confirms or corrects from the diff. A persistent `Confidence` column (`high` / `medium` / `owner-confirm`) MAY accompany changed and added rows in the chat-rendered diff to mark which rows the owner should look at most closely; this column is **chat-only** — it MUST NOT appear in the persisted profile file.
-11. Require explicit owner confirmation for low-confidence rows, newly inserted canonical rows, sensitive/regulatory/production-data rows, and any row where a `no` answer depends mostly on absence of evidence.
-12. Accept only `yes`, `no`, or blank/unknown for the Answer cell. Capture short evidence or rationale, preferring repository paths/commands for agent-detected facts and owner rationale for owner-only facts.
-13. Before writing, state whether the write will create a new profile, update an existing worktree profile, or restore a tracked deletion. If the owner asked to delete/reset the profile and has not chosen restore, do not write it back.
-14. Write the Markdown profile table only after confirmation, preserving canonical question order and including every canonical question. Leave uncertain rows blank with rationale that names the missing owner fact.
-15. **Do not bump `Owner (re)confirmed YYYY-MM-DD` dates on rows whose answer and evidence text are unchanged.** Refresh the date only on rows whose answer or evidence actually changed during this run, and on newly inserted canonical rows. A no-op date refresh creates churn in version control, weakens the meaning of "reconfirmed", and makes `git blame` lie about when the owner last engaged with the row. The diff in step 10 is what enforces this — if a row appears in the diff but only its date moved, drop the change.
-16. Do not run the target repository's formatter on the profile file from inside this skill. The skill writes a structurally-correct table; cosmetic formatting (column alignment, line wrapping, end-of-file handling) is the target repository's responsibility through its pre-commit hook or CI. Invoking `prettier`, `pnpm format`, or any equivalent here couples the skill to whatever formatter the target happens to use, can fight `markdownlint` rules, and produces target-dependent output for an otherwise deterministic skill.
-17. Run the read-only profile validator, not the audit validator. The validator prints a `skill version: ...` banner on its first line — capture that line in your run report so the Prompt Audit Trail records which skill version produced this profile:
-
-    ```sh
-    npx --yes tsx@4.21.0 <path-to-this-skill>/scripts/profile-validate.ts <target-repo-path>
-    ```
-
-18. Capture final `git status --short -- AI-CONTRIBUTOR-AUDIT.md .ai-contributor-audit` and report:
-    - whether the profile changed,
-    - whether the profile was created, updated, restored from a tracked deletion, or intentionally left deleted,
-    - whether generated audit outputs were already modified/deleted before the profile step,
-    - whether any generated audit output changed during the profile step.
-19. Summarize which `no` answers may make mapped checks `Not relevant` and name any blank rows that still require owner facts.
-
-## Guardrails
-
-- Do not edit generated audit outputs: `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, or `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
-- Do not run `audit-collect.ts`, `audit-stamp.ts`, or `audit-validate.ts` unless the user asks for an audit after profile creation.
-- Do not use generated audit-output deletions or modifications as profile evidence. Preserve and report them separately.
-- Treat a tracked deletion of `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` as the owner's fresh-start signal. Default to the canonical blank template; do not lift answers from `git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` unless the owner explicitly asks to restore.
-- Do not silently update the profile during an audit. If the owner gives new answers while an audit is running, finish the profile update first and rerun the audit from collection.
-- Do not infer sensitive-data, production-data, or regulated-data answers from absence alone if the owner is unsure.
-- Do not change checklist scopes while filling a target repo profile; checklist scope changes belong in this spec repo.
-- Keep every decision question phrased in the same direction: `yes` enables affected checks, `no` disables them only when `Not relevant` is allowed.
-- Do not describe a profile review as current, complete, or ready for final confirmation while any canonical template question is missing from the draft. Name the missing question and include it in the owner review table first.
-- Do not bump `Owner (re)confirmed YYYY-MM-DD` dates on rows whose answer and evidence text did not change during this run. Date-only refreshes are forbidden because they create empty version-control churn and erode the meaning of "reconfirmed".
-- Do not write a `Confidence` column to the persisted profile file. Confidence is a chat-only signal that helps the owner triage which rows need close attention during the rendered-diff review; once the owner confirms, the file records only the canonical columns (Area, Question, Answer, Evidence, Affected checks).
-- Do not run the target repository's formatter (`prettier`, `pnpm format`, `npm run format`, equivalents) on the profile file from inside this skill. The target's pre-commit hook or CI handles formatting; auto-formatting here couples the skill to whatever formatter is installed and produces target-dependent output.
-
-
----
-
-# skills/ai-contributor-audit/SKILL.md
-
-Source: skills/ai-contributor-audit/SKILL.md
-
----
-name: ai-contributor-audit
-description: Audit, re-audit, or score a repository against the AI Contributor Specification. Use this skill when a user asks for AI Contributor conformance, repository audit evidence, checklist scoring, or refreshing .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md / .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md. SKIP for generic security review, generic code review, dependency audit, license audit, repo-health roasts, or any "audit my repo" request that is not specifically about AI Contributor Specification conformance — those are different tasks and produce a different shape of output.
----
-
-# AI Contributor Audit
-
-> **Preflight (echo this to the user before doing anything):** "This is an AI Contributor Specification conformance audit. I will show the discovered `spec_version` and audit tool versions from the files being used, then pin the spec source, collect machine-readable evidence from the target repository, stamp mechanical fields, fill judgment-required rows from current evidence, stamp again, and run the structural validator. Tooling: `audit-run.ts` orchestrates `audit-collect.ts`, `audit-stamp.ts`, and `audit-validate.ts`; `bootstrap.ts` is used only when the target repo has not vendored the tooling. The collector checks local tools such as `git`, `gh`, `node`, `pnpm`, and `npm` when available. This produces reviewable audit artifacts; a human or named accountable owner should accept them before publishing a conformance claim. It is NOT a generic security review, code review, dependency audit, license audit, or repo-health assessment."
-
-Run a reproducible conformance audit against the [AI Contributor Specification](https://github.com/ai-contributors/ai-contributor-spec).
-
-The audit writes one root summary and three audit output artifacts in
-`.ai-contributor-audit/`. It also reads one optional owner profile input
-that the profile skill (or owner) authors before the audit runs:
-
-Audit output (written by the audit):
-
-- `AI-CONTRIBUTOR-AUDIT.md` — root summary
-- `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`
-- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`
-- `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`
-
-Owner profile input (read by the audit, never overwritten):
-
-- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`
-
-Treat the filled checklist and audit log as reviewable audit output, not final acceptance. A human or named accountable owner should spot-check `Fulfilled` rows and scrutinize every `Not relevant` row before committing or publishing the result.
-
-## What This Does
-
-The skill answers:
-
-- Which AI Contributor conformance level can this repository claim?
-- Which rows are `Fulfilled`, `Warning`, `Alarm`, or `Not relevant`?
-- Which evidence supports each status?
-- Which gaps should be fixed first?
-
-It is stricter than a readiness report. It pins the specification source, pins the audited commit, records command evidence, and runs the audit validator before handoff.
-
-## Plain-language Workflow
-
-The job is simple: establish the owner profile first, collect evidence, stamp mechanical fields, review current-run evidence and fill judgment-required gaps, stamp again, validate the pair, and hand the result to a human or named accountable owner. Do not treat memory, prior audit files, or unrecorded tool output as evidence.
-
-Audit artifacts are not standalone documents for agents to patch. If a user asks to refresh a status, remove a backlog row, or update the root audit summary, run the audit flow first (`audit-collect` → `audit-stamp` → evidence review for judgment-required rows → `audit-stamp` → `audit-validate`) and let the scripts rewrite derived cells. Agents may edit only auditor-owned cells after current-run evidence exists, then must re-run stamp and validate.
-
-The lifecycle and field-ownership model is canonical in [`references/audit-protocol.md`](references/audit-protocol.md#audit-lifecycle-and-field-ownership): collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, `Date reached` is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.
-
-The owner profile at `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` is the default input for owner-confirmed applicability answers and should be prepared before collection starts. Run the `ai-contributor-audit-profile` companion skill first when the agent supports skills. Otherwise, copy `references/audit-profile-template.md` before the audit, draft answers from repository evidence, and ask the owner to confirm or correct them. Profile answers can explain applicability, but they do not make rows `Fulfilled` unless the row explicitly allows owner attestation or policy text as fulfillment evidence.
-
-If the profile is a tracked deletion at audit time (the file is removed from the worktree but tracked at `HEAD`), `audit-run.ts` treats that as the owner's deliberate fresh-start signal and proceeds with no owner applicability input. The preflight surfaces this on stderr and the root summary records a "Boundary note" so a reader of the committed audit can see the audit ran without an owner profile. Restore the prior profile with `git restore -- .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` before audit-run if that was unintended.
-
-Do not silently edit the owner profile during an audit. If collection or row review exposes a missing, ambiguous, or contradictory owner fact, mark the affected row `⚠️ Warning` or add a verification gap that names the needed profile answer. If the owner explicitly supplies a new answer, treat that as a profile update and rerun the audit from collection so the evidence chain includes the updated profile.
-
-## Quick Run
-
-Use the pinned spec source requested by the user. If the user did not name one, resolve the upstream default branch to a full commit SHA before fetching anything:
-
-```sh
-git ls-remote https://github.com/ai-contributors/ai-contributor-spec.git refs/heads/main
-```
-
-Fetch every specification file, template, and runbook from that same immutable ref. Do not mix refs in one audit.
-
-Do not auto-update the installed skill during an audit. The audit skill and specification are coupled, and silent updates would hurt reproducibility. If the installed skill itself needs refreshing, stop before starting the audit and run:
-
-```sh
-npx skills update ai-contributor-audit
-```
-
-Actual audits still run from a pinned release tag or full commit SHA. Prefer release tags for released specification versions; use a full commit SHA only when intentionally auditing against an unreleased source revision. `bootstrap.ts` emits a non-fatal warning when it can safely compare the requested ref and sees that the installed skill/runbook ref is behind upstream `main` or the latest release tag.
-
-The umbrella command runs collect, initial stamp, an edit pause when interactive, final stamp, then validate. In non-interactive shells it stops after the initial stamp and prints the exact stamp/validate commands to run after judgment-required edits are complete. Pass `--no-pause` only when intentionally skipping that edit checkpoint:
-
-```sh
-npm --prefix tools run audit -- \
-  --auditor "AGENT | MODEL | REASONING_EFFORT" \
-  --runner-agent "<runner>" \
-  --runner-model "<model>"
-```
-
-By default `audit-run` enables the clean-clone bootstrap smoke test (the Clean Setup row stays judgment-required without it). The smoke test installs and runs documented setup steps in a temporary clone, so it can take several minutes; pass `--no-bootstrap-smoke` to skip it (e.g. quick local iterations) or `--bootstrap-smoke-timeout-ms <n>` to adjust the cap. The lower-level `audit-collect.ts` keeps its `--enable-bootstrap-smoke` opt-in default unchanged.
-
-For a fresh re-audit from blank pinned templates, add `--reset-templates`; it resets only `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, and `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, preserving the owner profile and evidence JSON. This requires a vendored or bootstrapped runbook that includes the templates; otherwise pass `--template-root <path>`.
-
-Before collecting evidence, the umbrella command checks whether the active `gh` login can read the target GitHub repository. If it cannot verify read access, it warns that hosted checks may remain `Warning` / Verification gaps instead of `Fulfilled` and asks before continuing. Do not add `--allow-missing-host-access` on the first run. If the preflight fails, stop and ask the user whether to switch `gh` accounts or continue with lower-confidence hosted evidence. In non-interactive runs, pass `--allow-missing-host-access` only after that choice is explicit.
-
-When checking or switching GitHub identity by hand, prefer bounded API probes over a broad `gh auth status` scan. Use `gh api user --jq .login` to confirm the active account and `gh api repos/<owner>/<repo> --jq .full_name` to confirm repository read access. `gh auth status` is useful for token scopes, but it can hang on unrelated stored hosts or accounts.
-
-Use the lower-level commands when you need to inspect or recover one phase. The full order is collect, stamp, fill judgment-required rows from current evidence, stamp again, then validate:
-
-1. **Collect** evidence into `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`:
-
-   ```sh
-   npm --prefix tools run audit:collect
-   ```
-
-2. **Stamp** derivable values (mechanical frontmatter, timestamps, versions, automated row `A` + Status + Comment for collector-derived and owner-profile-derived rows, conformance summary, `conformance_level`, backlog) into `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`, and `AI-CONTRIBUTOR-AUDIT.md`:
-
-   ```sh
-   npm --prefix tools run audit:stamp -- \
-     --auditor "AGENT | MODEL | REASONING_EFFORT" \
-     --runner-agent "<runner>" \
-     --runner-model "<model>"
-   ```
-
-   Add `-- --diff` to preview the stamper's changes without writing files. Add `-- --check` for a CI-friendly read-only dry run that exits `3` and prints a one-line summary when stamping would change anything (for gating "audit out of date" without depending on the validator). The check ignores wall-clock-only frontmatter drift (`assessment_completed_at`, `assessment_duration`).
-
-   After a successful stamp the stamper writes two stderr advisories that batch-surface remaining auditor work in one place (each is non-fatal — the validator is still the authority on completeness):
-
-   - `[audit-stamp] needs-evidence: …` — Warning/Alarm rows whose Comment lacks a backticked file/path/command citation (validator AUDIT034 will fail until each is fixed).
-   - `[audit-stamp] needs-status: …` — non-optional rows whose Status is still empty (validator AUDIT015), each annotated with the matching collector rule's reason from `AI-CONTRIBUTOR-EVIDENCE.json` (`judgment-required: …`, `collector: …`, or `no collector coverage`). Use this list to fill all blank rows in one batch instead of discovering them one validate call at a time.
-
-3. **Inspect** the collector's evidence (read-only, optional):
-
-   ```sh
-   npm --prefix tools run audit:summary
-   ```
-
-   Prints audit metadata, status counts, the list of collector-decisive rules with their status, and the list of collector-judgment-required rules with their reason. Useful for understanding what the collector decided before filling auditor-owned rows. No mutation; safe to run any time after `audit:collect`.
-
-4. **Validate** the filled pair (read-only — never mutates):
-
-   ```sh
-   npm --prefix tools run audit:validate
-   ```
-
-The convenience `npm --prefix tools run audit` is the preferred vendored entry point.
-
-If the target repo has not vendored the tooling, use the installed skill only to bootstrap the full runbook from the same pinned `SPEC_SHA`, then run the scripts from that bootstrapped directory. Do not run installed scripts with manually fetched templates; that mixes script and template refs and can reproduce stale collector behavior.
-
-```sh
-SPEC_SHA="<the same SHA recorded in spec_source>"
-RUNBOOK="/tmp/ai-contributor-audit-${SPEC_SHA}"
-npx --yes tsx@4.21.0 <path-to-this-skill>/scripts/bootstrap.ts "${SPEC_SHA}" --out="${RUNBOOK}"
-npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.ts" . \
-  --reset-templates \
-  --template-root "${RUNBOOK}" \
-  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
-  --auditor "AGENT | MODEL | REASONING_EFFORT" \
-  --runner-agent "<runner>" \
-  --runner-model "<model>"
-```
-
-The `npx --yes tsx@4.21.0` invocation acquires the TypeScript executor for
-bootstrap/startup. Once `audit-run.ts` is running, its collect/stamp/validate
-child phases invoke `tsx` from `PATH` and do not invoke `npm` or `npx` again.
-
-Or run the phases directly from the bootstrapped runbook:
-
-```sh
-npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-collect.ts" .
-npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-stamp.ts" \
-  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md \
-  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
-  --auditor "AGENT | MODEL | REASONING_EFFORT" \
-  --runner-agent "<runner>" \
-  --runner-model "<model>"
-npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-validate.ts" \
-  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md
-```
-
-When using the copy-and-paste prompt instead of an installed skill, fetch `bootstrap.ts` from the same pinned `spec_source` and let it materialize the runbook:
-
-```sh
-SPEC_SHA="<the same SHA recorded in spec_source>"
-curl -fsSL \
-  "https://raw.githubusercontent.com/ai-contributors/ai-contributor-spec/${SPEC_SHA}/skills/ai-contributor-audit/scripts/bootstrap.ts" \
-  -o /tmp/aic-bootstrap.ts
-RUNBOOK="/tmp/ai-contributor-audit-${SPEC_SHA}"
-npx --yes tsx@4.21.0 /tmp/aic-bootstrap.ts "${SPEC_SHA}" --out="${RUNBOOK}"
-npx --yes tsx@4.21.0 "${RUNBOOK}/skills/ai-contributor-audit/scripts/audit-run.ts" . \
-  --reset-templates \
-  --template-root "${RUNBOOK}" \
-  --spec-source "https://github.com/ai-contributors/ai-contributor-spec/tree/${SPEC_SHA}" \
-  --auditor "AGENT | MODEL | REASONING_EFFORT" \
-  --runner-agent "<runner>" \
-  --runner-model "<model>"
-```
-
-## Required Workflow
-
-Follow the complete protocol in [`references/audit-protocol.md`](references/audit-protocol.md). Do not skip steps.
-
-## Evidence Rules
-
-Follow [`references/evidence-rules.md`](references/evidence-rules.md) when deciding statuses and writing comments.
-
-Core rules:
-
-- Every non-blank checklist row needs independently reviewable evidence.
-- Every command cited in a checklist Comment must appear in the current `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`.
-- Collector-derived `Fulfilled` rows cite `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
-- Hosted settings such as branch protection, secret scanning, push protection, CODEOWNERS enforcement, and environment protection need host API evidence for `Fulfilled`.
-- `Not relevant` needs evidence that the applicability trigger does not hold.
-- Under uncertainty, use `Warning`, not `Fulfilled`.
-
-## What Not To Do
-
-- Do not invent evidence.
-- Do not update `AI-CONTRIBUTOR-AUDIT.md`, automated checklist Status/Comment cells, conformance summary Status cells, backlog derived columns, or stamped audit-log blocks by direct Markdown edits.
-- Do edit auditor-owned checklist Status/Comment cells, conformance summary Notes cells, newly reached Date reached cells, and backlog Next action/Owner/Target date cells only after current-run evidence exists, then re-run stamp and validate.
-- Do not copy statuses, comments, backlog rows, or audit-log rows from a prior audit.
-- Do not fetch templates or validators from mutable `main` after resolving `spec_source`.
-- Do not leave any non-optional checklist row blank. Optional MAY rows may remain blank — the validator allows this. If you set a status on an optional row, it must carry evidence like any other.
-- Do not mark hosted settings `Fulfilled` from local files alone.
-- Do not hand off until the validator exits 0.
-
-## Before Declaring Done
-
-Before reporting the audit complete, you MUST verify:
-
-1. **Template-only blocks removed.** Search the filled `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` for `TEMPLATE-ONLY` — there must be zero matches. The blank template wraps instructional sections (`Where these assets live`, `Re-audit protocol`, `How to use this checklist`, `Quick audit`, `Deterministic audit boundary`, `Validating this checklist`) in `<!-- BEGIN:TEMPLATE-ONLY -->` … `<!-- END:TEMPLATE-ONLY -->` markers. `audit-run.ts --reset-templates` strips these blocks automatically; pass `--keep-template-instructions` to keep them (and remove them by hand later). The validator (`AUDIT053`) fails if any marker remains.
-2. **Placeholder tokens replaced.** Search for `<FILL_` — there must be zero matches. The conformance summary table ships with `<FILL_STATUS>`, `<FILL_DATE>`, `<FILL_NOTES>` tokens; replace each with the audited value (`✅ Yes` / `❌ No` / `⚠️ Partial`, an ISO date or `—`, the blocker notes or `—`). The validator (`AUDIT054`) fails on any surviving token.
-3. **Conformance summary fully filled.** Every level row has Status and Notes populated, each `✅ Yes` level has Date reached populated, non-reached levels have no Date reached value, and the `conformance_level` frontmatter value matches the highest `✅ Yes` row (or `none`).
-4. **Validator exits 0.** Run `audit-stamp.ts` (stamps derivable cells), then `audit-validate.ts` (read-only check) over both files, and resolve every error and warning before declaring the audit complete.
-
-A self-check pass that surfaces remaining issues is part of the audit, not an optional polish step.
-
-
----
-
-# skills/ai-contributor-audit-fix/SKILL.md
-
-Source: skills/ai-contributor-audit-fix/SKILL.md
-
----
-name: ai-contributor-audit-fix
-description: Guides agents through fixing one AI Contributor audit finding at a time without changing audit results by hand. Use when the user asks to fix, close, remediate, plan, or verify AI Contributor audit rows such as Human Review Required, Secret Scanning, Dependency Security, SAST, Security Policy, CI Gates, CODEOWNERS, AI Authorship Traceability, Prompt Audit Trail, MCP Root Scoping, or Level 4 SHOULD evidence gaps.
----
-
-# AI Contributor Audit Fix
-
-## Purpose
-
-Use this skill to fix exactly one AI Contributor audit finding from the root backlog in `AI-CONTRIBUTOR-AUDIT.md`. It complements `ai-contributor-audit`: this skill changes only the target repository evidence or hosted settings needed for the selected fix. The audit skill reruns evidence collection, stamping, and validation.
-
-Do not edit generated audit results. This includes statuses, summaries, conformance levels, checklist rows, evidence JSON, and backlog rows.
-
-## Workflow
-
-1. Start from the root audit summary `AI-CONTRIBUTOR-AUDIT.md`. Its `## Backlog — what to address first` table is the action queue for fixes.
-2. Select the row:
-   - If the user names a rule, select that rule.
-   - Otherwise, take the first backlog row by current order: lowest `Level`, then lowest `Priority`, then table order.
-   - Do not maintain a separate backlog parser. The audit backlog table is already stamped and sorted by `audit-stamp.ts`; read the table directly from `AI-CONTRIBUTOR-AUDIT.md`.
-3. Stop after selecting one row. Tell the user which single finding will be addressed and ask whether to do it in a separate git worktree before making repository or hosted-setting changes.
-4. Read the matching checklist row in `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` and its `Comment` before editing. The root backlog `Next action` is the task. The checklist `Comment` and `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` explain the evidence gap.
-5. Classify the fix:
-   - Hosted GitHub control: branch rules, reviews, secret scanning, push protection, deployment protection, Dependabot alerts, CODEOWNERS enforcement.
-   - Repository file/config: workflows, policy docs, CodeQL/Semgrep, lint/type/test tooling, runtime validation, ownership docs.
-   - AI governance: `AGENTS.md`, AI contribution policy, provenance, prompt retention, redaction, MCP scoping, incident process.
-   - Level 4 SHOULD: either implement the control or add a documented reason that the repository intentionally defers it.
-6. Make the smallest change that creates real evidence for only the selected finding. Repository fixes may edit normal source, config, workflow, or policy files; they must not edit audit output files. Hosted fixes may change repository settings only after the user confirms the change.
-7. Verify with the command or API evidence the audit expects. Prefer the same command family named in the checklist comment or audit evidence.
-8. Stop after the selected finding is fixed or blocked. Do not continue to the next backlog row in the same run unless the user explicitly asks.
-9. Offer the user next-step choices appropriate to the current state: leave changes uncommitted, commit directly, create a branch and commit, push, or create a PR. Do not perform git publish actions without the user asking for them.
-10. Always advise the user to rerun the AI Contributor audit to refresh results. If the user asks to rerun it now:
-    - For pre-commit verification, run the audit collector in `--working-tree` mode.
-    - For claimable release evidence, commit the fix first, then run the SHA-pinned audit flow.
-    - Always run stamp and validate after collection.
-11. Final response: name the one addressed rule, list files or hosted settings changed, include verification commands, recommend rerunning the audit, and call out whether the selected finding is fixed, blocked, or awaiting hosted-setting confirmation.
-
-## Guardrails
-
-- Fix one finding at a time. Do not bundle unrelated backlog rows into a single fix pass.
-- Never edit `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`, or other generated audit result files as part of a fix.
-- Do not treat a document-only policy as satisfying an executable control unless the rule allows process evidence.
-- Keep broad Level 4 SHOULD work separate from L1/L2 blockers unless the user asks for Level 4 closure.
-
-
----
-
 # CHANGELOG.md
 
 Source: CHANGELOG.md
@@ -3394,6 +3502,29 @@ The catalog's `specVersion` is the adopter-facing specification release, while
 releases may update `specVersion` without changing `schemaVersion`.
 
 Every released entry lists the release date (the day the version lands on `main`).
+
+## [0.1.3] — 2026-07-02
+
+### Changed
+
+- Collapsed the three documented process options (manual self-assessment,
+  scripted human audit, agent-assisted audit) into a single scripted audit
+  process whose judgment-required rows are filled by a human or an agent.
+  Both auditor choices produce the same artifacts and evidence chain and
+  require human/accountable-owner acceptance before a conformance claim.
+- Manual self-assessment is now described as a script-free planning exercise
+  for gap analysis rather than a peer process option; it was never a valid
+  conformance-claim path, and that remains unchanged.
+- Audit field-ownership documentation is consolidated:
+  `AI-CONTRIBUTOR-AUDIT-MODEL.md` § Artifact And Field Ownership is the single
+  canonical table, and the shipped audit protocol and `CONTRIBUTING.md` link
+  to it instead of restating it. The ownership rules themselves are unchanged.
+- The bootstrap runbook manifest now materializes
+  `AI-CONTRIBUTOR-AUDIT-MODEL.md` so the protocol's canonical ownership
+  reference resolves inside pinned runbooks.
+
+This patch release does not change rule semantics, checklist rows, audit
+frontmatter fields, or conformance obligations.
 
 ## [0.1.2] — 2026-05-10
 
@@ -3684,17 +3815,11 @@ projections is the most common maintenance failure.
 - [`skills/ai-contributor-audit/SKILL.md`](skills/ai-contributor-audit/SKILL.md) — update the runbook if the change affects the audit workflow (new frontmatter field, new Status value, etc.). No `spec_version` to bump here; the skill references the spec repo at runtime.
 
 `spec_version` in generated audit templates comes from catalog `specVersion`.
-`spec_source`, `audited_commit`, `auditor`, `runner_agent`, and `runner_model`
-are supplied once through `audit-stamp.ts` flags or environment variables and
-then stamped into both audit files. `assessment_started_at`,
-`assessment_completed_at`, `assessment_duration`, `validator_version`,
-`collector_version`, and `conformance_level` are stamped automatically by
-`audit-stamp.ts` (timestamps from the collector's evidence JSON and current
-stamp run; versions from the running scripts; conformance level from the
-just-stamped Conformance level summary table). Keep stamper-owned frontmatter
-empty in this repository and preserve the inline hint comments.
-
-`audit-stamp.ts` also owns: collector-derived row `Status` + `Comment` cells in the checklist, the Backlog derived columns (`Priority` / `Level` / `Rule` / `Scope` / `Current status`), the Conformance level summary `Status` cells, the root `AI-CONTRIBUTOR-AUDIT.md` summary, the audit-log evidence rows between `<!-- BEGIN:STAMPED-COLLECTOR-ROWS -->` and `<!-- END:STAMPED-COLLECTOR-ROWS -->`, the verification-gaps rows between `<!-- BEGIN:STAMPED-VERIFICATION-GAPS -->` and `<!-- END:STAMPED-VERIFICATION-GAPS -->`, and cross-file equality for stamper-owned frontmatter fields between the checklist and audit log. `Date reached` is hybrid: the auditor enters it when a level is first claimed as `✅ Yes`, and the stamper preserves it while the level remains reached or clears it when the level drops. Do not hand-edit stamper-owned cells or marker blocks — the next stamp run overwrites them.
+Every other audit frontmatter field and derived checklist, summary, backlog,
+and audit-log cell is owned by the collector, stamper, or auditor as defined
+in the canonical table linked below. Keep stamper-owned frontmatter empty in
+this repository, preserve the inline hint comments, and do not hand-edit
+stamper-owned cells or marker blocks — the next stamp run overwrites them.
 
 The canonical artifact and field ownership table lives in [`AI-CONTRIBUTOR-AUDIT-MODEL.md`](AI-CONTRIBUTOR-AUDIT-MODEL.md#artifact-and-field-ownership). The audit lifecycle runbook lives in [`skills/ai-contributor-audit/references/audit-protocol.md`](skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership). Agent-run audits can produce valid artifacts, but external conformance claims need human or named accountable-owner acceptance of those artifacts.
 
@@ -4171,7 +4296,7 @@ Network use is intentionally explicit:
 ### `skills/ai-contributor-audit/scripts/`
 
 The canonical audit runtime. The high-level workflow is shown in the
-[README audit flow diagram](README.md#how-the-audit-runs).
+[README audit flow diagram](README.md#the-audit-process).
 
 - `audit-run.ts` orchestrates collect, stamp, optional edit pause, stamp
   again, validate.
@@ -4355,131 +4480,4 @@ report are especially welcome:
 - **Untrusted input via collector.** The collector runs commands on the
   target repo. Any way to make it execute commands the auditor did not
   approve (e.g. via crafted config files) is in scope.
-
-
----
-
-# docs/glossary.md
-
-Source: docs/glossary.md
-
-# Glossary
-
-Terms used across the spec, the audit pipeline, the rule catalog, and the conformance ladder — defined once so the rest of the docs can be terse. Words like _profile_, _stamp_, and _evidence_ have specific load-bearing meanings here; this page is the index.
-
-## A · Spec structure
-
-**Specification** (`AI-CONTRIBUTOR-SPECIFICATION.md`). The single normative document. 29 clauses across 7 pillars, with a 5-rung conformance ladder. Within a major version, a clause id (e.g. `P03.C2`) is stable. See [`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md).
-
-**Pillar** (P01 … P07). A named group of clauses sharing a concern: _Engineering Foundation_, _Security_, _Quality & Reliability_, _Release_, _AI Agents_, _AI Risk_, _Oversight_. Pillars are organisational, not normative — the clauses are.
-
-**Clause** (`P<pillar>.C<n>`). A single normative statement: an obligation, prohibition, or recommendation. Each clause has a stable id, a strength (`MUST` / `MUST when applicable` / `SHOULD` / `MAY`), an applicability scope, and an evidence path. Clause ids are pinned within a major version.
-
-**Conformance level** (L0 … L4). A cumulative tier on the autonomy ladder: **L0** baseline hygiene, **L1** hardened, **L2** AI-assisted, **L3** AI-authored, **L4** AI-autonomous. L_n_ includes every requirement of L_n−1_. Pick the level that matches what AI is actually doing in the repo today, not the aspiration.
-
-**`MUST` / `MUST when applicable` / `SHOULD` / `MAY`.** RFC 2119 keywords. **`MUST`** is unconditional. **`MUST when applicable`** is unconditional inside a stated scope (e.g. "MUST when the project ships a UI"). **`SHOULD`** is recommended; deviating needs a documented reason. **`MAY`** is permitted; the audit doesn't penalise its absence.
-
-**Applicability scope.** The condition under which a `MUST when applicable` clause applies — usually answered by a _Profile_ question. Examples: _processes regulated data_, _publishes artifacts_, _allows AI to merge_. Out-of-scope clauses are marked _Not relevant_ in the audit, never _Fail_.
-
-**Domain overlay.** An additional set of obligations layered on top of the base spec when the project handles regulated data — HIPAA, PCI-DSS, FedRAMP, GDPR, COPPA. Activated by Profile answers, not selected manually.
-
-**Spec rev.** The version of the spec a given audit was stamped against (SemVer at the doc level). Patch (typo / clarification), minor (added or refined clauses), major (clause renumbering or breaking semantics). Audits remain valid against the rev they were stamped against, even after newer revs ship.
-
-## B · Audit pipeline
-
-**Audit.** The five-phase loop that turns a repo state into stamped audit artifacts: **profile → collect → stamp → judge → validate**. Producible by three skills, by the no-install prompt, or by hand. Output is a root summary plus the detailed checklist, audit log, evidence JSON, and optional owner profile under `.ai-contributor-audit/`.
-
-**Profile** (`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`). The owner-confirmed applicability table. Answers the canonical questions (UI? regulated data? autonomous AI?) so the collector can mark out-of-scope rows _Not relevant_. Skipping the profile is the largest source of avoidable `Warning` rows.
-
-**Collect.** Phase 2. Walks the worktree and gathers evidence per clause — file paths, hashes, command outputs, parsed configs, hosted settings when available, and profile answers. Produces `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`. Read-only on the repo.
-
-**Preflight** (audit-collect setup rows). Setup activity that runs _before_ evidence collection proper — bootstrapping the collector from `spec_source`, recording original worktree status, disclosing tokens. Preflight rows in the audit log carry `<preflight>` in the _Rules_ column and may leave _Spec IDs_ blank. Distinguishing preflight from evidence keeps the rule-citation contract clean.
-
-**Evidence** (`.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`). A structured machine-readable record of what the collector saw: rules, commands, input paths, profile answers, hosted settings, raw signals, and verification gaps. The stamper reads this to fill mechanical rows; auditors read it before judging rows automation cannot decide.
-
-**Stamp.** Phase 3. Runs `audit-stamp.ts` to write derivable audit metadata and projections: synchronized checklist/audit-log frontmatter, collector-derived checklist rows, stamped audit-log rows, verification-gap blocks, conformance summary, backlog, and the root summary. Non-empty stamped blocks carry checksums so hand edits are detectable.
-
-**Judge.** Phase 4. Maps evidence to a per-clause status: _Fulfilled_, _Warning_, _Fail_, _Not relevant_, _Verification gap_. Deterministic — same evidence + same rule catalog produces the same verdicts.
-
-**Validate.** Phase 5. Cross-checks the stamped report against the rule catalog and the audit log. Catches bypassed phases, hand-edited stamps, profile drift, and out-of-spec status values. Exits non-zero if anything is off.
-
-**Audit report** (`AI-CONTRIBUTOR-AUDIT.md`). The root-level summary projection of the current checklist conformance summary and backlog. It is for readers who do not need the full evidence trail; detailed row status lives in the checklist and audit log.
-
-**Audit log** (`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`). An append-only record of audit runs — who, when, what spec rev, which phases, which commands, and which manual judgments. Lets you see the trajectory of the repo's level over time.
-
-**Checklist** (`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`). The detailed conformance and scoring surface. Collector-derived cells are stamped from evidence JSON; judgment-required rows are filled by the auditor and then validated against the audit log.
-
-## C · Row statuses
-
-**Fulfilled.** The evidence shows the clause is satisfied. The clause won't block the target level.
-
-**Warning.** The evidence is ambiguous or partial. The audit can't conclude either way without owner input or extra signals. Most first-time audits open with a stack of these — the Profile is the main fix.
-
-**Fail** (also: 🚨 Alarm). The evidence shows the clause is not satisfied at the target level. Blocks conformance. Resolve by either changing the repo or, where applicable, lowering the target level. The audit toolchain renders this status as **Alarm** with the 🚨 emoji in the checklist; _Fail_ is the colloquial name in the docs and the JSON catalog. Both names refer to the same status.
-
-**Alarm** (🚨 — checklist status). The checklist's spelling of _Fail_. Requires a specific negative finding (e.g. `.env` tracked in git, default branch unprotected, dependency audit reports critical CVEs) — not absence of evidence. Sorted to the top of the backlog: `MUST`-at-Alarm is priority tier 1.
-
-**Not relevant.** The clause's applicability scope evaluates to false for this repo (e.g. accessibility clauses on a no-UI library). Doesn't block the level. Only assigned when the checklist row explicitly permits it — never as a silent waiver.
-
-**Verification gap.** The evidence is missing in a way the collector can't repair from the worktree alone — usually because a tool wasn't installed, a network resource wasn't reachable, or an owner-only fact wasn't supplied. Treated like a soft _Warning_.
-
-**Evidence row.** A rule-level entry in `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` describing what the collector saw: rule id, input paths, raw command output, derived status, and reason such as `collector`, `judgment-required`, or `no collector coverage`. Read by the stamper, never edited by hand.
-
-**Judgment row** (judgment-required). A checklist row whose status the collector cannot decide mechanically — it needs auditor reasoning over the evidence (e.g. "is this remediation note adequate?"). After the initial stamp, the auditor fills the Status/Comment, then re-runs stamp + validate. The stamper's `needs-status:` stderr advisory enumerates these in one batch.
-
-## D · Tooling & artifacts
-
-**Skill** (`skills/ai-contributor-audit*`). A self-contained set of instructions plus scripts that an AI tool can load to run a phase of the audit. Three are shipped: `ai-contributor-audit-profile` (Profile), `ai-contributor-audit` (collect → stamp → judge → validate), `ai-contributor-audit-fix` (remediate flagged rows).
-
-**Collector** (`audit-collect.ts`, `COLLECTOR_VERSION`). The script that performs the _collect_ phase. Extracts `audited_commit` into a temporary `git worktree`, runs the canonical evidence commands there, and writes `AI-CONTRIBUTOR-EVIDENCE.json`. Its baked-in `COLLECTOR_VERSION` is stamped into both the checklist and audit-log frontmatter.
-
-**Stamper** (`audit-stamp.ts`). The script that performs the _stamp_ phase. Rewrites mechanical frontmatter (`spec_source`, `audited_commit`, timestamps), automated checklist _Status_/_Comment_ cells, the conformance-level summary, the backlog, the verification-gap stamped rows, and the root `AI-CONTRIBUTOR-AUDIT.md` projection — all from the evidence JSON. It owns specific stamped blocks; hand-edits inside them fail validation by checksum.
-
-**Validator** (`audit-validate.ts`, `VALIDATOR_VERSION`). The script that performs the _validate_ phase. Read-only structural cross-check: every checklist `command` citation must match an audit-log _Command_ cell, every stamped block's checksum must hold, every _Spec IDs_ entry must reference a real `AIC-*` ID, frontmatter must be in sync between the two files. Exit 0 means mechanically consistent; exit 1 prints every defect with a stable `AUDITxxx` code.
-
-**Fix loop** (`ai-contributor-audit-fix`). The remediation skill. Reads the freshly-stamped checklist, picks the highest-priority _Alarm_/_Warning_ row, proposes a minimal change, applies it, then re-runs collect → stamp → validate to confirm the row resolved. Repeated until the target level's blockers clear. The loop never edits stamped blocks directly — it edits source files and lets the stamper rewrite the projection.
-
-**No-install prompt.** A single self-contained prompt you paste into any tool-using agent. Produces the same artifacts as the skills, with no `npx`, no clone, no toolchain. Slower and slightly less precise than the skill flow, but works anywhere. See [`AI-CONTRIBUTOR-AUDIT-PROMPT.md`](../AI-CONTRIBUTOR-AUDIT-PROMPT.md).
-
-**Rule catalog** (`AI-CONTRIBUTOR-RULE-CATALOG.json`). The machine-readable canon. Each rule entry represents one stable `AIC-*` rule ID and carries the checklist metadata used to render and score audit rows; multiple rule IDs can contribute to the same checklist row. Generated projections consume this file — never scrape generated Markdown. Tool authors pin a rev and integrate against this.
-
-**Coverage map** (`AI-CONTRIBUTOR-COVERAGE.md`). A grid of clauses × audit phases showing which clauses the collector evaluates mechanically, which need owner attestation, and which are out of audit scope. The map is regenerated, not authored.
-
-**Stamp** (verb · the act of). As a verb: to run `audit-stamp.ts`, which rewrites every mechanical cell, frontmatter field, conformance summary line, backlog row, and root `AI-CONTRIBUTOR-AUDIT.md` projection from the evidence JSON. As a noun, stamped content means the mechanical frontmatter fields, status/comment cells, and checksum-protected blocks written by the stamper. Reproducibility is pinned by `spec_source`, `audited_commit`, tool versions, timestamps, and `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`.
-
-**`spec_source`** (frontmatter · audit log). The pinned URL of the specification revision the audit was run against — either a release tag (`.../tree/v0.1.2`) or a full commit SHA (`.../tree/<sha>`). Set once at the start of an audit; every fetch of templates, validators, and rule catalog uses this exact ref. Mixing refs inside one audit is forbidden.
-
-**`audited_commit`** (frontmatter · audit log). The full commit SHA of the target repository the audit was stamped against. The collector extracts this commit into a temporary `git worktree` and runs every evidence command there — so the audit is reproducible at the same SHA forever, regardless of subsequent worktree state.
-
-**`runner_agent`** (`--runner-agent` flag). The name of the AI agent that drove this audit run (e.g. `claude-code`, `cursor`, `copilot-cli`). Recorded in the audit log so a reader of the stamped artifact can see _which_ agent's interpretation produced the judgment-row verdicts.
-
-**`runner_model`** (`--runner-model` flag). The model id behind the runner agent (e.g. `claude-sonnet-4.5`, `gpt-4.1`). Pairs with `runner_agent` in the audit-log frontmatter so a future re-audit can compare verdicts across models or detect a model swap mid-stream.
-
-**Doc-check suite.** The set of TypeScript scripts under `tools/doc-checks/` that gate every PR — link integrity, clause refs, version coherence, evergreen text, stamped-block freshness, and so on. Run via `npm --prefix tools run check`.
-
-**Golden audit.** A synthetic repo plus expected outputs at `examples/golden-audit/`. Locks audit behaviour against regressions: every spec or tooling change must keep the golden run reproducing byte-for-byte.
-
-## E · Repo governance
-
-**Accountable owner.** The named human (or rotating role) who owns the repo's audit answers and is reachable when the audit raises a question. Not necessarily the most active contributor — the one whose attestation the audit treats as authoritative.
-
-**`AGENTS.md`** (a.k.a. authoritative AI instruction file). The single file in the repo that tells AI agents how to behave: scope, capabilities, allowlists, formatting rules, escalation paths. Other tool-specific files (`CLAUDE.md`, `.cursorrules`, `GEMINI.md`) should be short pointers to this one — see _Single AI Source_.
-
-**Single AI Source.** The principle that AI instructions live in exactly one authoritative file. Competing non-trivial instruction files in the same repo are a foot-gun the spec flags (`AIC-tool-specific-pointer-only`) — agents pick whichever they were configured for and behave inconsistently.
-
-**Capability scoping.** Restricting what an AI agent can do — file paths, network endpoints, shell commands, tools — to the minimum needed for its task. Spec requires explicit scoping at L2 and tightens at higher levels.
-
-**Allowlist.** An explicit, enumerated list of what an AI agent is permitted to do (commands it can run, hosts it can fetch, dependencies it can add). Default-deny. The opposite is a denylist; the spec prefers allowlists.
-
-**Cost ceiling.** A hard upper bound on tokens, requests, or wall-clock time an AI agent may consume per task or per day. Required at L3+ to bound autonomous-loop blast radius.
-
-**Untrusted input.** Any text an AI agent reads that originated outside the codebase or trusted contributors — PR descriptions, issue bodies, customer messages, fetched web pages. Treated as adversarial; the AI Risk pillar specifies how it must be handled.
-
-**Prompt injection.** An attack where untrusted input contains instructions intended to override the AI agent's actual instructions. Mitigations include capability scoping, content sandboxing in prompts, and human approval on side-effects.
-
-**DCO** (Developer Certificate of Origin). A lightweight contributor sign-off some projects require via `Signed-off-by:` trailers. This repo's required AI-authorship metadata is the `Co-Authored-By:` trailer plus the PR trace block; DCO-style sign-off is not required for every commit here.
-
-**RFC** (request for comments). A numbered Markdown proposal in `rfcs/` describing a non-trivial spec change before it lands. Spec PRs that bypass the RFC step are usually asked to start one.
-
-**Attribution.** Recording, in the commit or PR, that AI participated in a change and how (suggested, drafted, authored, merged). Required from L2; the form is repo-defined but the presence is mandatory.
 

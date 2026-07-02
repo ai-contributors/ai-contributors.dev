@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { productionUrl } from './pages-routing.mjs';
 import { readDocsConfig } from './spec-content.routes.mjs';
-import { getSpecRoot, SOURCE_ROUTES } from './spec-content.mjs';
+import { GENERATED_DOCS_ROOT, SOURCE_ROUTES } from './spec-content.mjs';
 
 function readDocNav() {
   return readDocsConfig().docs.map((entry) => ({
@@ -64,10 +64,23 @@ if (!existsSync(llmsPath)) {
 }
 
 if (!existsSync(llmsFullPath)) {
+  // Read the committed ported copies under src/content/generated-spec/ so
+  // the build never touches the spec submodule; a clean clone without
+  // submodules must still build (AIC-clean-clone-bootstrap). The ported
+  // files carry the upstream H1/lede as frontmatter — fold the title back
+  // into a heading so each section stays self-describing.
   const sections = [];
   for (const route of SOURCE_ROUTES) {
-    const body = await readFile(path.join(getSpecRoot(), route.source), 'utf8');
-    sections.push(`# ${route.source}\n\nSource: ${route.source}\n\n${body}`);
+    const raw = await readFile(path.join(GENERATED_DOCS_ROOT, route.file), 'utf8');
+    const fm = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+    let body = raw;
+    let title = route.source;
+    if (fm) {
+      body = raw.slice(fm[0].length);
+      const t = fm[1].match(/^title:\s*["']?(.+?)["']?\s*$/m);
+      if (t) title = t[1];
+    }
+    sections.push(`# ${title}\n\nSource: ${route.source}\n\n${body}`);
   }
   await writeFileIfAbsent(llmsFullPath, `${sections.join('\n\n---\n\n')}\n`);
 }

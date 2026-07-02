@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -137,7 +137,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download built site
         uses: actions/download-artifact@v8
@@ -207,7 +207,7 @@ jobs:
       url: https://ai-contributors.dev/pr-preview/pr-${{ github.event.pull_request.number }}/
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download built site
         uses: actions/download-artifact@v8
@@ -304,7 +304,7 @@ jobs:
       name: github-pages-preview
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Prepare gh-pages branch
         id: pages

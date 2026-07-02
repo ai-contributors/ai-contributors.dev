@@ -1,12 +1,12 @@
 name: Dependency Review
 
+# No paths filter: "Dependency Review" is a required status check in the
+# main-protection ruleset, and required checks are unaware of path filters —
+# a PR that skips this workflow would wait forever on "Expected". On PRs
+# without dependency changes the action completes quickly with nothing to
+# review and reports success.
 on:
   pull_request:
-    paths:
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/dependabot.yml"
-      - ".github/workflows/dependency-review.yml"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

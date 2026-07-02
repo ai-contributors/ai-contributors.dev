@@ -11,12 +11,12 @@ agent scope, shared skills, and AI-authored verification.
 
 ## Provider And Model Allowlist
 
-| Tool / surface | Provider           | Model family                                     | Permitted data classes                                      | Permitted actions                                         | Status   |
-| -------------- | ------------------ | ------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------- | -------- |
-| Claude Code    | Anthropic          | Claude Opus 4.7, Claude Opus 4.8, Claude Fable 5 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| Codex          | OpenAI             | GPT-5.4, GPT-5.5                                 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| GitHub Copilot | GitHub (Microsoft) | GPT-5.4, GPT-5.5                                 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| Gemini         | Google             | Gemini 3                                         | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Tool / surface | Provider           | Model family                    | Permitted data classes                                      | Permitted actions                                         | Status   |
+| -------------- | ------------------ | ------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------- | -------- |
+| Claude Code    | Anthropic          | Claude Opus 4.8, Claude Fable 5 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Codex          | OpenAI             | GPT-5.4, GPT-5.5                | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| GitHub Copilot | GitHub (Microsoft) | GPT-5.4, GPT-5.5                | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Gemini         | Google             | Gemini 3                        | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
 
 AI workflows must not route secrets, credentials, customer data, regulated data,
 or private maintainer-only content to any provider. If a task requires a data

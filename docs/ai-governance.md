@@ -11,12 +11,12 @@ agent scope, shared skills, and AI-authored verification.
 
 ## Provider And Model Allowlist
 
-| Tool / surface | Provider           | Model family     | Permitted data classes                                      | Permitted actions                                         | Status   |
-| -------------- | ------------------ | ---------------- | ----------------------------------------------------------- | --------------------------------------------------------- | -------- |
-| Claude Code    | Anthropic          | Claude Opus 4.7  | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| Codex          | OpenAI             | GPT-5.4, GPT-5.5 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| GitHub Copilot | GitHub (Microsoft) | GPT-5.4, GPT-5.5 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
-| Gemini         | Google             | Gemini 3         | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Tool / surface | Provider           | Model family                    | Permitted data classes                                      | Permitted actions                                         | Status   |
+| -------------- | ------------------ | ------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------- | -------- |
+| Claude Code    | Anthropic          | Claude Opus 4.8, Claude Fable 5 | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Codex          | OpenAI             | GPT-5.4, GPT-5.5                | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| GitHub Copilot | GitHub (Microsoft) | GPT-5.4, GPT-5.5                | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
+| Gemini         | Google             | Gemini 3                        | Public site/source content and public CI configuration only | Read, summarize, edit, test, audit, and draft PR evidence | Approved |
 
 AI workflows must not route secrets, credentials, customer data, regulated data,
 or private maintainer-only content to any provider. If a task requires a data
@@ -33,6 +33,23 @@ class not listed above, stop and get maintainer approval before continuing.
 - The review must record the affected provider/model, evidence source, data
   classes still permitted, allowed action categories, and migration or fallback
   path.
+
+### Recorded Allowlist Reviews
+
+- **2026-07-02 — Anthropic / Claude Code entry rescoped.** Affected models:
+  `Claude Opus 4.7` removed (superseded; do not route new work to it);
+  `Claude Opus 4.8` and `Claude Fable 5` approved. Evidence: Anthropic model
+  deprecation and migration documentation
+  (<https://platform.claude.com/docs/en/about-claude/model-deprecations>,
+  <https://platform.claude.com/docs/en/about-claude/models/migration-guide>)
+  plus merged PRs in this repository disclosing `Claude Fable 5`. Permitted
+  data classes unchanged: public site/source content and public CI
+  configuration only — Fable 5 retention constraints are acceptable because
+  no non-public data may be routed to any provider from this repository.
+  Allowed actions unchanged: read, summarize, edit, test, audit, and draft PR
+  evidence. Migration/fallback: route Claude Code work to `Claude Opus 4.8`
+  when `Claude Fable 5` is unavailable or its terms change; the other
+  allowlisted providers remain independent fallbacks.
 
 ## AI Surface Redaction And Context Retention
 

@@ -1,7 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
-import path from 'node:path';
-
-const repoRoot = process.cwd();
+import generated from '../data/audit-artifacts.generated.json';
 
 export type AuditArtifact = {
   key: string;
@@ -36,25 +33,17 @@ const ARTIFACTS = [
   },
 ] as const;
 
-function hasArtifacts(root: string): boolean {
-  return ARTIFACTS.every((artifact) => existsSync(path.join(root, artifact.path)));
-}
-
-export function pickAuditArtifactRoot(): string {
-  if (process.env.SPEC_ROOT_OVERRIDE) return path.resolve(process.env.SPEC_ROOT_OVERRIDE);
-
-  const submodule = path.join(repoRoot, 'external/ai-contributor-spec');
-  if (hasArtifacts(submodule)) return submodule;
-
-  const sibling = path.resolve(repoRoot, '..', 'ai-contributor-spec');
-  if (hasArtifacts(sibling)) return sibling;
-
-  return submodule;
-}
-
-export function loadSpecAuditArtifacts(root = pickAuditArtifactRoot()): AuditArtifact[] {
+// Content is ported from the pinned spec source into a committed generated
+// file by `pnpm prepare:spec` (scripts/generate-spec-data.mjs) so the build
+// never reads the submodule; a clean clone without submodules must build.
+export function loadSpecAuditArtifacts(): AuditArtifact[] {
   return ARTIFACTS.map((artifact) => {
-    const content = readFileSync(path.join(root, artifact.path), 'utf8');
+    const content = (generated.artifacts as Record<string, string>)[artifact.path];
+    if (typeof content !== 'string') {
+      throw new Error(
+        `audit artifact missing from src/data/audit-artifacts.generated.json: ${artifact.path} — run \`pnpm prepare:spec\``,
+      );
+    }
     return {
       ...artifact,
       content,

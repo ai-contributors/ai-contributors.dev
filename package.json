@@ -37,7 +37,7 @@
     "@astrojs/mdx": "5.0.4",
     "@astrojs/starlight": "0.39.2",
     "@fontsource/instrument-serif": "5.2.8",
-    "astro": "6.3.1"
+    "astro": "6.4.6"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",
@@ -62,7 +62,8 @@
   },
   "pnpm": {
     "overrides": {
-      "uuid": "14.0.0"
+      "uuid": "14.0.0",
+      "tmp@<0.2.6": "0.2.7"
     },
     "onlyBuiltDependencies": [
       "esbuild",

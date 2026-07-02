@@ -157,15 +157,15 @@ npm --prefix tools run generate:audit-templates
 
 This repository accepts AI-assisted contributions when they are disclosed, reviewable, and compatible with the license for the path being changed:
 
-- **CC BY 4.0** for documentation and specification content (see [`LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/LICENSE)).
-- **Apache License 2.0** for the reusable starter template under [`examples/typescript-pnpm/template/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/) (see [`examples/typescript-pnpm/template/LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/LICENSE)).
-- **Apache License 2.0** for repository tooling under [`tools/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/) and shipped audit runtime scripts under [`skills/ai-contributor-audit/scripts/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/).
+- **CC BY 4.0** for documentation and specification content (see [`LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/LICENSE)).
+- **Apache License 2.0** for the reusable starter template under [`examples/typescript-pnpm/template/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/examples/typescript-pnpm/template/) (see [`examples/typescript-pnpm/template/LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/examples/typescript-pnpm/template/LICENSE)).
+- **Apache License 2.0** for repository tooling under [`tools/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/) and shipped audit runtime scripts under [`skills/ai-contributor-audit/scripts/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/scripts/).
 
 See [License](#license) below.
 
 A pull request is **materially AI-authored** when an AI tool or agent produced substantial text, code, tests, examples, or high-level design. Minor autocomplete, spelling, grammar, or formatting suggestions do not need disclosure.
 
-For materially AI-authored pull requests, complete the **AI Authorship & Agent Trace** block in the PR body using the template at [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/.github/PULL_REQUEST_TEMPLATE.md):
+For materially AI-authored pull requests, complete the **AI Authorship & Agent Trace** block in the PR body using the template at [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/.github/PULL_REQUEST_TEMPLATE.md):
 
 - `AI-Authored: yes (<tool/agent>, <model>)` — name the tool/agent and model when known.
 - `Prompt-Audit: AGENTS.md@<commit-or-working-tree>; skill:<skills/.../SKILL.md>@<sha-or-local>; transcript:<location-or-none>` — cite the agent instruction sources used. When a change was driven by a skill in this repository, the skill citation MUST include its commit SHA so the prompt is pinned.
@@ -208,16 +208,16 @@ projections is the most common maintenance failure.
   canonical structured facts: specification version, pillars, clauses,
   conformance levels, `AIC-*` IDs, normative text, checklist row metadata,
   coverage projections, and detector linkage.
-- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template)
+- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template)
   — hand-authored specification prose and placement directives.
-- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template)
+- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template)
   — hand-authored coverage-map prose and placement directives.
-- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template)
+- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template)
   — checklist instructions, frontmatter comments, template-only auditor blocks,
   and placement directives.
-- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template)
+- [`tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template)
   and
-  [`tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template)
+  [`tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template)
   — root audit summary and audit-log prose, frontmatter comments, stamped-block
   markers, and placement directives.
 - Generated projections:
@@ -238,19 +238,13 @@ projections is the most common maintenance failure.
 - [`skills/ai-contributor-audit/SKILL.md`](../skill-audit/) — update the runbook if the change affects the audit workflow (new frontmatter field, new Status value, etc.). No `spec_version` to bump here; the skill references the spec repo at runtime.
 
 `spec_version` in generated audit templates comes from catalog `specVersion`.
-`spec_source`, `audited_commit`, `auditor`, `runner_agent`, and `runner_model`
-are supplied once through `audit-stamp.ts` flags or environment variables and
-then stamped into both audit files. `assessment_started_at`,
-`assessment_completed_at`, `assessment_duration`, `validator_version`,
-`collector_version`, and `conformance_level` are stamped automatically by
-`audit-stamp.ts` (timestamps from the collector's evidence JSON and current
-stamp run; versions from the running scripts; conformance level from the
-just-stamped Conformance level summary table). Keep stamper-owned frontmatter
-empty in this repository and preserve the inline hint comments.
+Every other audit frontmatter field and derived checklist, summary, backlog,
+and audit-log cell is owned by the collector, stamper, or auditor as defined
+in the canonical table linked below. Keep stamper-owned frontmatter empty in
+this repository, preserve the inline hint comments, and do not hand-edit
+stamper-owned cells or marker blocks — the next stamp run overwrites them.
 
-`audit-stamp.ts` also owns: collector-derived row `Status` + `Comment` cells in the checklist, the Backlog derived columns (`Priority` / `Level` / `Rule` / `Scope` / `Current status`), the Conformance level summary `Status` cells, the root `AI-CONTRIBUTOR-AUDIT.md` summary, the audit-log evidence rows between `<!-- BEGIN:STAMPED-COLLECTOR-ROWS -->` and `<!-- END:STAMPED-COLLECTOR-ROWS -->`, the verification-gaps rows between `<!-- BEGIN:STAMPED-VERIFICATION-GAPS -->` and `<!-- END:STAMPED-VERIFICATION-GAPS -->`, and cross-file equality for stamper-owned frontmatter fields between the checklist and audit log. `Date reached` is hybrid: the auditor enters it when a level is first claimed as `✅ Yes`, and the stamper preserves it while the level remains reached or clears it when the level drops. Do not hand-edit stamper-owned cells or marker blocks — the next stamp run overwrites them.
-
-The canonical artifact and field ownership table lives in [`AI-CONTRIBUTOR-AUDIT-MODEL.md`](../audit-overview/#artifact-and-field-ownership). The audit lifecycle runbook lives in [`skills/ai-contributor-audit/references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership). Agent-run audits can produce valid artifacts, but external conformance claims need human or named accountable-owner acceptance of those artifacts.
+The canonical artifact and field ownership table lives in [`AI-CONTRIBUTOR-AUDIT-MODEL.md`](../audit-overview/#artifact-and-field-ownership). The audit lifecycle runbook lives in [`skills/ai-contributor-audit/references/audit-protocol.md`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership). Agent-run audits can produce valid artifacts, but external conformance claims need human or named accountable-owner acceptance of those artifacts.
 
 ### Merge order of operations
 
@@ -418,11 +412,11 @@ Use the same step shape: Do / Why / How / Verify / Spec reference. In the PR, pr
 
 By contributing, you agree that your contributions use the license for the part of the repository they modify:
 
-- Documentation and specification content is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) (see [`LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/LICENSE)).
-- The reusable starter template under [`examples/typescript-pnpm/template/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). See [`examples/typescript-pnpm/template/LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/examples/typescript-pnpm/template/LICENSE).
-- Repository tooling and helper scripts under [`tools/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/tools/), plus shipped
+- Documentation and specification content is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) (see [`LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/LICENSE)).
+- The reusable starter template under [`examples/typescript-pnpm/template/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/examples/typescript-pnpm/template/) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). See [`examples/typescript-pnpm/template/LICENSE`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/examples/typescript-pnpm/template/LICENSE).
+- Repository tooling and helper scripts under [`tools/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/tools/), plus shipped
   audit runtime scripts under
-  [`skills/ai-contributor-audit/scripts/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.2/skills/ai-contributor-audit/scripts/),
+  [`skills/ai-contributor-audit/scripts/`](https://github.com/ai-contributors/ai-contributor-spec/blob/v0.1.3/skills/ai-contributor-audit/scripts/),
   are licensed under
   [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0); each file
   carries an `SPDX-License-Identifier: Apache-2.0` header.

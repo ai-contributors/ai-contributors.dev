@@ -34,6 +34,23 @@ class not listed above, stop and get maintainer approval before continuing.
   classes still permitted, allowed action categories, and migration or fallback
   path.
 
+### Recorded Allowlist Reviews
+
+- **2026-07-02 — Anthropic / Claude Code entry rescoped.** Affected models:
+  `Claude Opus 4.7` removed (superseded; do not route new work to it);
+  `Claude Opus 4.8` and `Claude Fable 5` approved. Evidence: Anthropic model
+  deprecation and migration documentation
+  (<https://platform.claude.com/docs/en/about-claude/model-deprecations>,
+  <https://platform.claude.com/docs/en/about-claude/models/migration-guide>)
+  plus merged PRs in this repository disclosing `Claude Fable 5`. Permitted
+  data classes unchanged: public site/source content and public CI
+  configuration only — Fable 5 retention constraints are acceptable because
+  no non-public data may be routed to any provider from this repository.
+  Allowed actions unchanged: read, summarize, edit, test, audit, and draft PR
+  evidence. Migration/fallback: route Claude Code work to `Claude Opus 4.8`
+  when `Claude Fable 5` is unavailable or its terms change; the other
+  allowlisted providers remain independent fallbacks.
+
 ## AI Surface Redaction And Context Retention
 
 Prompt, transcript, tool-output, retrieved-document, and AI-error-report

@@ -62,6 +62,7 @@
   },
   "pnpm": {
     "overrides": {
+      "uuid": "14.0.0",
       "tmp@<0.2.6": "0.2.7"
     },
     "onlyBuiltDependencies": [

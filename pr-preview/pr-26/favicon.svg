@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>AI Contributors - Contributor Grid</title>
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <circle cx="233" cy="233" r="85" fill="#c0c0c0"/>
+  <circle cx="419" cy="233" r="85" fill="#808080"/>
+  <circle cx="605" cy="233" r="85" fill="#c0c0c0"/>
+  <circle cx="791" cy="233" r="85" fill="#808080"/>
+  <circle cx="233" cy="419" r="85" fill="#808080"/>
+  <circle cx="419" cy="419" r="85" fill="#c0c0c0"/>
+  <circle cx="605" cy="419" r="85" fill="#0a0a0a"/>
+  <text x="605" y="440" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, monospace" font-size="60" font-weight="600" fill="#ffffff">ai</text>
+  <circle cx="791" cy="419" r="85" fill="#808080"/>
+  <circle cx="233" cy="605" r="85" fill="#c0c0c0"/>
+  <circle cx="419" cy="605" r="85" fill="#808080"/>
+  <circle cx="605" cy="605" r="85" fill="#c0c0c0"/>
+  <circle cx="791" cy="605" r="85" fill="#808080"/>
+  <circle cx="233" cy="791" r="85" fill="#808080"/>
+  <circle cx="419" cy="791" r="85" fill="#c0c0c0"/>
+  <circle cx="605" cy="791" r="85" fill="#808080"/>
+  <circle cx="791" cy="791" r="85" fill="#c0c0c0"/>
+</svg>

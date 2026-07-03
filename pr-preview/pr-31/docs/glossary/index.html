@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-of46li67"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Glossary | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-31/docs/glossary/"/><link rel="sitemap" href="/pr-preview/pr-31/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-31/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.0.5"/><meta name="generator" content="Starlight v0.41.2"/><meta property="og:title" content="Glossary"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-31/docs/glossary/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Terms used across the spec, the audit pipeline, the rule catalog, and the conformance ladder — defined once so the rest of the docs can be terse. Words like _profile_, _stamp_, and _evidence_ have specific load-bearing meanings here; this page is the index."/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Terms used across the spec, the audit pipeline, the rule catalog, and the conformance ladder — defined once so the rest of the docs can be terse. Words like _profile_, _stamp_, and _evidence_ have specific load-bearing meanings here; this page is the index."/><script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script><link rel="prefetch" href="/pr-preview/pr-31/pagefind/pagefind-ui.js" as="script" crossorigin><link rel="prefetch" href="/pr-preview/pr-31/pagefind/pagefind-ui.css" as="style"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-31/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DDiogqUc.js"></script><script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+  window.StarlightThemeProvider = (() => {
+    const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme-mode');
+    const theme = storedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    return {
+      updatePickers(theme = storedTheme === 'dark' ? 'dark' : 'light') {
+        document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+          const select = picker.querySelector('select');
+          if (select) select.value = theme;
+          /** @type {HTMLTemplateElement | null} */
+          const tmpl = document.querySelector(`#theme-icons`);
+          const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+          if (newIcon) {
+            const oldIcon = picker.querySelector('svg.label-icon');
+            if (oldIcon) {
+              oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+            }
+          }
+        });
+      },
+    };
+  })();
+</script><link rel="stylesheet" href="/pr-preview/pr-31/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-31/_astro/index.-hPliZY1.css"><style>.astro-route-announcer{clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;width:1px;height:1px;position:absolute;top:0;left:0;overflow:hidden}
+</style><script type="module" src="/pr-preview/pr-31/_astro/page.BOCGgm5i.js"></script></head><body class="astro-of46li67"><a href="#_top" class="astro-l5k47ikk">Skip to content</a><div class="page sl-flex astro-4an56mbc"><header class="header astro-4an56mbc"><div class="header astro-bgigng3i"><div class="title-wrapper sl-flex astro-bgigng3i"><a href="/pr-preview/pr-31/" class="site-title sl-flex astro-jaqx2u3k"><img class="astro-jaqx2u3k" alt="ai-contributors logomark" src="/pr-preview/pr-31/_astro/logomark.M5JGvKcj.svg" width="120" height="120"><span class="astro-jaqx2u3k" translate="no">ai-contributor-spec / audit</span></a></div><div class="sl-flex print:hidden astro-bgigng3i"><site-search class="astro-bgigng3i astro-nsiiprfo" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-nsiiprfo"><svg aria-hidden="true" class="astro-nsiiprfo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-nsiiprfo" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-nsiiprfo" style="display: none;"><kbd class="astro-nsiiprfo">Ctrl</kbd><kbd class="astro-nsiiprfo">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-nsiiprfo"><div class="dialog-frame sl-flex astro-nsiiprfo"><button data-close-modal class="sl-flex md:sl-hidden astro-nsiiprfo">Cancel</button><div class="search-container astro-nsiiprfo"><div id="starlight__search" class="astro-nsiiprfo"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/pr-preview/pr-31/_astro/Search.astro_astro_type_script_index_0_lang.DV2zTz62.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-bgigng3i"><div class="sl-flex social-icons astro-bgigng3i"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-4an56mbc" aria-label="Main"><starlight-menu-button class="print:hidden astro-ns7vdiax"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-ns7vdiax"><svg aria-hidden="true" class="open-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e)}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-4an56mbc"><div class="sidebar-content sl-flex astro-4an56mbc"><div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="11zjjf8" class="astro-ch4lkps4"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-nspf5tbo"><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Start</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/quickstart/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Quickstart</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/adoption-guide/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Adoption guide</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/skill-profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/skill-audit/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/skill-fix/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-fix</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Specification</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/specification/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Full specification</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/pillars/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Pillars overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/conformance-levels/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Levels overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/coverage-map/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Coverage map</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/rule-catalog/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Rule catalog</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/threat-model/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Threat model template</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/glossary/" aria-current="page" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Glossary</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Audit</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/audit-overview/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">How the audit works</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">The profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/audit/prompt/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">No-install prompt</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/stamped-audit/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">A stamped audit</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Project</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/releases/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Releases</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/contributing/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Contributing</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/authors/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Authors</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/tooling/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Tooling</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/security-policy/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Security policy</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-31/docs/doc-coverage/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Published pages</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-dajafrs2"><div class="social-icons astro-dajafrs2"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script></div></div></div></div></div></nav><div class="main-frame astro-4an56mbc"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()}),addEventListener(`pageHide`,a);</script><div class="lg:sl-flex astro-emasnav6"><aside class="right-sidebar-container print:hidden astro-emasnav6"><div class="right-sidebar astro-emasnav6"><div class="lg:sl-hidden astro-xdg7xc5d"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-wvpbq5dg"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-wvpbq5dg"><details id="starlight__mobile-toc" class="astro-wvpbq5dg"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-wvpbq5dg"><span class="toggle sl-flex astro-wvpbq5dg">On this page<svg aria-hidden="true" class="caret astro-wvpbq5dg astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-wvpbq5dg"></span></summary><div class="dropdown astro-wvpbq5dg"><ul class="isMobile astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#a--spec-structure" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">A · Spec structure</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#b--audit-pipeline" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">B · Audit pipeline</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#c--row-statuses" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">C · Row statuses</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#d--tooling--artifacts" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">D · Tooling &amp; artifacts</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#e--repo-governance" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">E · Repo governance</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-31/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-xdg7xc5d"><div class="sl-container astro-xdg7xc5d"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#a--spec-structure" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">A · Spec structure</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#b--audit-pipeline" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">B · Audit pipeline</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#c--row-statuses" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">C · Row statuses</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#d--tooling--artifacts" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">D · Tooling &amp; artifacts</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#e--repo-governance" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">E · Repo governance</span></a></li></ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-31/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-emasnav6"><main data-pagefind-body class="astro-of46li67" lang="en" dir="ltr"><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="dx-eyebrow">Specification › Glossary</div><h1 id="_top" class="astro-y364ktsa">Glossary</h1></div></div><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="sl-markdown-content"><!-- generated by scripts/spec-content.mjs; do not edit -->
+<div class="sl-heading-wrapper level-h2"><h2 id="a--spec-structure">A · Spec structure</h2><a class="sl-anchor-link" href="#a--spec-structure"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “A · Spec structure”</span></a></div>
+<p><strong>Specification</strong> (<code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code>). The single normative document. 29 clauses across 7 pillars, with a 5-rung conformance ladder. Within a major version, a clause id (e.g. <code dir="auto">P03.C2</code>) is stable. See <a href="../../specification/"><code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code></a>.</p>
+<p><strong>Pillar</strong> (P01 … P07). A named group of clauses sharing a concern: <em>Engineering Foundation</em>, <em>Security</em>, <em>Quality &#x26; Reliability</em>, <em>Release</em>, <em>AI Agents</em>, <em>AI Risk</em>, <em>Oversight</em>. Pillars are organisational, not normative — the clauses are.</p>
+<p><strong>Clause</strong> (<code dir="auto">P&#x3C;pillar>.C&#x3C;n></code>). A single normative statement: an obligation, prohibition, or recommendation. Each clause has a stable id, a strength (<code dir="auto">MUST</code> / <code dir="auto">MUST when applicable</code> / <code dir="auto">SHOULD</code> / <code dir="auto">MAY</code>), an applicability scope, and an evidence path. Clause ids are pinned within a major version.</p>
+<p><strong>Conformance level</strong> (L0 … L4). A cumulative tier on the autonomy ladder: <strong>L0</strong> baseline hygiene, <strong>L1</strong> hardened, <strong>L2</strong> AI-assisted, <strong>L3</strong> AI-authored, <strong>L4</strong> AI-autonomous. L_n_ includes every requirement of L_n−1_. Pick the level that matches what AI is actually doing in the repo today, not the aspiration.</p>
+<p><strong><code dir="auto">MUST</code> / <code dir="auto">MUST when applicable</code> / <code dir="auto">SHOULD</code> / <code dir="auto">MAY</code>.</strong> RFC 2119 keywords. <strong><code dir="auto">MUST</code></strong> is unconditional. <strong><code dir="auto">MUST when applicable</code></strong> is unconditional inside a stated scope (e.g. “MUST when the project ships a UI”). <strong><code dir="auto">SHOULD</code></strong> is recommended; deviating needs a documented reason. <strong><code dir="auto">MAY</code></strong> is permitted; the audit doesn’t penalise its absence.</p>
+<p><strong>Applicability scope.</strong> The condition under which a <code dir="auto">MUST when applicable</code> clause applies — usually answered by a <em>Profile</em> question. Examples: <em>processes regulated data</em>, <em>publishes artifacts</em>, <em>allows AI to merge</em>. Out-of-scope clauses are marked <em>Not relevant</em> in the audit, never <em>Fail</em>.</p>
+<p><strong>Domain overlay.</strong> An additional set of obligations layered on top of the base spec when the project handles regulated data — HIPAA, PCI-DSS, FedRAMP, GDPR, COPPA. Activated by Profile answers, not selected manually.</p>
+<p><strong>Spec rev.</strong> The version of the spec a given audit was stamped against (SemVer at the doc level). Patch (typo / clarification), minor (added or refined clauses), major (clause renumbering or breaking semantics). Audits remain valid against the rev they were stamped against, even after newer revs ship.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b--audit-pipeline">B · Audit pipeline</h2><a class="sl-anchor-link" href="#b--audit-pipeline"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “B · Audit pipeline”</span></a></div>
+<p><strong>Audit.</strong> The five-phase loop that turns a repo state into stamped audit artifacts: <strong>profile → collect → stamp → judge → validate</strong>. Producible by three skills, by the no-install prompt, or by hand. Output is a root summary plus the detailed checklist, audit log, evidence JSON, and optional owner profile under <code dir="auto">.ai-contributor-audit/</code>.</p>
+<p><strong>Profile</strong> (<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code>). The owner-confirmed applicability table. Answers the canonical questions (UI? regulated data? autonomous AI?) so the collector can mark out-of-scope rows <em>Not relevant</em>. Skipping the profile is the largest source of avoidable <code dir="auto">Warning</code> rows.</p>
+<p><strong>Collect.</strong> Phase 2. Walks the worktree and gathers evidence per clause — file paths, hashes, command outputs, parsed configs, hosted settings when available, and profile answers. Produces <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>. Read-only on the repo.</p>
+<p><strong>Preflight</strong> (audit-collect setup rows). Setup activity that runs <em>before</em> evidence collection proper — bootstrapping the collector from <code dir="auto">spec_source</code>, recording original worktree status, disclosing tokens. Preflight rows in the audit log carry <code dir="auto">&#x3C;preflight></code> in the <em>Rules</em> column and may leave <em>Spec IDs</em> blank. Distinguishing preflight from evidence keeps the rule-citation contract clean.</p>
+<p><strong>Evidence</strong> (<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>). A structured machine-readable record of what the collector saw: rules, commands, input paths, profile answers, hosted settings, raw signals, and verification gaps. The stamper reads this to fill mechanical rows; auditors read it before judging rows automation cannot decide.</p>
+<p><strong>Stamp.</strong> Phase 3. Runs <code dir="auto">audit-stamp.ts</code> to write derivable audit metadata and projections: synchronized checklist/audit-log frontmatter, collector-derived checklist rows, stamped audit-log rows, verification-gap blocks, conformance summary, backlog, and the root summary. Non-empty stamped blocks carry checksums so hand edits are detectable.</p>
+<p><strong>Judge.</strong> Phase 4. Maps evidence to a per-clause status: <em>Fulfilled</em>, <em>Warning</em>, <em>Fail</em>, <em>Not relevant</em>, <em>Verification gap</em>. Deterministic — same evidence + same rule catalog produces the same verdicts.</p>
+<p><strong>Validate.</strong> Phase 5. Cross-checks the stamped report against the rule catalog and the audit log. Catches bypassed phases, hand-edited stamps, profile drift, and out-of-spec status values. Exits non-zero if anything is off.</p>
+<p><strong>Audit report</strong> (<code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>). The root-level summary projection of the current checklist conformance summary and backlog. It is for readers who do not need the full evidence trail; detailed row status lives in the checklist and audit log.</p>
+<p><strong>Audit log</strong> (<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code>). An append-only record of audit runs — who, when, what spec rev, which phases, which commands, and which manual judgments. Lets you see the trajectory of the repo’s level over time.</p>
+<p><strong>Checklist</strong> (<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code>). The detailed conformance and scoring surface. Collector-derived cells are stamped from evidence JSON; judgment-required rows are filled by the auditor and then validated against the audit log.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="c--row-statuses">C · Row statuses</h2><a class="sl-anchor-link" href="#c--row-statuses"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “C · Row statuses”</span></a></div>
+<p><strong>Fulfilled.</strong> The evidence shows the clause is satisfied. The clause won’t block the target level.</p>
+<p><strong>Warning.</strong> The evidence is ambiguous or partial. The audit can’t conclude either way without owner input or extra signals. Most first-time audits open with a stack of these — the Profile is the main fix.</p>
+<p><strong>Fail</strong> (also: 🚨 Alarm). The evidence shows the clause is not satisfied at the target level. Blocks conformance. Resolve by either changing the repo or, where applicable, lowering the target level. The audit toolchain renders this status as <strong>Alarm</strong> with the 🚨 emoji in the checklist; <em>Fail</em> is the colloquial name in the docs and the JSON catalog. Both names refer to the same status.</p>
+<p><strong>Alarm</strong> (🚨 — checklist status). The checklist’s spelling of <em>Fail</em>. Requires a specific negative finding (e.g. <code dir="auto">.env</code> tracked in git, default branch unprotected, dependency audit reports critical CVEs) — not absence of evidence. Sorted to the top of the backlog: <code dir="auto">MUST</code>-at-Alarm is priority tier 1.</p>
+<p><strong>Not relevant.</strong> The clause’s applicability scope evaluates to false for this repo (e.g. accessibility clauses on a no-UI library). Doesn’t block the level. Only assigned when the checklist row explicitly permits it — never as a silent waiver.</p>
+<p><strong>Verification gap.</strong> The evidence is missing in a way the collector can’t repair from the worktree alone — usually because a tool wasn’t installed, a network resource wasn’t reachable, or an owner-only fact wasn’t supplied. Treated like a soft <em>Warning</em>.</p>
+<p><strong>Evidence row.</strong> A rule-level entry in <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code> describing what the collector saw: rule id, input paths, raw command output, derived status, and reason such as <code dir="auto">collector</code>, <code dir="auto">judgment-required</code>, or <code dir="auto">no collector coverage</code>. Read by the stamper, never edited by hand.</p>
+<p><strong>Judgment row</strong> (judgment-required). A checklist row whose status the collector cannot decide mechanically — it needs auditor reasoning over the evidence (e.g. “is this remediation note adequate?”). After the initial stamp, the auditor fills the Status/Comment, then re-runs stamp + validate. The stamper’s <code dir="auto">needs-status:</code> stderr advisory enumerates these in one batch.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="d--tooling--artifacts">D · Tooling &#x26; artifacts</h2><a class="sl-anchor-link" href="#d--tooling--artifacts"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “D · Tooling &#x26; artifacts”</span></a></div>
+<p><strong>Skill</strong> (<code dir="auto">skills/ai-contributor-audit*</code>). A self-contained set of instructions plus scripts that an AI tool can load to run a phase of the audit. Three are shipped: <code dir="auto">ai-contributor-audit-profile</code> (Profile), <code dir="auto">ai-contributor-audit</code> (collect → stamp → judge → validate), <code dir="auto">ai-contributor-audit-fix</code> (remediate flagged rows).</p>
+<p><strong>Collector</strong> (<code dir="auto">audit-collect.ts</code>, <code dir="auto">COLLECTOR_VERSION</code>). The script that performs the <em>collect</em> phase. Extracts <code dir="auto">audited_commit</code> into a temporary <code dir="auto">git worktree</code>, runs the canonical evidence commands there, and writes <code dir="auto">AI-CONTRIBUTOR-EVIDENCE.json</code>. Its baked-in <code dir="auto">COLLECTOR_VERSION</code> is stamped into both the checklist and audit-log frontmatter.</p>
+<p><strong>Stamper</strong> (<code dir="auto">audit-stamp.ts</code>). The script that performs the <em>stamp</em> phase. Rewrites mechanical frontmatter (<code dir="auto">spec_source</code>, <code dir="auto">audited_commit</code>, timestamps), automated checklist <em>Status</em>/<em>Comment</em> cells, the conformance-level summary, the backlog, the verification-gap stamped rows, and the root <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code> projection — all from the evidence JSON. It owns specific stamped blocks; hand-edits inside them fail validation by checksum.</p>
+<p><strong>Validator</strong> (<code dir="auto">audit-validate.ts</code>, <code dir="auto">VALIDATOR_VERSION</code>). The script that performs the <em>validate</em> phase. Read-only structural cross-check: every checklist <code dir="auto">command</code> citation must match an audit-log <em>Command</em> cell, every stamped block’s checksum must hold, every <em>Spec IDs</em> entry must reference a real <code dir="auto">AIC-*</code> ID, frontmatter must be in sync between the two files. Exit 0 means mechanically consistent; exit 1 prints every defect with a stable <code dir="auto">AUDITxxx</code> code.</p>
+<p><strong>Fix loop</strong> (<code dir="auto">ai-contributor-audit-fix</code>). The remediation skill. Reads the stamped backlog, confirms the batch of rows blocking the target conformance level with the user (fix-next-level mode; naming a rule scopes it to that one row — fix-one mode), applies a minimal change per row in priority order, then re-runs collect → stamp → validate once at the end to confirm the blockers cleared. The loop never edits stamped blocks directly — it edits source files and lets the stamper rewrite the projection.</p>
+<p><strong>No-install prompt.</strong> A single self-contained prompt you paste into any tool-using agent. Produces the same artifacts as the skills, with no <code dir="auto">npx</code>, no clone, no toolchain. Slower and slightly less precise than the skill flow, but works anywhere. See <a href="../../audit/prompt/"><code dir="auto">AI-CONTRIBUTOR-AUDIT-PROMPT.md</code></a>.</p>
+<p><strong>Rule catalog</strong> (<code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code>). The machine-readable canon. Each rule entry represents one stable <code dir="auto">AIC-*</code> rule ID and carries the checklist metadata used to render and score audit rows; multiple rule IDs can contribute to the same checklist row. Generated projections consume this file — never scrape generated Markdown. Tool authors pin a rev and integrate against this.</p>
+<p><strong>Coverage map</strong> (<code dir="auto">AI-CONTRIBUTOR-COVERAGE.md</code>). A grid of clauses × audit phases showing which clauses the collector evaluates mechanically, which need owner attestation, and which are out of audit scope. The map is regenerated, not authored.</p>
+<p><strong>Stamp</strong> (verb · the act of). As a verb: to run <code dir="auto">audit-stamp.ts</code>, which rewrites every mechanical cell, frontmatter field, conformance summary line, backlog row, and root <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code> projection from the evidence JSON. As a noun, stamped content means the mechanical frontmatter fields, status/comment cells, and checksum-protected blocks written by the stamper. Reproducibility is pinned by <code dir="auto">spec_source</code>, <code dir="auto">audited_commit</code>, tool versions, timestamps, and <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>.</p>
+<p><strong><code dir="auto">spec_source</code></strong> (frontmatter · audit log). The pinned URL of the specification revision the audit was run against — either a release tag (<code dir="auto">.../tree/v0.1.2</code>) or a full commit SHA (<code dir="auto">.../tree/&#x3C;sha></code>). Set once at the start of an audit; every fetch of templates, validators, and rule catalog uses this exact ref. Mixing refs inside one audit is forbidden.</p>
+<p><strong><code dir="auto">audited_commit</code></strong> (frontmatter · audit log). The full commit SHA of the target repository the audit was stamped against. The collector extracts this commit into a temporary <code dir="auto">git worktree</code> and runs every evidence command there — so the audit is reproducible at the same SHA forever, regardless of subsequent worktree state.</p>
+<p><strong><code dir="auto">runner_agent</code></strong> (<code dir="auto">--runner-agent</code> flag). The name of the AI agent that drove this audit run (e.g. <code dir="auto">claude-code</code>, <code dir="auto">cursor</code>, <code dir="auto">copilot-cli</code>). Recorded in the audit log so a reader of the stamped artifact can see <em>which</em> agent’s interpretation produced the judgment-row verdicts.</p>
+<p><strong><code dir="auto">runner_model</code></strong> (<code dir="auto">--runner-model</code> flag). The model id behind the runner agent (e.g. <code dir="auto">claude-sonnet-4.5</code>, <code dir="auto">gpt-4.1</code>). Pairs with <code dir="auto">runner_agent</code> in the audit-log frontmatter so a future re-audit can compare verdicts across models or detect a model swap mid-stream.</p>
+<p><strong>Doc-check suite.</strong> The set of TypeScript scripts under <code dir="auto">tools/doc-checks/</code> that gate every PR — link integrity, clause refs, version coherence, evergreen text, stamped-block freshness, and so on. Run via <code dir="auto">npm --prefix tools run check</code>.</p>
+<p><strong>Golden audit.</strong> A synthetic repo plus expected outputs at <code dir="auto">examples/golden-audit/</code>. Locks audit behaviour against regressions: every spec or tooling change must keep the golden run reproducing byte-for-byte.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="e--repo-governance">E · Repo governance</h2><a class="sl-anchor-link" href="#e--repo-governance"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “E · Repo governance”</span></a></div>
+<p><strong>Accountable owner.</strong> The named human (or rotating role) who owns the repo’s audit answers and is reachable when the audit raises a question. Not necessarily the most active contributor — the one whose attestation the audit treats as authoritative.</p>
+<p><strong><code dir="auto">AGENTS.md</code></strong> (a.k.a. authoritative AI instruction file). The single file in the repo that tells AI agents how to behave: scope, capabilities, allowlists, formatting rules, escalation paths. Other tool-specific files (<code dir="auto">CLAUDE.md</code>, <code dir="auto">.cursorrules</code>, <code dir="auto">GEMINI.md</code>) should be short pointers to this one — see <em>Single AI Source</em>.</p>
+<p><strong>Single AI Source.</strong> The principle that AI instructions live in exactly one authoritative file. Competing non-trivial instruction files in the same repo are a foot-gun the spec flags (<code dir="auto">AIC-tool-specific-pointer-only</code>) — agents pick whichever they were configured for and behave inconsistently.</p>
+<p><strong>Capability scoping.</strong> Restricting what an AI agent can do — file paths, network endpoints, shell commands, tools — to the minimum needed for its task. Spec requires explicit scoping at L2 and tightens at higher levels.</p>
+<p><strong>Allowlist.</strong> An explicit, enumerated list of what an AI agent is permitted to do (commands it can run, hosts it can fetch, dependencies it can add). Default-deny. The opposite is a denylist; the spec prefers allowlists.</p>
+<p><strong>Cost ceiling.</strong> A hard upper bound on tokens, requests, or wall-clock time an AI agent may consume per task or per day. Required at L3+ to bound autonomous-loop blast radius.</p>
+<p><strong>Untrusted input.</strong> Any text an AI agent reads that originated outside the codebase or trusted contributors — PR descriptions, issue bodies, customer messages, fetched web pages. Treated as adversarial; the AI Risk pillar specifies how it must be handled.</p>
+<p><strong>Prompt injection.</strong> An attack where untrusted input contains instructions intended to override the AI agent’s actual instructions. Mitigations include capability scoping, content sandboxing in prompts, and human approval on side-effects.</p>
+<p><strong>DCO</strong> (Developer Certificate of Origin). A lightweight contributor sign-off some projects require via <code dir="auto">Signed-off-by:</code> trailers. This repo’s required AI-authorship metadata is the <code dir="auto">Co-Authored-By:</code> trailer plus the PR trace block; DCO-style sign-off is not required for every commit here.</p>
+<p><strong>RFC</strong> (request for comments). A numbered Markdown proposal in <code dir="auto">rfcs/</code> describing a non-trivial spec change before it lands. Spec PRs that bypass the RFC step are usually asked to start one.</p>
+<p><strong>Attribution.</strong> Recording, in the commit or PR, that AI participated in a change and how (suggested, drafted, authored, merged). Required from L2; the form is repo-defined but the presence is mandatory.</p></div><footer class="dx-footer"><span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span><span class="sep">·</span><span><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>tooling/template/runtime</span></footer></div></div></main></div></div></div></div></body></html>

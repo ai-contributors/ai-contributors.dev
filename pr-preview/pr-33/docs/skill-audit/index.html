@@ -1,0 +1,377 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-of46li67"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>AI Contributor Audit | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-33/docs/skill-audit/"/><link rel="sitemap" href="/pr-preview/pr-33/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-33/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.0.5"/><meta name="generator" content="Starlight v0.41.2"/><meta property="og:title" content="AI Contributor Audit"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-33/docs/skill-audit/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Run a reproducible conformance audit against the [AI Contributor Specification](https://github.com/ai-contributors/ai-contributor-spec)."/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Run a reproducible conformance audit against the [AI Contributor Specification](https://github.com/ai-contributors/ai-contributor-spec)."/><script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script><link rel="prefetch" href="/pr-preview/pr-33/pagefind/pagefind-ui.js" as="script" crossorigin><link rel="prefetch" href="/pr-preview/pr-33/pagefind/pagefind-ui.css" as="style"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-33/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DDiogqUc.js"></script><script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+  window.StarlightThemeProvider = (() => {
+    const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme-mode');
+    const theme = storedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    return {
+      updatePickers(theme = storedTheme === 'dark' ? 'dark' : 'light') {
+        document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+          const select = picker.querySelector('select');
+          if (select) select.value = theme;
+          /** @type {HTMLTemplateElement | null} */
+          const tmpl = document.querySelector(`#theme-icons`);
+          const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+          if (newIcon) {
+            const oldIcon = picker.querySelector('svg.label-icon');
+            if (oldIcon) {
+              oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+            }
+          }
+        });
+      },
+    };
+  })();
+</script><link rel="stylesheet" href="/pr-preview/pr-33/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-33/_astro/index.BK68ZURB.css"><style>.astro-route-announcer{clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;width:1px;height:1px;position:absolute;top:0;left:0;overflow:hidden}
+</style><script type="module" src="/pr-preview/pr-33/_astro/page.BOCGgm5i.js"></script></head><body class="astro-of46li67"><a href="#_top" class="astro-l5k47ikk">Skip to content</a><div class="page sl-flex astro-4an56mbc"><header class="header astro-4an56mbc"><div class="header astro-bgigng3i"><div class="title-wrapper sl-flex astro-bgigng3i"><a href="/pr-preview/pr-33/" class="site-title sl-flex astro-jaqx2u3k"><img class="astro-jaqx2u3k" alt="ai-contributors logomark" src="/pr-preview/pr-33/_astro/logomark.M5JGvKcj.svg" width="120" height="120"><span class="astro-jaqx2u3k" translate="no">ai-contributor-spec / audit</span></a></div><div class="sl-flex print:hidden astro-bgigng3i"><site-search class="astro-bgigng3i astro-nsiiprfo" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-nsiiprfo"><svg aria-hidden="true" class="astro-nsiiprfo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-nsiiprfo" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-nsiiprfo" style="display: none;"><kbd class="astro-nsiiprfo">Ctrl</kbd><kbd class="astro-nsiiprfo">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-nsiiprfo"><div class="dialog-frame sl-flex astro-nsiiprfo"><button data-close-modal class="sl-flex md:sl-hidden astro-nsiiprfo">Cancel</button><div class="search-container astro-nsiiprfo"><div id="starlight__search" class="astro-nsiiprfo"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/pr-preview/pr-33/_astro/Search.astro_astro_type_script_index_0_lang.Nm2Zz8RJ.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-bgigng3i"><div class="sl-flex social-icons astro-bgigng3i"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-4an56mbc" aria-label="Main"><starlight-menu-button class="print:hidden astro-ns7vdiax"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-ns7vdiax"><svg aria-hidden="true" class="open-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e)}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-4an56mbc"><div class="sidebar-content sl-flex astro-4an56mbc"><div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="0iw7djy" class="astro-ch4lkps4"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-nspf5tbo"><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Start</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/quickstart/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Quickstart</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/adoption-guide/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Adoption guide</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/skill-profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/skill-audit/" aria-current="page" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/skill-fix/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-fix</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Specification</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/specification/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Full specification</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/pillars/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Pillars overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/conformance-levels/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Levels overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/coverage-map/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Coverage map</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/rule-catalog/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Rule catalog</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/threat-model/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Threat model template</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/glossary/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Glossary</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Audit</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/audit-overview/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">How the audit works</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">The profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/audit/prompt/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">No-install prompt</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/stamped-audit/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">A stamped audit</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Project</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/releases/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Releases</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/contributing/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Contributing</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/authors/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Authors</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/tooling/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Tooling</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/security-policy/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Security policy</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-33/docs/doc-coverage/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Published pages</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-dajafrs2"><div class="social-icons astro-dajafrs2"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script></div></div></div></div></div></nav><div class="main-frame astro-4an56mbc"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()}),addEventListener(`pageHide`,a);</script><div class="lg:sl-flex astro-emasnav6"><aside class="right-sidebar-container print:hidden astro-emasnav6"><div class="right-sidebar astro-emasnav6"><div class="lg:sl-hidden astro-xdg7xc5d"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-wvpbq5dg"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-wvpbq5dg"><details id="starlight__mobile-toc" class="astro-wvpbq5dg"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-wvpbq5dg"><span class="toggle sl-flex astro-wvpbq5dg">On this page<svg aria-hidden="true" class="caret astro-wvpbq5dg astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-wvpbq5dg"></span></summary><div class="dropdown astro-wvpbq5dg"><ul class="isMobile astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#what-this-does" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">What This Does</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#plain-language-workflow" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Plain-language Workflow</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#quick-run" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Quick Run</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#required-workflow" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Required Workflow</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#evidence-rules" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Evidence Rules</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#what-not-to-do" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">What Not To Do</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#before-declaring-done" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Before Declaring Done</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-33/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-xdg7xc5d"><div class="sl-container astro-xdg7xc5d"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#what-this-does" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">What This Does</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#plain-language-workflow" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Plain-language Workflow</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#quick-run" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Quick Run</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#required-workflow" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Required Workflow</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#evidence-rules" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Evidence Rules</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#what-not-to-do" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">What Not To Do</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#before-declaring-done" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Before Declaring Done</span></a></li></ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-33/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-emasnav6"><main data-pagefind-body class="astro-of46li67" lang="en" dir="ltr"><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="dx-eyebrow">Start › ai-contributor-audit</div><h1 id="_top" class="astro-y364ktsa">AI Contributor Audit</h1></div></div><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="sl-markdown-content"><!-- generated by scripts/spec-content.mjs; do not edit -->
+<div class="expressive-code"><link rel="stylesheet" href="/pr-preview/pr-33/_astro/ec.v4551.css"><script type="module" src="/pr-preview/pr-33/_astro/ec.0vx5m.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="yaml"><code><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#111111">name</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">ai-contributor-audit</span></div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#111111">description</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">Run a reproducible AI Contributor Specification conformance audit and produce the stamped checklist, audit log, evidence JSON, and root summary.</span></div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#111111">disable-model-invocation</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#FF6A83;--1:#A24848">true</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="name: ai-contributor-auditdescription: Run a reproducible AI Contributor Specification conformance audit and produce the stamped checklist, audit log, evidence JSON, and root summary.disable-model-invocation: true"><div></div></button></div></figure></div>
+<p>This skill is user-invoked only (<code dir="auto">disable-model-invocation: true</code>). Start it explicitly — <code dir="auto">/ai-contributor-audit</code> in Claude Code or GitHub Copilot, <code dir="auto">$ai-contributor-audit</code> in Codex — it never starts because an agent matched a prompt.</p>
+<p>The audit writes one root summary and three audit output artifacts in
+<code dir="auto">.ai-contributor-audit/</code>. It also reads one optional owner profile input
+that the profile skill (or owner) authors before the audit runs:</p>
+<p>Audit output (written by the audit):</p>
+<ul>
+<li><code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code> — root summary</li>
+<li><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></li>
+<li><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></li>
+<li><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code></li>
+</ul>
+<p>Owner profile input (read by the audit, never overwritten):</p>
+<ul>
+<li><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code></li>
+</ul>
+<p>Treat the filled checklist and audit log as reviewable audit output, not final acceptance. A human or named accountable owner should spot-check <code dir="auto">Fulfilled</code> rows and scrutinize every <code dir="auto">Not relevant</code> row before committing or publishing the result.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="what-this-does">What This Does</h2><a class="sl-anchor-link" href="#what-this-does"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “What This Does”</span></a></div>
+<p>The skill answers:</p>
+<ul>
+<li>Which AI Contributor conformance level can this repository claim?</li>
+<li>Which rows are <code dir="auto">Fulfilled</code>, <code dir="auto">Warning</code>, <code dir="auto">Alarm</code>, or <code dir="auto">Not relevant</code>?</li>
+<li>Which evidence supports each status?</li>
+<li>Which gaps should be fixed first?</li>
+</ul>
+<p>It is stricter than a readiness report. It pins the specification source, pins the audited commit, records command evidence, and runs the audit validator before handoff.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="plain-language-workflow">Plain-language Workflow</h2><a class="sl-anchor-link" href="#plain-language-workflow"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Plain-language Workflow”</span></a></div>
+<p>The job is simple: establish the owner profile first, collect evidence, stamp mechanical fields, review current-run evidence and fill judgment-required gaps, stamp again, validate the pair, and hand the result to a human or named accountable owner. Do not treat memory, prior audit files, or unrecorded tool output as evidence.</p>
+<p>Audit artifacts are not standalone documents for agents to patch. If a user asks to refresh a status, remove a backlog row, or update the root audit summary, run the audit flow first (<code dir="auto">audit-collect</code> → <code dir="auto">audit-stamp</code> → evidence review for judgment-required rows → <code dir="auto">audit-stamp</code> → <code dir="auto">audit-validate</code>) and let the scripts rewrite derived cells. Agents may edit only auditor-owned cells after current-run evidence exists, then must re-run stamp and validate.</p>
+<p>The lifecycle and field-ownership model is canonical in <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership" target="_blank" rel="noopener noreferrer"><code dir="auto">references/audit-protocol.md</code></a>: collector/stamper-owned cells are mechanical, auditor-owned cells may be filled by a human or agent, <code dir="auto">Date reached</code> is auditor-entered but stamper-preserved, and human/accountable-owner acceptance is a separate step before external conformance claims.</p>
+<p>The owner profile at <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code> is the default input for owner-confirmed applicability answers and should be prepared before collection starts. Run the <code dir="auto">ai-contributor-audit-profile</code> companion skill first when the agent supports skills. Otherwise, copy <code dir="auto">references/audit-profile-template.md</code> before the audit, draft answers from repository evidence, and ask the owner to confirm or correct them. Profile answers can explain applicability, but they do not make rows <code dir="auto">Fulfilled</code> unless the row explicitly allows owner attestation or policy text as fulfillment evidence.</p>
+<p>If the profile is a tracked deletion at audit time (the file is removed from the worktree but tracked at <code dir="auto">HEAD</code>), <code dir="auto">audit-run.ts</code> treats that as the owner’s deliberate fresh-start signal and proceeds with no owner applicability input. The preflight surfaces this on stderr and the root summary records a “Boundary note” so a reader of the committed audit can see the audit ran without an owner profile. Restore the prior profile with <code dir="auto">git restore -- .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md</code> before audit-run if that was unintended.</p>
+<p>Do not silently edit the owner profile during an audit. If collection or row review exposes a missing, ambiguous, or contradictory owner fact, mark the affected row <code dir="auto">⚠️ Warning</code> or add a verification gap that names the needed profile answer. If the owner explicitly supplies a new answer, treat that as a profile update and rerun the audit from collection so the evidence chain includes the updated profile.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="quick-run">Quick Run</h2><a class="sl-anchor-link" href="#quick-run"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Quick Run”</span></a></div>
+<p>Use the pinned spec source requested by the user. If the user did not name one, resolve the upstream default branch to a full commit SHA before fetching anything:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">ls-remote</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">https://github.com/ai-contributors/ai-contributor-spec.git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">refs/heads/main</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git ls-remote https://github.com/ai-contributors/ai-contributor-spec.git refs/heads/main"><div></div></button></div></figure></div>
+<p>Fetch every specification file, template, and runbook from that same immutable ref. Do not mix refs in one audit.</p>
+<p>Do not auto-update the installed skill during an audit. The audit skill and specification are coupled, and silent updates would hurt reproducibility. If the installed skill itself needs refreshing, stop before starting the audit and run:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npx</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">skills</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">update</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">ai-contributor-audit</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npx skills update ai-contributor-audit"><div></div></button></div></figure></div>
+<p>Actual audits still run from a pinned release tag or full commit SHA. Prefer release tags for released specification versions; use a full commit SHA only when intentionally auditing against an unreleased source revision. <code dir="auto">bootstrap.ts</code> emits a non-fatal warning when it can safely compare the requested ref and sees that the installed skill/runbook ref is behind upstream <code dir="auto">main</code> or the latest release tag.</p>
+<p>The umbrella command runs collect, initial stamp, an edit pause when interactive, final stamp, then validate. In non-interactive shells it stops after the initial stamp and prints the exact stamp/validate commands to run after judgment-required edits are complete. Pass <code dir="auto">--no-pause</code> only when intentionally skipping that edit checkpoint:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">audit</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--auditor</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">AGENT | MODEL | REASONING_EFFORT</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--runner-agent</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">&#x3C;runner></span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--runner-model</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">&#x3C;model></span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run audit -- \  --auditor &#x22;AGENT | MODEL | REASONING_EFFORT&#x22; \  --runner-agent &#x22;<runner>&#x22; \  --runner-model &#x22;<model>&#x22;"><div></div></button></div></figure></div>
+<p>By default <code dir="auto">audit-run</code> enables the clean-clone bootstrap smoke test (the Clean Setup row stays judgment-required without it). The smoke test installs and runs documented setup steps in a temporary clone, so it can take several minutes; pass <code dir="auto">--no-bootstrap-smoke</code> to skip it (e.g. quick local iterations) or <code dir="auto">--bootstrap-smoke-timeout-ms &#x3C;n></code> to adjust the cap. The lower-level <code dir="auto">audit-collect.ts</code> keeps its <code dir="auto">--enable-bootstrap-smoke</code> opt-in default unchanged.</p>
+<p>For a fresh re-audit from blank pinned templates, add <code dir="auto">--reset-templates</code>; it resets only <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>, <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code>, and <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code>, preserving the owner profile and evidence JSON. This requires a vendored or bootstrapped runbook that includes the templates; otherwise pass <code dir="auto">--template-root &#x3C;path></code>.</p>
+<p>Before collecting evidence, the umbrella command checks whether the active <code dir="auto">gh</code> login can read the target GitHub repository. If it cannot verify read access, it warns that hosted checks may remain <code dir="auto">Warning</code> / Verification gaps instead of <code dir="auto">Fulfilled</code> and asks before continuing. Do not add <code dir="auto">--allow-missing-host-access</code> on the first run. If the preflight fails, stop and ask the user whether to switch <code dir="auto">gh</code> accounts or continue with lower-confidence hosted evidence. In non-interactive runs, pass <code dir="auto">--allow-missing-host-access</code> only after that choice is explicit.</p>
+<p>When checking or switching GitHub identity by hand, prefer bounded API probes over a broad <code dir="auto">gh auth status</code> scan. Use <code dir="auto">gh api user --jq .login</code> to confirm the active account and <code dir="auto">gh api repos/&#x3C;owner>/&#x3C;repo> --jq .full_name</code> to confirm repository read access. <code dir="auto">gh auth status</code> is useful for token scopes, but it can hang on unrelated stored hosts or accounts.</p>
+<p>Use the lower-level commands when you need to inspect or recover one phase. The full order is collect, stamp, fill judgment-required rows from current evidence, stamp again, then validate:</p>
+<ol>
+<li>
+<p><strong>Collect</strong> evidence into <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">audit:collect</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run audit:collect"><div></div></button></div></figure></div>
+</li>
+<li>
+<p><strong>Stamp</strong> derivable values (mechanical frontmatter, timestamps, versions, automated row <code dir="auto">A</code> + Status + Comment for collector-derived and owner-profile-derived rows, conformance summary, <code dir="auto">conformance_level</code>, backlog) into <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code>, <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code>, and <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">audit:stamp</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--auditor</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">AGENT | MODEL | REASONING_EFFORT</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--runner-agent</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">&#x3C;runner></span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">--runner-model</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">&#x3C;model></span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run audit:stamp -- \  --auditor &#x22;AGENT | MODEL | REASONING_EFFORT&#x22; \  --runner-agent &#x22;<runner>&#x22; \  --runner-model &#x22;<model>&#x22;"><div></div></button></div></figure></div>
+<p>Add <code dir="auto">-- --diff</code> to preview the stamper’s changes without writing files. Add <code dir="auto">-- --check</code> for a CI-friendly read-only dry run that exits <code dir="auto">3</code> and prints a one-line summary when stamping would change anything (for gating “audit out of date” without depending on the validator). The check ignores wall-clock-only frontmatter drift (<code dir="auto">assessment_completed_at</code>, <code dir="auto">assessment_duration</code>).</p>
+<p>After a successful stamp the stamper writes two stderr advisories that batch-surface remaining auditor work in one place (each is non-fatal — the validator is still the authority on completeness):</p>
+<ul>
+<li><code dir="auto">[audit-stamp] needs-evidence: …</code> — Warning/Alarm rows whose Comment lacks a backticked file/path/command citation (validator AUDIT034 will fail until each is fixed).</li>
+<li><code dir="auto">[audit-stamp] needs-status: …</code> — non-optional rows whose Status is still empty (validator AUDIT015), each annotated with the matching collector rule’s reason from <code dir="auto">AI-CONTRIBUTOR-EVIDENCE.json</code> (<code dir="auto">judgment-required: …</code>, <code dir="auto">collector: …</code>, or <code dir="auto">no collector coverage</code>). Use this list to fill all blank rows in one batch instead of discovering them one validate call at a time.</li>
+</ul>
+</li>
+<li>
+<p><strong>Inspect</strong> the collector’s evidence (read-only, optional):</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">audit:summary</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run audit:summary"><div></div></button></div></figure></div>
+<p>Prints audit metadata, status counts, the list of collector-decisive rules with their status, and the list of collector-judgment-required rules with their reason. Useful for understanding what the collector decided before filling auditor-owned rows. No mutation; safe to run any time after <code dir="auto">audit:collect</code>.</p>
+</li>
+<li>
+<p><strong>Validate</strong> the filled pair (read-only — never mutates). On a re-audit, extract the previous committed checklist first and pass it via <code dir="auto">--previous</code> — without it the <code dir="auto">AUDIT070</code>–<code dir="auto">AUDIT072</code> status-change rationale check is silently skipped (<code dir="auto">audit-run.ts</code> does this automatically; omit it on a first audit):</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">show</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#096E72">></span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">/tmp/previous-checklist.md</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">audit:validate</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--previous</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">/tmp/previous-checklist.md</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git show HEAD:.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md > /tmp/previous-checklist.mdnpm --prefix tools run audit:validate -- --previous /tmp/previous-checklist.md"><div></div></button></div></figure></div>
+</li>
+</ol>
+<p>The convenience <code dir="auto">npm --prefix tools run audit</code> is the preferred vendored entry point.</p>
+<p>If the target repo has not vendored the tooling, use the installed skill (or the copy-and-paste prompt’s fetched <code dir="auto">bootstrap.ts</code>) only to bootstrap the full runbook from the same pinned <code dir="auto">SPEC_SHA</code>, then run the scripts from that bootstrapped directory. Follow <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/references/bootstrap-run.md" target="_blank" rel="noopener noreferrer"><code dir="auto">references/bootstrap-run.md</code></a> for the exact commands.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="required-workflow">Required Workflow</h2><a class="sl-anchor-link" href="#required-workflow"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Required Workflow”</span></a></div>
+<p>Follow the complete protocol in <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/references/audit-protocol.md" target="_blank" rel="noopener noreferrer"><code dir="auto">references/audit-protocol.md</code></a>. Do not skip steps.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="evidence-rules">Evidence Rules</h2><a class="sl-anchor-link" href="#evidence-rules"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Evidence Rules”</span></a></div>
+<p>Follow <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/references/evidence-rules.md" target="_blank" rel="noopener noreferrer"><code dir="auto">references/evidence-rules.md</code></a> when deciding statuses and writing comments.</p>
+<p>Core rules:</p>
+<ul>
+<li>Every non-blank checklist row needs independently reviewable evidence.</li>
+<li>Every command cited in a checklist Comment must appear in the current <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code>.</li>
+<li>Collector-derived <code dir="auto">Fulfilled</code> rows cite <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json</code>.</li>
+<li>Hosted settings such as branch protection, secret scanning, push protection, CODEOWNERS enforcement, and environment protection need host API evidence for <code dir="auto">Fulfilled</code>.</li>
+<li><code dir="auto">Not relevant</code> needs evidence that the applicability trigger does not hold.</li>
+<li>Under uncertainty, use <code dir="auto">Warning</code>, not <code dir="auto">Fulfilled</code>.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="what-not-to-do">What Not To Do</h2><a class="sl-anchor-link" href="#what-not-to-do"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “What Not To Do”</span></a></div>
+<ul>
+<li>Do not invent evidence.</li>
+<li>Do not update <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>, automated checklist Status/Comment cells, conformance summary Status cells, backlog derived columns, or stamped audit-log blocks by direct Markdown edits.</li>
+<li>Do edit auditor-owned checklist Status/Comment cells, conformance summary Notes cells, newly reached Date reached cells, and backlog Next action/Owner/Target date cells only after current-run evidence exists, then re-run stamp and validate.</li>
+<li>Do not copy statuses, comments, backlog rows, or audit-log rows from a prior audit.</li>
+<li>Do not fetch templates or validators from mutable <code dir="auto">main</code> after resolving <code dir="auto">spec_source</code>.</li>
+<li>Do not leave any non-optional checklist row blank. Optional MAY rows may remain blank — the validator allows this. If you set a status on an optional row, it must carry evidence like any other.</li>
+<li>Do not mark hosted settings <code dir="auto">Fulfilled</code> from local files alone.</li>
+<li>Do not hand off until the validator exits 0.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="before-declaring-done">Before Declaring Done</h2><a class="sl-anchor-link" href="#before-declaring-done"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Before Declaring Done”</span></a></div>
+<p>Before reporting the audit complete, you MUST verify:</p>
+<ol>
+<li><strong>Template-only blocks removed.</strong> Search the filled <code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code> for <code dir="auto">TEMPLATE-ONLY</code> — there must be zero matches. The blank template wraps instructional sections (<code dir="auto">Where these assets live</code>, <code dir="auto">Re-audit protocol</code>, <code dir="auto">How to use this checklist</code>, <code dir="auto">Quick audit</code>, <code dir="auto">Deterministic audit boundary</code>, <code dir="auto">Validating this checklist</code>) in <code dir="auto">&#x3C;!-- BEGIN:TEMPLATE-ONLY --></code> … <code dir="auto">&#x3C;!-- END:TEMPLATE-ONLY --></code> markers. <code dir="auto">audit-run.ts --reset-templates</code> strips these blocks automatically; pass <code dir="auto">--keep-template-instructions</code> to keep them (and remove them by hand later). The validator (<code dir="auto">AUDIT053</code>) fails if any marker remains.</li>
+<li><strong>Placeholder tokens replaced.</strong> Search for <code dir="auto">&#x3C;FILL_</code> — there must be zero matches. The conformance summary table ships with <code dir="auto">&#x3C;FILL_STATUS></code>, <code dir="auto">&#x3C;FILL_DATE></code>, <code dir="auto">&#x3C;FILL_NOTES></code> tokens; replace each with the audited value (<code dir="auto">✅ Yes</code> / <code dir="auto">❌ No</code> / <code dir="auto">⚠️ Partial</code>, an ISO date or <code dir="auto">—</code>, the blocker notes or <code dir="auto">—</code>). The validator (<code dir="auto">AUDIT054</code>) fails on any surviving token.</li>
+<li><strong>Status changes from the previous audit carry rationales.</strong> When the target repository has a previously committed checklist, <code dir="auto">audit-run.ts</code> passes it to the validator via <code dir="auto">--previous</code>; any auditor-owned row whose Status changed must say <code dir="auto">Changed from &#x3C;old status> to &#x3C;new status> because &#x3C;reason></code> in its Comment with a backticked current-run citation. The validator (<code dir="auto">AUDIT070</code>/<code dir="auto">AUDIT071</code>) fails otherwise; collector-derived and owner-profile stamped rows are exempt.</li>
+<li><strong>Conformance summary fully filled.</strong> Every level row has Status and Notes populated, each <code dir="auto">✅ Yes</code> level has Date reached populated, non-reached levels have no Date reached value, and the <code dir="auto">conformance_level</code> frontmatter value matches the highest <code dir="auto">✅ Yes</code> row (or <code dir="auto">none</code>).</li>
+<li><strong>Validator exits 0.</strong> Run <code dir="auto">audit-stamp.ts</code> (stamps derivable cells), then <code dir="auto">audit-validate.ts</code> (read-only check) over both files, and resolve every error and warning before declaring the audit complete.</li>
+</ol>
+<p>A self-check pass that surfaces remaining issues is part of the audit, not an optional polish step.</p></div><footer class="dx-footer"><span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span><span class="sep">·</span><span><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>tooling/template/runtime</span></footer></div></div></main></div></div></div></div></body></html>

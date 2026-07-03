@@ -295,10 +295,10 @@ applicability evidence for checks that do not apply.</li>
 <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>.</li>
 <li>Review the current result and decide which
 <a href="#choose-your-target-level">target level</a> you want to reach.</li>
-<li>Use the <a href="../skill-fix/">fix skill</a> to address one
-backlog row at a time.</li>
-<li>Rerun the audit after a batch of fixes, especially when you expect to reach
-the next level.</li>
+<li>Use the <a href="../skill-fix/">fix skill</a> to address the
+backlog rows blocking your target level. It confirms the batch scope with
+you, fixes each row, and finishes with a single re-audit.</li>
+<li>Rerun the audit whenever you need refreshed results outside a fix batch.</li>
 <li>Have a human or named accountable owner review the
 <a href="../audit-overview/">audit evidence</a> before claiming a level.</li>
 </ol>
@@ -339,8 +339,14 @@ dependency alerts may remain <code dir="auto">Warning</code> / verification gaps
 <code dir="auto">$ai-contributor-audit-fix</code>.</li>
 <li>Other agents: ask for the skill by name.</li>
 </ul>
-<p>The fix skill works on one finding, stops, and asks what to do next: leave the
-change uncommitted, commit, branch, push, or open a PR.</p>
+<p>The fix skill has two modes: <strong>fix-next-level</strong> (default —
+<code dir="auto">/ai-contributor-audit-fix</code> fixes every backlog row blocking the next
+conformance level) and <strong>fix-one</strong> (<code dir="auto">/ai-contributor-audit-fix &#x3C;rule></code> fixes
+the single named row). Both confirm the scope with you first, fix each row,
+ask what to do next (leave the changes uncommitted, commit, branch, push, or
+open a PR), and finish with a single re-audit.</p>
+<p>The skills are user-invoked only: an agent never starts them on its own from a
+matched prompt.</p>
 <p>If your agent does not support skills, or you prefer the prompt-based flow, use
 the prompt in
 <a href="../../audit/prompt/"><code dir="auto">AI-CONTRIBUTOR-AUDIT-PROMPT.md</code></a>.</p>

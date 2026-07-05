@@ -34,10 +34,10 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "7.0.1",
-    "@astrojs/starlight": "0.41.2",
+    "@astrojs/mdx": "7.0.2",
+    "@astrojs/starlight": "0.41.3",
     "@fontsource/instrument-serif": "5.2.8",
-    "astro": "7.0.5"
+    "astro": "7.0.6"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",

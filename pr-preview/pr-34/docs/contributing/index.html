@@ -1,0 +1,653 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-y2bza65e"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Contributing | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-34/docs/contributing/"/><link rel="sitemap" href="/pr-preview/pr-34/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-34/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.0.6"/><meta name="generator" content="Starlight v0.41.3"/><meta property="og:title" content="Contributing"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-34/docs/contributing/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Thanks for considering a contribution. This repository maintains:"/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Thanks for considering a contribution. This repository maintains:"/><script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script><link rel="prefetch" href="/pr-preview/pr-34/pagefind/pagefind-ui.js" as="script" crossorigin><link rel="prefetch" href="/pr-preview/pr-34/pagefind/pagefind-ui.css" as="style"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-34/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DDiogqUc.js"></script><script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+  window.StarlightThemeProvider = (() => {
+    const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme-mode');
+    const theme = storedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    return {
+      updatePickers(theme = storedTheme === 'dark' ? 'dark' : 'light') {
+        document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+          const select = picker.querySelector('select');
+          if (select) select.value = theme;
+          /** @type {HTMLTemplateElement | null} */
+          const tmpl = document.querySelector(`#theme-icons`);
+          const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+          if (newIcon) {
+            const oldIcon = picker.querySelector('svg.label-icon');
+            if (oldIcon) {
+              oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+            }
+          }
+        });
+      },
+    };
+  })();
+</script><link rel="stylesheet" href="/pr-preview/pr-34/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-34/_astro/index.CNSgmJW5.css"><style>.astro-route-announcer{clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;width:1px;height:1px;position:absolute;top:0;left:0;overflow:hidden}
+</style><script type="module" src="/pr-preview/pr-34/_astro/page.BOCGgm5i.js"></script></head><body class="astro-y2bza65e"><a class="sl-skip-link astro-w2w24kjw" href="#_top">Skip to content</a><div class="page sl-flex astro-6xjxvdau"><header class="header astro-6xjxvdau"><div class="header astro-icmeat5v"><div class="title-wrapper sl-flex astro-icmeat5v"><a href="/pr-preview/pr-34/" class="site-title sl-flex astro-5g6jy6c5"><img class="astro-5g6jy6c5" alt="ai-contributors logomark" src="/pr-preview/pr-34/_astro/logomark.M5JGvKcj.svg" width="120" height="120"><span class="astro-5g6jy6c5" translate="no">ai-contributor-spec / audit</span></a></div><div class="sl-flex print:hidden astro-icmeat5v"><site-search class="astro-icmeat5v astro-gx2noaay" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-gx2noaay"><svg aria-hidden="true" class="astro-gx2noaay astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-gx2noaay" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-gx2noaay" style="display: none;"><kbd class="astro-gx2noaay">Ctrl</kbd><kbd class="astro-gx2noaay">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-gx2noaay"><div class="dialog-frame sl-flex astro-gx2noaay"><button data-close-modal class="sl-flex md:sl-hidden astro-gx2noaay">Cancel</button><div class="search-container astro-gx2noaay"><div id="starlight__search" class="astro-gx2noaay"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/pr-preview/pr-34/_astro/Search.astro_astro_type_script_index_0_lang.B4vi_mNq.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-icmeat5v"><div class="sl-flex social-icons astro-icmeat5v"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-6xjxvdau" aria-label="Main"><starlight-menu-button class="print:hidden astro-v26apmtz"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-v26apmtz"><svg aria-hidden="true" class="open-menu astro-v26apmtz astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-v26apmtz astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e)),matchMedia(`(min-width: 50em)`).addEventListener(`change`,()=>this.setExpanded(!1))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e),document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-6xjxvdau"><div class="sidebar-content sl-flex astro-6xjxvdau"><div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="09cjamb" class="astro-scwkm36t"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-ilyksmaf"><li class="astro-ilyksmaf"><details open class="astro-ilyksmaf"><summary class="astro-ilyksmaf"><span class="group-label astro-ilyksmaf"><span class="large astro-ilyksmaf">Start</span></span><svg aria-hidden="true" class="caret astro-ilyksmaf astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-ilyksmaf"><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Overview</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/quickstart/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Quickstart</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/adoption-guide/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Adoption guide</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/skill-profile/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">ai-contributor-audit-profile</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/skill-audit/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">ai-contributor-audit</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/skill-fix/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">ai-contributor-audit-fix</span></a></li></ul></details></li><li class="astro-ilyksmaf"><details open class="astro-ilyksmaf"><summary class="astro-ilyksmaf"><span class="group-label astro-ilyksmaf"><span class="large astro-ilyksmaf">Specification</span></span><svg aria-hidden="true" class="caret astro-ilyksmaf astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-ilyksmaf"><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/specification/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Full specification</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/pillars/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Pillars overview</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/conformance-levels/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Levels overview</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/coverage-map/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Coverage map</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/rule-catalog/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Rule catalog</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/threat-model/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Threat model template</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/glossary/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Glossary</span></a></li></ul></details></li><li class="astro-ilyksmaf"><details open class="astro-ilyksmaf"><summary class="astro-ilyksmaf"><span class="group-label astro-ilyksmaf"><span class="large astro-ilyksmaf">Audit</span></span><svg aria-hidden="true" class="caret astro-ilyksmaf astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-ilyksmaf"><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/audit-overview/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">How the audit works</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/profile/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">The profile</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/audit/prompt/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">No-install prompt</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/stamped-audit/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">A stamped audit</span></a></li></ul></details></li><li class="astro-ilyksmaf"><details open class="astro-ilyksmaf"><summary class="astro-ilyksmaf"><span class="group-label astro-ilyksmaf"><span class="large astro-ilyksmaf">Project</span></span><svg aria-hidden="true" class="caret astro-ilyksmaf astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-ilyksmaf"><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/releases/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Releases</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/contributing/" aria-current="page" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Contributing</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/authors/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Authors</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/tooling/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Tooling</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/security-policy/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Security policy</span></a></li><li class="astro-ilyksmaf"><a href="/pr-preview/pr-34/docs/doc-coverage/" class="astro-ilyksmaf"><span class="astro-ilyksmaf">Published pages</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-xxcru3v4"><div class="social-icons astro-xxcru3v4"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script></div></div></div></div></div></nav><div class="main-frame astro-6xjxvdau"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()}),addEventListener(`pageHide`,a);</script><div class="lg:sl-flex astro-6fsqkyuf"><aside class="right-sidebar-container print:hidden astro-6fsqkyuf"><div class="right-sidebar astro-6fsqkyuf"><div class="lg:sl-hidden astro-k7si4bb4"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-ha42qdfx"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-ha42qdfx"><details id="starlight__mobile-toc" class="astro-ha42qdfx"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-ha42qdfx"><span class="toggle sl-flex astro-ha42qdfx">On this page<svg aria-hidden="true" class="caret astro-ha42qdfx astro-q6rbrhue" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-ha42qdfx"></span></summary><div class="dropdown astro-ha42qdfx"><ul class="isMobile astro-aynzuimk" style="--depth: 0;"><li style="--depth: 0;" class="astro-aynzuimk"><a href="#_top" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Overview</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#pick-the-right-path" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Pick the right path</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#low-barrier-contribution-path" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Low-barrier contribution path</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#scope" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Scope</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#how-to-propose-a-change" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">How to propose a change</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#publication-metadata" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Publication metadata</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#local-validation" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Local validation</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#ai-authored-contributions" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">AI-authored contributions</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#maintainer-playbook" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Maintainer playbook</span></a><ul class="isMobile astro-aynzuimk" style="--depth: 1;"><li style="--depth: 1;" class="astro-aynzuimk"><a href="#when-to-bump-and-by-how-much" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">When to bump, and by how much</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#source-files-and-projections-for-every-normative-pr" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Source files and projections for every normative PR</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#merge-order-of-operations" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Merge order of operations</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#release-runbook" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Release runbook</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#when-not-to-bump" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">When not to bump</span></a></li></ul></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#drafting-conventions" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Drafting conventions</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#contributing-a-parallel-guide-for-another-stack" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Contributing a parallel guide for another stack</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#review" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Review</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#license" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">License</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-34/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-k7si4bb4"><div class="sl-container astro-k7si4bb4"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-aynzuimk" style="--depth: 0;"><li style="--depth: 0;" class="astro-aynzuimk"><a href="#_top" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Overview</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#pick-the-right-path" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Pick the right path</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#low-barrier-contribution-path" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Low-barrier contribution path</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#scope" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Scope</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#how-to-propose-a-change" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">How to propose a change</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#publication-metadata" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Publication metadata</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#local-validation" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Local validation</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#ai-authored-contributions" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">AI-authored contributions</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#maintainer-playbook" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Maintainer playbook</span></a><ul class="astro-aynzuimk" style="--depth: 1;"><li style="--depth: 1;" class="astro-aynzuimk"><a href="#when-to-bump-and-by-how-much" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">When to bump, and by how much</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#source-files-and-projections-for-every-normative-pr" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Source files and projections for every normative PR</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#merge-order-of-operations" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Merge order of operations</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#release-runbook" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">Release runbook</span></a></li><li style="--depth: 1;" class="astro-aynzuimk"><a href="#when-not-to-bump" style="--depth: 1;" class="astro-aynzuimk"><span style="--depth: 1;" class="astro-aynzuimk">When not to bump</span></a></li></ul></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#drafting-conventions" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Drafting conventions</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#contributing-a-parallel-guide-for-another-stack" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Contributing a parallel guide for another stack</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#review" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">Review</span></a></li><li style="--depth: 0;" class="astro-aynzuimk"><a href="#license" style="--depth: 0;" class="astro-aynzuimk"><span style="--depth: 0;" class="astro-aynzuimk">License</span></a></li></ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-34/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-6fsqkyuf"><main data-pagefind-body class="astro-y2bza65e" lang="en" dir="ltr"><div class="content-panel astro-yeyamlgy"><div class="sl-container astro-yeyamlgy"><div class="dx-eyebrow">Project › Contributing</div><h1 id="_top" class="astro-3aso6et4">Contributing</h1></div></div><div class="content-panel astro-yeyamlgy"><div class="sl-container astro-yeyamlgy"><div class="sl-markdown-content"><!-- generated by scripts/spec-content.mjs; do not edit -->
+<ul>
+<li>the canonical rule and document metadata catalog:
+<a href="../rule-catalog/"><code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code></a></li>
+<li>the generated normative specification:
+<a href="../../specification/"><code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code></a></li>
+<li>the generated companion checklist:
+<a href="../stamped-audit/"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></a></li>
+<li>the step-by-step GitHub + TypeScript + web guide: <a href="../adoption-guide/"><code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code></a></li>
+<li>the repository tooling described in <a href="../tooling/"><code dir="auto">TOOLING.md</code></a></li>
+</ul>
+<p>Contributions should improve clarity, tighten requirements, close real gaps, reflect new AI-era risks, or extend the guide to additional stacks.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="pick-the-right-path">Pick the right path</h2><a class="sl-anchor-link" href="#pick-the-right-path"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Pick the right path”</span></a></div>
+<p>The repository is several artifacts in one tree. Different changes go through different gates. Pick the path that matches what you are changing — the rest of this document expands each path.</p>
+<ul>
+<li><strong>Spec change.</strong> A new clause, a clarified <code dir="auto">MUST</code>, a new conformance level, a renamed pillar. RFC-style discussion in an issue first. Touches <code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code> and the rule catalog. Goes through a tagged spec release.</li>
+<li><strong>Tooling change.</strong> A new doc check, a fix in the collector, a new evidence row, an update to a skill. Lives in <code dir="auto">tools/</code> and <code dir="auto">skills/</code>. Does not bump the spec rev unless it changes normative behavior.</li>
+<li><strong>Docs / guide change.</strong> A typo, a clarification, a new walkthrough, a new stack guide. Lives in the root Markdown files and the audit-skill docs. Lightest review path, but still runs the doc-check suite.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="low-barrier-contribution-path">Low-barrier contribution path</h2><a class="sl-anchor-link" href="#low-barrier-contribution-path"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Low-barrier contribution path”</span></a></div>
+<p>For a small editorial improvement to a hand-authored document:</p>
+<ol>
+<li>Edit only the affected document.</li>
+<li>Run <code dir="auto">npm --prefix tools run check</code>.</li>
+<li>Open a focused pull request and explain what became clearer.</li>
+</ol>
+<p>For a small editorial improvement to generated output, edit the source template
+under <code dir="auto">tools/spec-authoring/templates/</code>, regenerate the projection, then run
+the relevant check. For any change that adds, removes, promotes, demotes, or
+renames a requirement, follow the full process below. Those changes are
+normative. The catalog, generated projections, guide, README, and changelog
+must stay aligned.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="scope">Scope</h2><a class="sl-anchor-link" href="#scope"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Scope”</span></a></div>
+<p>In scope:</p>
+<ul>
+<li>Corrections, clarifications, and tightening of existing clauses.</li>
+<li>New <code dir="auto">MUST</code>, <code dir="auto">SHOULD</code>, or <code dir="auto">MAY</code> items that address a credible, recurring risk in AI-assisted development.</li>
+<li>Better definitions, examples, or cross-references.</li>
+<li>Keeping the catalog, generated projections, checklist, and specification
+synchronized.</li>
+</ul>
+<p>Out of scope:</p>
+<ul>
+<li>Vendor-specific guidance (tool names, product SKUs, SaaS configurations).</li>
+<li>Advice that cannot be enforced by automation or review.</li>
+<li>Duplicating existing industry standards instead of referencing them.</li>
+<li>Expanding the document beyond AI-assisted development on working codebases (see “Scope and audience” in <code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code>).</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="how-to-propose-a-change">How to propose a change</h2><a class="sl-anchor-link" href="#how-to-propose-a-change"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “How to propose a change”</span></a></div>
+<ol>
+<li>
+<p><strong>Open an issue first</strong> for anything beyond a typo or minor wording fix. Describe the risk or ambiguity and the outcome you want. This avoids duplicate work and lets review start before drafting.</p>
+</li>
+<li>
+<p><strong>Submit a pull request</strong> referencing the issue. Keep PRs focused — one change of substance per PR.</p>
+</li>
+<li>
+<p><strong>Update source files, then regenerate projections.</strong> Structured rule facts
+belong in
+<a href="../rule-catalog/"><code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code></a>.
+Long-form prose and placement belong in the relevant Markdown template under
+<code dir="auto">tools/spec-authoring/templates/</code>. Do not hand-edit generated specification,
+coverage, checklist, root audit summary, or audit-log output to make a
+normative change.</p>
+</li>
+<li>
+<p><strong>Keep generated artifacts aligned.</strong> If the catalog or a source template
+changes, run the matching generator: <code dir="auto">generate:rule-catalog</code>,
+<code dir="auto">generate:specification</code>, <code dir="auto">generate:coverage</code>, <code dir="auto">generate:checklist-assets</code>,
+or <code dir="auto">generate:audit-templates</code>. The PR should include both the source edit
+and the regenerated projection.</p>
+</li>
+<li>
+<p><strong>Bump versions for normative changes.</strong> Update <code dir="auto">specVersion</code> in
+<code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code>; rerun the generators so generated
+<code dir="auto">Version</code> and <code dir="auto">spec_version</code> fields update from the catalog. Update the
+hand-authored <strong>Version</strong> fields in <code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code> and
+<code dir="auto">README.md</code>. Add a matching <a href="../releases/"><code dir="auto">CHANGELOG.md</code></a> entry with the
+release date and a short summary. Specification versions use the compact
+notation defined in <a href="../releases/"><code dir="auto">CHANGELOG.md</code></a>: patch-zero releases are
+<code dir="auto">MAJOR.MINOR</code>, while real patch releases are <code dir="auto">MAJOR.MINOR.PATCH</code>. Purely
+editorial changes do not need a version bump. Adopter-filled frontmatter
+fields stay empty in this repository, with their inline hint comments
+preserved.</p>
+<p><code dir="auto">specVersion</code> is the adopter-facing specification release. <code dir="auto">schemaVersion</code>
+is the catalog JSON shape version used by tooling. Patch releases may update
+<code dir="auto">specVersion</code> without changing <code dir="auto">schemaVersion</code> when the specification bundle
+changes but the catalog JSON shape remains compatible.</p>
+</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="publication-metadata">Publication metadata</h2><a class="sl-anchor-link" href="#publication-metadata"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Publication metadata”</span></a></div>
+<p>Specification Markdown is source content, not a website manifest. Do not add
+frontmatter blocks for titles, slugs, sidebar sections, ordering, or publication
+paths to spec documents. The spec revision is the git tag at <code dir="auto">HEAD</code>; consumers
+that need to display a version should use <code dir="auto">git describe</code> (or an equivalent
+pinned commit/tag lookup) instead of parsing Markdown fields.</p>
+<p>Consumer-specific publication metadata belongs in the consumer. For example,
+the public docs site owns its sidebar grouping, route paths, labels, and
+view-source mapping in its own <code dir="auto">docs.config.json</code>. Adding a new spec document
+here only requires committing the Markdown body and any relevant source-template
+or catalog changes; each publisher decides whether and where to surface it.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="local-validation">Local validation</h2><a class="sl-anchor-link" href="#local-validation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Local validation”</span></a></div>
+<p>Before opening a pull request, use Node.js 24.x and install the
+repository-check tooling:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/pr-preview/pr-34/_astro/ec.v4551.css"><script type="module" src="/pr-preview/pr-34/_astro/ec.0vx5m.js"></script><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">ci</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm ci --prefix tools"><div></div></button></div></figure></div>
+<p>The installed Husky hooks run two local gates:</p>
+<ul>
+<li><code dir="auto">pre-commit</code> runs staged-file formatting and linting.</li>
+<li><code dir="auto">pre-push</code> runs <code dir="auto">npm --prefix tools run check:ci-local</code>, which covers the
+locally reproducible PR gates before code leaves the workstation.</li>
+</ul>
+<p>To run the pre-push gate directly:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">check:ci-local</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run check:ci-local"><div></div></button></div></figure></div>
+<p>That command runs the aggregate repository check, the strict audit-runtime
+coverage gate, and the TypeScript pnpm scaffold verification. GitHub-hosted
+checks such as CodeQL, dependency review, and immutable release-tag creation
+still run in CI because they depend on GitHub services.</p>
+<p>The aggregate repository check is still available on its own:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">check</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run check"><div></div></button></div></figure></div>
+<p>It typechecks scripts, checks Markdown links and anchors, validates clause
+references, stack hints, checklist metadata, pillar tables, and evergreen
+wording, and fails if generated projections are stale.</p>
+<p>For the architecture behind the script layer and the purpose of each tooling
+directory, see <a href="../tooling/"><code dir="auto">TOOLING.md</code></a>.</p>
+<p>To refresh generated projections after editing catalog or template sources, run
+the relevant generator:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">generate:rule-catalog</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">generate:specification</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">generate:coverage</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">generate:checklist-assets</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">generate:audit-templates</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run generate:rule-catalognpm --prefix tools run generate:specificationnpm --prefix tools run generate:coveragenpm --prefix tools run generate:checklist-assetsnpm --prefix tools run generate:audit-templates"><div></div></button></div></figure></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="ai-authored-contributions">AI-authored contributions</h2><a class="sl-anchor-link" href="#ai-authored-contributions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “AI-authored contributions”</span></a></div>
+<p>This repository accepts AI-assisted contributions when they are disclosed, reviewable, and compatible with the license for the path being changed:</p>
+<ul>
+<li><strong>CC BY 4.0</strong> for documentation and specification content (see <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/LICENSE" target="_blank" rel="noopener noreferrer"><code dir="auto">LICENSE</code></a>).</li>
+<li><strong>Apache License 2.0</strong> for the reusable starter template under <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/examples/typescript-pnpm/template/" target="_blank" rel="noopener noreferrer"><code dir="auto">examples/typescript-pnpm/template/</code></a> (see <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/examples/typescript-pnpm/template/LICENSE" target="_blank" rel="noopener noreferrer"><code dir="auto">examples/typescript-pnpm/template/LICENSE</code></a>).</li>
+<li><strong>Apache License 2.0</strong> for repository tooling under <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/</code></a> and shipped audit runtime scripts under <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/scripts/" target="_blank" rel="noopener noreferrer"><code dir="auto">skills/ai-contributor-audit/scripts/</code></a>.</li>
+</ul>
+<p>See <a href="#license">License</a> below.</p>
+<p>A pull request is <strong>materially AI-authored</strong> when an AI tool or agent produced substantial text, code, tests, examples, or high-level design. Minor autocomplete, spelling, grammar, or formatting suggestions do not need disclosure.</p>
+<p>For materially AI-authored pull requests, complete the <strong>AI Authorship &#x26; Agent Trace</strong> block in the PR body using the template at <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/.github/PULL_REQUEST_TEMPLATE.md" target="_blank" rel="noopener noreferrer"><code dir="auto">.github/PULL_REQUEST_TEMPLATE.md</code></a>:</p>
+<ul>
+<li><code dir="auto">AI-Authored: yes (&#x3C;tool/agent>, &#x3C;model>)</code> — name the tool/agent and model when known.</li>
+<li><code dir="auto">Prompt-Audit: AGENTS.md@&#x3C;commit-or-working-tree>; skill:&#x3C;skills/.../SKILL.md>@&#x3C;sha-or-local>; transcript:&#x3C;location-or-none></code> — cite the agent instruction sources used. When a change was driven by a skill in this repository, the skill citation MUST include its commit SHA so the prompt is pinned.</li>
+<li><code dir="auto">Subagent-Trace: none</code> <em>or</em> <code dir="auto">&#x3C;subagent name + brief role></code> — list subagents invoked by the primary agent.</li>
+<li>License confirmation — confirm that any AI-generated material may be contributed under the license for the changed path: CC BY 4.0 for docs/spec content; Apache-2.0 for the starter template under <code dir="auto">examples/typescript-pnpm/template/</code>, repository tooling under <code dir="auto">tools/</code>, and audit runtime scripts under <code dir="auto">skills/ai-contributor-audit/scripts/</code>.</li>
+</ul>
+<p>Each commit in a materially AI-authored PR MUST also include a <code dir="auto">Co-Authored-By:</code> trailer naming the model/variant.</p>
+<p>The trace block is intentionally short. AI-authored scope, validation evidence, and the reviewer name are visible elsewhere in the PR (the diff, the “How validated” section, reviewer assignment + CODEOWNERS) and are not duplicated here. Do not add fields to the block without a load-bearing reason — it exists to satisfy specific normative rules, not to repeat what the PR already shows.</p>
+<p>Pull requests with missing, unclear, or incorrect AI-authorship disclosure are held until the PR body is corrected. For normative policy changes, maintainers may require more validation evidence before review continues.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="maintainer-playbook">Maintainer playbook</h2><a class="sl-anchor-link" href="#maintainer-playbook"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Maintainer playbook”</span></a></div>
+<p>This section is for maintainers merging a PR. It answers two questions: <em>“is this change normative?”</em> and <em>“which version bump applies?”</em>.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="when-to-bump-and-by-how-much">When to bump, and by how much</h3><a class="sl-anchor-link" href="#when-to-bump-and-by-how-much"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “When to bump, and by how much”</span></a></div>
+<p>The versioning policy defined in <a href="../releases/"><code dir="auto">CHANGELOG.md</code></a> applies to the specification and its companion templates. Specification versions use SemVer bump semantics with compact patch-zero notation: normal spec releases are written as <code dir="auto">MAJOR.MINOR</code> (<code dir="auto">0.1</code>, <code dir="auto">1.2</code>), and patch releases are written with a third component only when a real patch exists (<code dir="auto">0.1.1</code>, <code dir="auto">1.2.1</code>). Prefer minor releases for meaningful specification changes; reserve patch releases for narrow corrections to an already published minor line.</p>
+<p>A release tag such as <code dir="auto">v0.1</code> is the specification release and pins the whole adopter-facing bundle at that commit. Tooling versions such as <code dir="auto">BOOTSTRAP_VERSION</code>, <code dir="auto">collector_version</code>, and <code dir="auto">validator_version</code> are separate implementation versions used for audit evidence and debugging; they do not define separate public release lines unless this repository later publishes packages.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Change</th><th>Version bump</th><th>Examples</th></tr></thead><tbody><tr><td>Typo, formatting, broken link, non-semantic reflow</td><td>None</td><td>Fix a dead link, convert curly quote to straight quote.</td></tr><tr><td>Clarify existing wording without changing what a conforming repo must do</td><td>Patch (<code dir="auto">0.1</code> → <code dir="auto">0.1.1</code>) when a tagged correction is needed</td><td>Add a “for example” to an existing rule; split a long sentence; reword for readability.</td></tr><tr><td>Add a new <code dir="auto">MUST</code> / <code dir="auto">SHOULD</code> / <code dir="auto">MAY</code>, tighten an existing rule, or add a frontmatter field tooling can opt into</td><td>Minor (<code dir="auto">0.1</code> → <code dir="auto">0.2</code>)</td><td>New <code dir="auto">MUST</code> row; promote a <code dir="auto">SHOULD</code> to <code dir="auto">MUST</code>; add <code dir="auto">assessment_duration</code>.</td></tr><tr><td>Remove a rule, loosen a rule, rename or remove a frontmatter field, or change Status vocabulary so old audits no longer parse</td><td>Major (<code dir="auto">1.2</code> → <code dir="auto">2.0</code>) — <strong>breaks existing conformance claims</strong></td><td>Drop <code dir="auto">MUST when applicable</code>; rename <code dir="auto">assessment_date</code> → <code dir="auto">assessment_started_at</code> after <code dir="auto">1.0</code>; change <code dir="auto">Fulfilled</code> label.</td></tr></tbody></table>
+<p>If a PR is a mix, such as a typo fix plus a new <code dir="auto">MUST</code>, pick the highest bump it contains. Do not split a PR only to avoid a minor bump.</p>
+<p>Before version <code dir="auto">1.0</code>, breaking changes may be released in minor versions. SemVer allows this below <code dir="auto">1.0</code>. From <code dir="auto">1.0</code> onward, breaking changes use a major bump only. Every release MUST be tagged so adopters can pin the audit skill and specification to an immutable version.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="source-files-and-projections-for-every-normative-pr">Source files and projections for every normative PR</h3><a class="sl-anchor-link" href="#source-files-and-projections-for-every-normative-pr"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Source files and projections for every normative PR”</span></a></div>
+<p>Keep this list in the PR checklist — drift between source files and generated
+projections is the most common maintenance failure.</p>
+<ul>
+<li><a href="../rule-catalog/"><code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code></a> —
+canonical structured facts: specification version, pillars, clauses,
+conformance levels, <code dir="auto">AIC-*</code> IDs, normative text, checklist row metadata,
+coverage projections, and detector linkage.</li>
+<li><a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/spec-authoring/templates/AI-CONTRIBUTOR-SPECIFICATION.md.template</code></a>
+— hand-authored specification prose and placement directives.</li>
+<li><a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/spec-authoring/templates/AI-CONTRIBUTOR-COVERAGE.md.template</code></a>
+— hand-authored coverage-map prose and placement directives.</li>
+<li><a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/spec-authoring/templates/AI-CONTRIBUTOR-CHECKLIST.md.template</code></a>
+— checklist instructions, frontmatter comments, template-only auditor blocks,
+and placement directives.</li>
+<li><a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT.md.template</code></a>
+and
+<a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/spec-authoring/templates/AI-CONTRIBUTOR-AUDIT-LOG.md.template</code></a>
+— root audit summary and audit-log prose, frontmatter comments, stamped-block
+markers, and placement directives.</li>
+<li>Generated projections:
+<a href="../../specification/"><code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code></a>,
+<a href="../coverage-map/"><code dir="auto">AI-CONTRIBUTOR-COVERAGE.md</code></a>,
+<a href="../stamped-audit/"><code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code></a>,
+<a href="../stamped-audit/"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code></a>,
+and
+<a href="../stamped-audit/"><code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code></a>.
+Regenerate these from catalog and templates; do not hand-edit generated
+content.</li>
+<li><a href="../adoption-guide/"><code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code></a> — bump the
+hand-authored <strong>Version</strong> field and update any step that references the
+changed clause.</li>
+<li><a href="../quickstart/"><code dir="auto">README.md</code></a> — bump the hand-authored <strong>Version</strong> field when the
+specification version changes.</li>
+<li><a href="../releases/"><code dir="auto">CHANGELOG.md</code></a> — add an entry under the next version heading with the release date (ISO <code dir="auto">YYYY-MM-DD</code>) and a short summary of the normative change.</li>
+<li><a href="../skill-audit/"><code dir="auto">skills/ai-contributor-audit/SKILL.md</code></a> — update the runbook if the change affects the audit workflow (new frontmatter field, new Status value, etc.). No <code dir="auto">spec_version</code> to bump here; the skill references the spec repo at runtime.</li>
+</ul>
+<p><code dir="auto">spec_version</code> in generated audit templates comes from catalog <code dir="auto">specVersion</code>.
+Every other audit frontmatter field and derived checklist, summary, backlog,
+and audit-log cell is owned by the collector, stamper, or auditor as defined
+in the canonical table linked below. Keep stamper-owned frontmatter empty in
+this repository, preserve the inline hint comments, and do not hand-edit
+stamper-owned cells or marker blocks — the next stamp run overwrites them.</p>
+<p>The canonical artifact and field ownership table lives in <a href="../audit-overview/#artifact-and-field-ownership"><code dir="auto">AI-CONTRIBUTOR-AUDIT-MODEL.md</code></a>. The audit lifecycle runbook lives in <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/references/audit-protocol.md#audit-lifecycle-and-field-ownership" target="_blank" rel="noopener noreferrer"><code dir="auto">skills/ai-contributor-audit/references/audit-protocol.md</code></a>. Agent-run audits can produce valid artifacts, but external conformance claims need human or named accountable-owner acceptance of those artifacts.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="merge-order-of-operations">Merge order of operations</h3><a class="sl-anchor-link" href="#merge-order-of-operations"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Merge order of operations”</span></a></div>
+<ol>
+<li>Review the PR against the rows above and the Drafting conventions below.</li>
+<li>Confirm the version bump is correct (use the decision table). If the PR author did not bump, ask them to; do not land it yourself unless the change is purely editorial.</li>
+<li>Confirm <code dir="auto">CHANGELOG.md</code> has a matching entry with today’s date.</li>
+<li>Decide whether the reviewed PR is also the release-trigger PR. If it is,
+squash-merge to <code dir="auto">main</code> with a message of the form
+<code dir="auto">spec vX.Y: &#x3C;short description></code> or
+<code dir="auto">spec vX.Y.Z: &#x3C;short description></code> for an actual patch release. If the PR
+is only the patch/content PR, merge it with a descriptive non-<code dir="auto">spec v...</code>
+subject and use the empty release-trigger PR flow below. CHANGELOG entries
+cover only normative changes (see <a href="../releases/"><code dir="auto">CHANGELOG.md</code></a> “Scope”),
+so <code dir="auto">git log</code> is broader than the CHANGELOG, but every CHANGELOG entry maps
+to a reviewed release or release-trigger merge commit.</li>
+<li>Let the <code dir="auto">Tag Spec Release</code> workflow tag the reviewed release-trigger merge
+commit <code dir="auto">vX.Y</code> or <code dir="auto">vX.Y.Z</code> for an actual patch release. Required for every
+release, including pre-<code dir="auto">1.0</code> releases. The audit skill pins <code dir="auto">spec_source</code> to
+this tag. Do not push release-trigger commits directly to <code dir="auto">main</code>, even if
+the actor can bypass rulesets.</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="release-runbook">Release runbook</h3><a class="sl-anchor-link" href="#release-runbook"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Release runbook”</span></a></div>
+<p>Use this process for every specification release. Do not commit release work or
+release-trigger commits directly on <code dir="auto">main</code>; prepare them on branches and review
+them as PRs. A ruleset bypass push does not satisfy the release process, even
+when the pushed commit changes no files.</p>
+<ol>
+<li>
+<p>Start from current <code dir="auto">main</code>:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">switch</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">main</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">pull</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--ff-only</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">switch</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-c</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">release/vX.Y</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git switch maingit pull --ff-onlygit switch -c release/vX.Y"><div></div></button></div></figure></div>
+<p>Use <code dir="auto">release/vX.Y.Z</code> for a real patch release. Use a feature branch name for non-release work, then let the release PR collect the final version and changelog updates.</p>
+</li>
+<li>
+<p>Make the release changes on the branch. Normative releases update the source
+files and projections listed in “Source files and projections for every
+normative PR”; editorial releases skip version and changelog bumps.</p>
+</li>
+<li>
+<p>Run the full local guardrail suite:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">npm</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--prefix</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tools</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">run</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">check:ci-local</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm --prefix tools run check:ci-local"><div></div></button></div></figure></div>
+</li>
+<li>
+<p>Push the branch and open a PR. The PR body must include the standard AI
+Authorship &#x26; Agent Trace block when applicable. Human CODEOWNER review is
+required for protected paths and normative changes.</p>
+</li>
+<li>
+<p>Squash-merge the reviewed PR into <code dir="auto">main</code>. If this PR is both the release
+content PR and the release trigger, use a squash message of the form
+<code dir="auto">spec vX.Y: &#x3C;short description></code> or <code dir="auto">spec vX.Y.Z: &#x3C;short description></code>.
+If the PR is only the patch/content PR, use a descriptive non-<code dir="auto">spec v...</code>
+subject so the tag workflow does not run yet.</p>
+</li>
+<li>
+<p>If the release content already landed under a non-release subject, open a
+separate empty release-trigger PR. This PR has no file changes; its purpose
+is to make the human-approved release decision visible before the tag
+workflow runs.</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">switch</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">main</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">pull</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--ff-only</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">switch</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-c</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">release/vX.Y-trigger</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">commit</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--allow-empty</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">-m</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">spec vX.Y: &#x3C;short release summary></span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">-m</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">Release-trigger commit for vX.Y. Release content landed in #NN at &#x3C;merge-sha>.</span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">push</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-u</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">origin</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">release/vX.Y-trigger</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git switch maingit pull --ff-onlygit switch -c release/vX.Y-triggergit commit --allow-empty \  -m &#x22;spec vX.Y: <short release summary>&#x22; \  -m &#x22;Release-trigger commit for vX.Y. Release content landed in #NN at <merge-sha>.&#x22;git push -u origin release/vX.Y-trigger"><div></div></button></div></figure></div>
+<p>For a patch release, use <code dir="auto">vX.Y.Z</code> in the branch name, commit subject, and
+commit body.</p>
+<p>Use a PR title that exactly starts with the release subject, for example
+<code dir="auto">spec vX.Y.Z: &#x3C;short release summary></code>. The PR body should state:</p>
+<ul>
+<li>the version being released;</li>
+<li>the content PR number and merge commit SHA;</li>
+<li>that the PR intentionally has no file changes;</li>
+<li>that merging it will let <code dir="auto">Tag Spec Release</code> create <code dir="auto">vX.Y.Z</code>.</li>
+</ul>
+<p>Human review is still required. When merging, preserve the
+<code dir="auto">spec vX.Y.Z: ...</code> squash subject because the workflow reads the pushed
+<code dir="auto">main</code> commit subject.</p>
+</li>
+<li>
+<p>Fetch the updated <code dir="auto">main</code> locally and identify the merge commit:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">switch</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">main</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">pull</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--ff-only</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">log</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-1</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--oneline</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git switch maingit pull --ff-onlygit log -1 --oneline"><div></div></button></div></figure></div>
+</li>
+<li>
+<p>Let the <code dir="auto">Tag Spec Release</code> workflow create the release tag. The workflow runs on pushes to <code dir="auto">main</code>, reads the squash-merge subject, and creates an annotated tag when the subject starts with <code dir="auto">spec vX.Y:</code> or <code dir="auto">spec vX.Y.Z:</code>. It also checks that <code dir="auto">CHANGELOG.md</code> has a matching release heading and refuses to move an existing tag.</p>
+<p>If the workflow is unavailable, create and push the release tag manually on the merge commit. Prefer an annotated tag; use a signed tag when the maintainer has signing configured.</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">tag</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-a</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">vX.Y</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-m</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">AI Contributor Specification vX.Y</span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">push</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">origin</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">vX.Y</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git tag -a vX.Y -m &#x22;AI Contributor Specification vX.Y&#x22;git push origin vX.Y"><div></div></button></div></figure></div>
+<p>For a patch release, use <code dir="auto">vX.Y.Z</code>. Do not tag the release branch tip before merge, do not retag an existing release, and do not move a pushed tag. If a release tag is wrong, publish a new patch release instead.</p>
+</li>
+<li>
+<p>Verify the pushed tag resolves on the remote:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">ls-remote</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">--tags</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">origin</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">vX.Y</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="git ls-remote --tags origin vX.Y"><div></div></button></div></figure></div>
+</li>
+<li>
+<p>After the tag exists, use that tag in adopter-facing audit instructions and <code dir="auto">spec_source</code> examples for released audits. Installed skills may be refreshed with <code dir="auto">npx skills update ai-contributor-audit</code>, but actual audits still materialize the runbook from a pinned release tag or full commit SHA.</p>
+</li>
+</ol>
+<p>The release-tagging workflow preserves the same boundaries as the manual
+fallback: all release content lands through a reviewed PR, the release-trigger
+commit also lands through a reviewed PR when it is separate from the content
+change, CI passes before merge, and the tag points at the protected <code dir="auto">main</code>
+merge commit.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="when-not-to-bump">When not to bump</h3><a class="sl-anchor-link" href="#when-not-to-bump"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “When not to bump”</span></a></div>
+<ul>
+<li>PR is pure editorial: typo, formatting, link fix, whitespace, comment in a code sample, renaming a variable in the reference template.</li>
+<li>PR updates adopter-filled example content in the example scaffold but does not
+change catalog-owned rule semantics, generated projections, guide, or skill.</li>
+<li>PR updates dependency versions in the reference template’s <code dir="auto">package.json</code> without touching any normative clause.</li>
+</ul>
+<p>Editorial PRs merge with a single reviewer, skip the version bump, and do not need a CHANGELOG entry.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="drafting-conventions">Drafting conventions</h2><a class="sl-anchor-link" href="#drafting-conventions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Drafting conventions”</span></a></div>
+<ul>
+<li>
+<p>Use RFC 2119 normative language: <code dir="auto">MUST</code>, <code dir="auto">MUST NOT</code>, <code dir="auto">SHOULD</code>, <code dir="auto">MAY</code>, <code dir="auto">MUST when applicable</code>. Wrap the keyword in backticks.</p>
+</li>
+<li>
+<p>Prefer specific, auditable wording over general principles. “Lockfiles include integrity hashes and CI fails on verification errors” is useful; “dependencies are secure” is not.</p>
+</li>
+<li>
+<p>Keep each clause self-contained and short. If a clause needs long justification, consider whether it belongs in the specification at all.</p>
+</li>
+<li>
+<p>Use vendor-neutral language. Reference concepts (<code dir="auto">CODEOWNERS</code>-style ownership, OIDC-style federation) rather than specific platforms.</p>
+</li>
+<li>
+<p>Avoid restating requirements already covered elsewhere in the document. Cross-reference instead.</p>
+</li>
+<li>
+<p>Use UK or US English consistently within a PR (the existing document uses US English).</p>
+</li>
+<li>
+<p><strong>Write evergreen text.</strong> Documents and code comments are read by people who did not see the discussion that produced the change. Do not embed temporary context.</p>
+<p>Banned phrasing includes: <code dir="auto">TODO</code>, <code dir="auto">FIXME</code>, <code dir="auto">XXX</code>, <code dir="auto">HACK</code>, <code dir="auto">WIP</code>; “the recent rename / renumber / reshuffle / move”; “we just moved/renamed/added/fixed/changed/removed X”; “in this repo’s history”; “now-fixed”, “just fixed”, and “after the recent rename”.</p>
+<p>State what is true now. Do not narrate what changed last sprint. CI runs <code dir="auto">npm --prefix tools run check:evergreen</code> and fails the PR on banned phrases. To allow one legitimate occurrence, add <code dir="auto">evergreen-skip: &#x3C;reason></code> on the same line in a comment (<code dir="auto">&#x3C;!-- evergreen-skip: ... --></code>, <code dir="auto"># evergreen-skip: ...</code>, or <code dir="auto">// evergreen-skip: ...</code>). CHANGELOG.md is exempt because it is historical by design.</p>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="contributing-a-parallel-guide-for-another-stack">Contributing a parallel guide for another stack</h2><a class="sl-anchor-link" href="#contributing-a-parallel-guide-for-another-stack"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Contributing a parallel guide for another stack”</span></a></div>
+<p><a href="../adoption-guide/"><code dir="auto">AI-CONTRIBUTOR-GUIDE.md</code></a> is GitHub + TypeScript + web. Parallel guides for other stacks are welcome.</p>
+<p>Use the same four phases:</p>
+<ol>
+<li>Before AI touches your repo.</li>
+<li>Before AI assists shipped changes.</li>
+<li>Before AI materially authors code or uses governed tooling.</li>
+<li>Before the full Level 4 audit.</li>
+</ol>
+<p>Use the same step shape: Do / Why / How / Verify / Spec reference. In the PR, propose the new guide filename, such as <code dir="auto">AI-CONTRIBUTOR-GUIDE-python-uv.md</code>, and the deep-link targets inside your stack’s <code dir="auto">examples/</code> subdirectory.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="review">Review</h2><a class="sl-anchor-link" href="#review"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Review”</span></a></div>
+<ul>
+<li>Normative changes require review before merge.</li>
+<li>Editorial changes (typos, formatting, link fixes) can be merged with a single reviewer.</li>
+<li>The document owner (set per adopting repository, tracked in <code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code>) has final call on normative changes to the upstream copy.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="license">License</h2><a class="sl-anchor-link" href="#license"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “License”</span></a></div>
+<p>By contributing, you agree that your contributions use the license for the part of the repository they modify:</p>
+<ul>
+<li>Documentation and specification content is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> (see <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/LICENSE" target="_blank" rel="noopener noreferrer"><code dir="auto">LICENSE</code></a>).</li>
+<li>The reusable starter template under <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/examples/typescript-pnpm/template/" target="_blank" rel="noopener noreferrer"><code dir="auto">examples/typescript-pnpm/template/</code></a> is licensed under <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>. See <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/examples/typescript-pnpm/template/LICENSE" target="_blank" rel="noopener noreferrer"><code dir="auto">examples/typescript-pnpm/template/LICENSE</code></a>.</li>
+<li>Repository tooling and helper scripts under <a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/tools/" target="_blank" rel="noopener noreferrer"><code dir="auto">tools/</code></a>, plus shipped
+audit runtime scripts under
+<a href="https://github.com/ai-contributors/ai-contributor-spec/blob/v0.2/skills/ai-contributor-audit/scripts/" target="_blank" rel="noopener noreferrer"><code dir="auto">skills/ai-contributor-audit/scripts/</code></a>,
+are licensed under
+<a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>; each file
+carries an <code dir="auto">SPDX-License-Identifier: Apache-2.0</code> header.</li>
+</ul></div><footer class="dx-footer"><span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span><span class="sep">·</span><span><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>tooling/template/runtime</span></footer></div></div></main></div></div></div></div></body></html>

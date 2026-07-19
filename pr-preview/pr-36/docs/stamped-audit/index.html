@@ -1,0 +1,606 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-of46li67"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>A stamped audit. | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-36/docs/stamped-audit/"/><link rel="sitemap" href="/pr-preview/pr-36/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-36/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.0.5"/><meta name="generator" content="Starlight v0.41.2"/><meta property="og:title" content="A stamped audit."/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-36/docs/stamped-audit/"/><meta property="og:locale" content="en"/><meta property="og:description" content="A source-backed view of the audit artifacts shipped by the pinned specification repo: root summary, checklist, and audit log."/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="A source-backed view of the audit artifacts shipped by the pinned specification repo: root summary, checklist, and audit log."/><script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script><link rel="prefetch" href="/pr-preview/pr-36/pagefind/pagefind-ui.js" as="script" crossorigin><link rel="prefetch" href="/pr-preview/pr-36/pagefind/pagefind-ui.css" as="style"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-36/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DDiogqUc.js"></script><script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+  window.StarlightThemeProvider = (() => {
+    const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme-mode');
+    const theme = storedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    return {
+      updatePickers(theme = storedTheme === 'dark' ? 'dark' : 'light') {
+        document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+          const select = picker.querySelector('select');
+          if (select) select.value = theme;
+          /** @type {HTMLTemplateElement | null} */
+          const tmpl = document.querySelector(`#theme-icons`);
+          const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+          if (newIcon) {
+            const oldIcon = picker.querySelector('svg.label-icon');
+            if (oldIcon) {
+              oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+            }
+          }
+        });
+      },
+    };
+  })();
+</script><link rel="stylesheet" href="/pr-preview/pr-36/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-36/_astro/index.Bm6v3ik4.css"><style>.astro-route-announcer{clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;width:1px;height:1px;position:absolute;top:0;left:0;overflow:hidden}
+</style><script type="module" src="/pr-preview/pr-36/_astro/page.BOCGgm5i.js"></script></head><body class="astro-of46li67"><a href="#_top" class="astro-l5k47ikk">Skip to content</a><div class="page sl-flex astro-4an56mbc"><header class="header astro-4an56mbc"><div class="header astro-bgigng3i"><div class="title-wrapper sl-flex astro-bgigng3i"><a href="/pr-preview/pr-36/" class="site-title sl-flex astro-jaqx2u3k"><img class="astro-jaqx2u3k" alt="ai-contributors logomark" src="/pr-preview/pr-36/_astro/logomark.M5JGvKcj.svg" width="120" height="120"><span class="astro-jaqx2u3k" translate="no">ai-contributor-spec / audit</span></a></div><div class="sl-flex print:hidden astro-bgigng3i"><site-search class="astro-bgigng3i astro-nsiiprfo" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-nsiiprfo"><svg aria-hidden="true" class="astro-nsiiprfo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-nsiiprfo" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-nsiiprfo" style="display: none;"><kbd class="astro-nsiiprfo">Ctrl</kbd><kbd class="astro-nsiiprfo">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-nsiiprfo"><div class="dialog-frame sl-flex astro-nsiiprfo"><button data-close-modal class="sl-flex md:sl-hidden astro-nsiiprfo">Cancel</button><div class="search-container astro-nsiiprfo"><div id="starlight__search" class="astro-nsiiprfo"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/pr-preview/pr-36/_astro/Search.astro_astro_type_script_index_0_lang.YodMuzke.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-bgigng3i"><div class="sl-flex social-icons astro-bgigng3i"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-4an56mbc" aria-label="Main"><starlight-menu-button class="print:hidden astro-ns7vdiax"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-ns7vdiax"><svg aria-hidden="true" class="open-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-ns7vdiax astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e)}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-4an56mbc"><div class="sidebar-content sl-flex astro-4an56mbc"><div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="1pab6q5" class="astro-ch4lkps4"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-nspf5tbo"><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Start</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/quickstart/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Quickstart</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/adoption-guide/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Adoption guide</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/skill-profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/skill-audit/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/skill-fix/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">ai-contributor-audit-fix</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Specification</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/specification/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Full specification</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/pillars/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Pillars overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/conformance-levels/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Levels overview</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/coverage-map/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Coverage map</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/rule-catalog/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Rule catalog</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/threat-model/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Threat model template</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/glossary/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Glossary</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Audit</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/audit-overview/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">How the audit works</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/profile/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">The profile</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/audit/prompt/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">No-install prompt</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/stamped-audit/" aria-current="page" class="astro-nspf5tbo"><span class="astro-nspf5tbo">A stamped audit</span></a></li></ul></details></li><li class="astro-nspf5tbo"><details open class="astro-nspf5tbo"><summary class="astro-nspf5tbo"><span class="group-label astro-nspf5tbo"><span class="large astro-nspf5tbo">Project</span></span><svg aria-hidden="true" class="caret astro-nspf5tbo astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-nspf5tbo"><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/releases/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Releases</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/contributing/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Contributing</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/authors/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Authors</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/tooling/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Tooling</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/security-policy/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Security policy</span></a></li><li class="astro-nspf5tbo"><a href="/pr-preview/pr-36/docs/doc-coverage/" class="astro-nspf5tbo"><span class="astro-nspf5tbo">Published pages</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-dajafrs2"><div class="social-icons astro-dajafrs2"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script></div></div></div></div></div></nav><div class="main-frame astro-4an56mbc"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()}),addEventListener(`pageHide`,a);</script><div class="lg:sl-flex astro-emasnav6"><aside class="right-sidebar-container print:hidden astro-emasnav6"><div class="right-sidebar astro-emasnav6"><div class="lg:sl-hidden astro-xdg7xc5d"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-wvpbq5dg"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-wvpbq5dg"><details id="starlight__mobile-toc" class="astro-wvpbq5dg"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-wvpbq5dg"><span class="toggle sl-flex astro-wvpbq5dg">On this page<svg aria-hidden="true" class="caret astro-wvpbq5dg astro-sob7pb7a" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-wvpbq5dg"></span></summary><div class="dropdown astro-wvpbq5dg"><ul class="isMobile astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#artifact-set" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Artifact set</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#root-summary" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Root summary</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#checklist-template" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Checklist template</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#audit-log-template" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Audit log template</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#how-to-reproduce" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">How to reproduce</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-36/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-xdg7xc5d"><div class="sl-container astro-xdg7xc5d"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-r6vlv6m3" style="--depth: 0;"><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#_top" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Overview</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#artifact-set" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Artifact set</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#root-summary" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Root summary</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#checklist-template" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Checklist template</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#audit-log-template" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">Audit log template</span></a></li><li style="--depth: 0;" class="astro-r6vlv6m3"><a href="#how-to-reproduce" style="--depth: 0;" class="astro-r6vlv6m3"><span style="--depth: 0;" class="astro-r6vlv6m3">How to reproduce</span></a></li></ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-36/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-emasnav6"><main data-pagefind-body class="astro-of46li67" lang="en" dir="ltr"><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="dx-eyebrow">Audit › A stamped audit</div><h1 id="_top" class="astro-y364ktsa">A stamped audit.</h1></div></div><div class="content-panel astro-jfjf2piw"><div class="sl-container astro-jfjf2piw"><div class="sl-markdown-content"><div class="sl-heading-wrapper level-h2"><h2 id="artifact-set">Artifact set</h2><a class="sl-anchor-link" href="#artifact-set"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Artifact set”</span></a></div>
+<p>The content below is loaded from the pinned specification repo at build
+time. The site owns the layout and annotations; the audit artifact text
+comes from the spec source.</p>
+<div class="artifact-grid"><article class="artifact-card"><div class="artifact-k">Root summary</div><div class="artifact-n">AI-CONTRIBUTOR-AUDIT.md</div><div class="artifact-d">Repo-root summary projected by the stamper from the checklist level summary and backlog.</div><div class="artifact-d" style="margin-top: 10px;">80 source lines</div></article><article class="artifact-card"><div class="artifact-k">Checklist</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</div><div class="artifact-d">Full scoring surface: status, comment, automation marker, and spec IDs for every audit row.</div><div class="artifact-d" style="margin-top: 10px;">511 source lines</div></article><article class="artifact-card"><div class="artifact-k">Audit log</div><div class="artifact-n">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</div><div class="artifact-d">Evidence ledger for commands, hosted-setting checks, stamped collector rows, and manual rows.</div><div class="artifact-d" style="margin-top: 10px;">104 source lines</div></article></div>
+<p>The root <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code> is the canonical source link for this
+page. The companion checklist and audit log are read from
+<code dir="auto">.ai-contributor-audit/</code>. <code dir="auto">AI-CONTRIBUTOR-EVIDENCE.json</code> is produced by a
+filled audit run, so it is described by the templates rather than bundled
+as static source.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="root-summary">Root summary</h2><a class="sl-anchor-link" href="#root-summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Root summary”</span></a></div>
+<p>This is the root-level audit summary template. In an adopting repository,
+the stamper fills the conformance summary and backlog from the checklist.</p>
+<pre class="artifact-pre"><code># AI Contributor Audit
+
+&gt; Blank root summary template shipped with the specification. A populated audit
+&gt; replaces the placeholders below and is reviewed together with the full
+&gt; artifacts in `.ai-contributor-audit/`.
+
+Full audit artifacts live in [`.ai-contributor-audit/`](.ai-contributor-audit/):
+
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`](.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md)
+- [`.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`](.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md)
+- `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`
+- `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md`
+
+## Display your level badge
+
+&gt; Stamped automatically by `audit-stamp.ts` from `conformance_level`.
+
+No badge is displayed for `conformance_level: none` or `conformance_level: 0`.
+
+## Conformance level summary
+
+&gt; `Status` is stamped automatically by `audit-stamp.ts` from the per-row tables below. Fill `Date reached` only when a level is first claimed as `✅ Yes`; the stamper preserves it while the level remains reached and clears it if the level drops. Edit `Notes` with blockers or review context. `Partial` means one or more rows at that level are `Alarm` or `Warning`; record the blockers in **Notes** and list them in the root backlog.
+
+| Level                          | Status        | Date reached | Notes        |
+| ------------------------------ | ------------- | ------------ | ------------ |
+| **Level 0 — Baseline Hygiene** | &lt;FILL_STATUS&gt; | &lt;FILL_DATE&gt;  | &lt;FILL_NOTES&gt; |
+| **Level 1 — Hardened**         | &lt;FILL_STATUS&gt; | &lt;FILL_DATE&gt;  | &lt;FILL_NOTES&gt; |
+| **Level 2 — AI Assisted**      | &lt;FILL_STATUS&gt; | &lt;FILL_DATE&gt;  | &lt;FILL_NOTES&gt; |
+| **Level 3 — AI Authored**      | &lt;FILL_STATUS&gt; | &lt;FILL_DATE&gt;  | &lt;FILL_NOTES&gt; |
+| **Level 4 — AI Autonomous**    | &lt;FILL_STATUS&gt; | &lt;FILL_DATE&gt;  | &lt;FILL_NOTES&gt; |
+
+### Deriving `conformance_level`
+
+`audit-stamp.ts` derives `conformance_level` from the table above:
+
+1. Complete every checklist row first.
+2. Run the stamper so each summary **Status** is derived from the checklist tables.
+3. The stamper sets `conformance_level` to the numeric value of the **highest** level whose **Status** is `✅ Yes`.
+4. If no level row is `✅ Yes`, the stamper sets `none`.
+5. Never claim a level whose row is not `✅ Yes`, even if most requirements are met.
+
+The frontmatter value and the summary table `MUST` agree; a mismatch is an audit defect. To advertise the level with a README badge, see [the badge section in the spec README](README.md#display-your-level).
+
+## Backlog — what to address first
+
+&gt; `Priority`, `Level`, `Rule`, `Scope`, and `Current status` are stamped automatically by `audit-stamp.ts` from the full checklist. Edit only `Next action`, `Owner`, and `Target date`.
+
+Populate this table from **every** checklist row where **Status** is `Alarm` or `Warning`. Do not drop rows for brevity. This keeps audits reproducible.
+
+**Priority tiers** (the `Priority` column is the tier number, **not** a sequential unique rank — ties are expected and correct):
+
+1. `MUST` at `Alarm` — repository fails on an unconditional requirement.
+2. `MUST when applicable` at `Alarm` — the requirement applies to the repository and is unmet.
+3. `MUST` at `Warning` — partial coverage or drift risk on an unconditional requirement.
+4. `MUST when applicable` at `Warning`.
+5. `SHOULD` at `Alarm` / `Warning` — each unmet `SHOULD` needs a documented reason in its Comment to count toward Level 4.
+
+**Ordering rules** (deterministic so two auditors produce the same row order):
+
+- Primary: ascending by `Level` (`L0`, then `L1`, through `L4`).
+- Secondary: ascending by `Priority` (tier 1 first, tier 5 last).
+- Tertiary: alphabetical by **Rule** name (case-insensitive).
+- `MAY` rows are **not** listed here even if at `Alarm` / `Warning`; `MAY` is optional and tracked only in the full checklist.
+
+**Cell conventions:**
+
+- `Priority` — severity tier, not a unique rank.
+- `Level` — conformance level this row affects in the step-by-step backlog.
+- `Scope` — one of `MUST`, `MUST when applicable`, `SHOULD`. No parentheticals.
+- `Current status` — the emoji-prefixed status from the full checklist (`🚨 Alarm` or `⚠️ Warning`).
+- `Next action` — the concrete remediation; reuse wording from the checklist Comment when appropriate.
+- `Owner` — handle or team (e.g. `@org/team`); leave blank if unknown.
+- `Target date` — ISO date (`YYYY-MM-DD`) or blank if unknown. Do **not** write `TBD`, `n/a`, or similar filler.
+
+| Priority | Level | Rule | Scope | Current status | Next action | Owner | Target date |
+|----------|-------|------|-------|----------------|-------------|-------|-------------|
+| | | | | | | | |
+
+Once a rule reaches `Fulfilled` or `Not relevant` in the checklist, it disappears from this backlog on the next stamp run.</code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="checklist-template">Checklist template</h2><a class="sl-anchor-link" href="#checklist-template"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Checklist template”</span></a></div>
+<p>The checklist is the scoring surface. It carries synchronized frontmatter,
+level summaries, backlog rows, per-level audit rows, and verification
+gaps.</p>
+<pre class="artifact-pre"><code>---
+spec_version: &quot;0.2&quot;
+spec_source:           # Stamped automatically by audit-stamp.ts from --spec-source, AI_CONTRIBUTOR_SPEC_SOURCE, the bootstrap manifest, or the pinned runbook path. Immutable source used for this audit, e.g. https://github.com/ai-contributors/ai-contributor-spec/tree/&lt;full-commit-sha&gt; or a release tag. Must match the companion audit log exactly.
+assessment_started_at:    # Stamped automatically by audit-stamp.ts from the collector&#39;s evidence JSON. Leave blank — the stamper overwrites it. ISO 8601 date-time with seconds.
+assessment_completed_at:  # Stamped automatically by audit-stamp.ts. Leave blank — the stamper overwrites it.
+assessment_duration:      # Stamped automatically by audit-stamp.ts (HH:MM:SS, derived from the two timestamps). Leave blank — the stamper overwrites it.
+audited_commit:     # Stamped automatically by audit-stamp.ts from AI-CONTRIBUTOR-EVIDENCE.json target.audited_commit, falling back to git rev-parse HEAD.
+auditor:            # Stamped by audit-stamp.ts from --auditor or AI_CONTRIBUTOR_AUDITOR. Human: name (e.g. Jane Smith); AI: AGENT | MODEL | REASONING_EFFORT (e.g. &quot;GitHub Copilot | gpt-5.4 | high&quot;). Use &quot;n/a&quot; if the agent has no reasoning setting.
+validator_version:  # Stamped automatically by audit-stamp.ts from the `VALIDATOR_VERSION` constant baked into the running stamper. Leave blank — the stamper overwrites it. Two audits diffed against each other are guaranteed to have run the same machinery because the validator fails when its runtime version disagrees with this value. Must match the companion audit log exactly.
+collector_version:  # Stamped automatically by audit-stamp.ts from the `COLLECTOR_VERSION` constant baked into the running collector. Leave blank — the stamper overwrites it. Must match the companion audit log exactly.
+runner_agent:       # Stamped by audit-stamp.ts from --runner-agent or AI_CONTRIBUTOR_RUNNER_AGENT. Must match the companion audit log exactly.
+runner_model:       # Stamped by audit-stamp.ts from --runner-model or AI_CONTRIBUTOR_RUNNER_MODEL. Must match the companion audit log exactly.
+conformance_level:  # one of: none, 0, 1, 2, 3, 4. Stamped automatically by audit-stamp.ts from the highest ✅ Yes row in the Conformance level summary table. Leave blank — the stamper overwrites it. Must match the companion audit log exactly.
+---
+
+# AI Contributor Conformance Checklist
+
+&gt; Companion audit checklist for [`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md). Check your repository against every item and record the evidence (CI job, config file, review rule, policy document) that enforces each one.
+&gt;
+&gt; **Either an AI agent or a human can fill this in.** The rigor rules in &quot;How to use this checklist&quot; apply equally to both — strict Status definitions and evidence in every **Comment**.
+&gt;
+&gt; The audit produces one root summary and three audit output artifacts (this file, the audit log, and the evidence JSON), and reads one optional owner profile input (`AI-CONTRIBUTOR-AUDIT-PROFILE.md`) that the audit never overwrites. The sections below describe the structure of this file.
+&gt;
+&gt; - **Frontmatter** (top of file) — structured metadata (`spec_version`, `spec_source`, `assessment_started_at`, `assessment_completed_at`, `assessment_duration`, `audited_commit`, `auditor`, `validator_version`, `collector_version`, `runner_agent`, `runner_model`, `conformance_level`).
+&gt; - **Root summary** ([`../AI-CONTRIBUTOR-AUDIT.md`](../AI-CONTRIBUTOR-AUDIT.md)) — short conformance summary and severity-prioritized backlog for readers who do not need the full evidence trail.
+&gt; - **Conformance level summary** (top) — which of Levels 0–4 the repository has reached, with blockers in Notes. The stamper mirrors this section into the root summary.
+&gt; - **Backlog — what to address first** (top) — one step-by-step action plan ordered by conformance level, priority, then rule.
+&gt; - **Level tables** (middle) — Scope, automated marker (`A`), Status, Comment, and IDs for every row, grouped by level.
+&gt; - **Verification gaps** (bottom) — rows where evidence is indirect; the owner checks these manually.
+&gt; - **Audit log** ([`AI-CONTRIBUTOR-AUDIT-LOG.md`](AI-CONTRIBUTOR-AUDIT-LOG.md), companion file) — every evidence command, with output excerpt. This helps reviewers catch invented or stale evidence in AI-run audits and inspect the trail for human-run audits.
+
+&lt;!-- BEGIN:TEMPLATE-ONLY — Auditor: delete this entire block (and its END marker) when filling the checklist. The validator fails the audit if any TEMPLATE-ONLY marker survives in the filled output. --&gt;
+
+## Where these assets live
+
+- **The root summary belongs at the adopting repository root** as `AI-CONTRIBUTOR-AUDIT.md`.
+- **Full audit artifacts belong under `.ai-contributor-audit/`**: `AI-CONTRIBUTOR-CHECKLIST.md`, `AI-CONTRIBUTOR-AUDIT-LOG.md`, and `AI-CONTRIBUTOR-EVIDENCE.json`.
+- **Commit and push all audit artifacts with every audit.** `audited_commit`, `spec_source`, and `assessment_started_at` pin each audit to a point in time. Git history becomes the audit trail.
+- **Prior audits live in git history, not in the current file.** To inspect old results, run `git log -- .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md` or `git show &lt;sha&gt;:.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`. Start each re-audit from the blank template.
+
+## Re-audit protocol (start from scratch)
+
+**A prior filled checklist or audit log in the target repository is NOT evidence.** When re-auditing, the auditor (human or AI) MUST:
+
+1. **Pin `audited_commit` and run the evidence collector.** The audit is tied to a commit, not a worktree. Bootstrap `audit-collect` from the same `spec_source` the stamper will record — it extracts `audited_commit` (default: `HEAD`) into a temporary `git worktree`, runs every canonical command there, and emits `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` next to the full audit artifacts. Uncommitted local changes in the caller&#39;s worktree are recorded in `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json.preflight.original_worktree_status` for traceability but do **not** affect the audit. If `audit-collect` is not available through the local `tools` package, fetch it from `spec_source` and run via `npx tsx`; record the bootstrap command in the audit log. A prior filled checklist or audit log from an earlier run must be committed before re-auditing — the next steps overwrite the artifacts and uncommitted prior audit output would be lost. (If you specifically want to audit your working tree — rare; typically a pre-commit dry run — pass `--working-tree`. The collector then sets `audited_commit: &quot;working-tree:HEAD=&lt;sha&gt;+dirty&quot;` and the audit cannot be cited as conformance against a release tag.)
+2. **Overwrite from the blank template.** Reset `AI-CONTRIBUTOR-AUDIT.md`, `.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md`, and `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md` to the blank templates from the immutable `spec_source` used for this audit (for example a release tag or full commit SHA from the spec repo) before filling them. Do not edit in place on top of prior Status, Comment, Backlog, or audit-log content. Do not fetch templates from a mutable branch such as `main` unless you first resolve that branch to a full commit SHA; the bootstrap manifest or stamper `--spec-source` then records that immutable source. After the first stamp, confirm the stamped audit-log block records the `audit-collect` invocation and its `[audit-collect] wrote …` summary line.
+3. **Do not read prior filled content as input.** Do not copy forward any Status, Comment, Backlog row, Verification-gap row, or audit-log entry from a previous run. Prior audits reflect a previous commit; the current audit reflects `audited_commit` and must stand on its own evidence.
+4. **Every Comment must cite current-run evidence.** A checklist Comment must cite either a command recorded in the current run&#39;s audit log, a `file:line` / section citation from `audited_commit`, or `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json` emitted by the current `audit-collect` invocation. This rule prevents copied evidence: an agent cannot reuse a Comment unless it also provides current, reviewable evidence. Each `Fulfilled` row `MUST` additionally have at least one matching audit-log entry whose `Spec IDs` column lists one of the rule&#39;s visible IDs from this checklist, unless the row is a collector-derived finding citing `AI-CONTRIBUTOR-EVIDENCE.json`; CI fails the audit otherwise.
+5. **Timestamps must be fresh and measured by the scripts.** Do not run `date` or type assessment timestamps by hand. `audit-collect.ts` records `assessment_started_at` in `.ai-contributor-audit/AI-CONTRIBUTOR-EVIDENCE.json`; `audit-stamp.ts` stamps `assessment_started_at`, `assessment_completed_at`, and `assessment_duration` into both files.
+6. **Spec source must be immutable.** Ensure the stamper records the exact spec source used for the current run in both files. For an upstream audit, use a release tag or full commit SHA. For a forked local policy, pass `--spec-source` with the local policy file path plus its commit SHA. Same target repository, same `audited_commit`, same `spec_source`, and same external settings snapshots are the reproducibility boundary.
+7. **Status changes from the previous committed audit need a rationale.** `audit-run.ts` diffs the filled checklist against the version committed at `HEAD` and validation fails (`AUDIT070`) when an auditor-owned row&#39;s Status changed without a Comment rationale in the form `Changed from &lt;old status&gt; to &lt;new status&gt; because &lt;reason&gt;`, citing current-run evidence in backticks. Collector-derived and owner-profile stamped rows are exempt.
+
+The audit artifacts have different roles: `AI-CONTRIBUTOR-EVIDENCE.json` is the source for collector-derived facts and findings, the audit log records command and manual evidence, this checklist is the rendered scoring and judgment surface, and the root `AI-CONTRIBUTOR-AUDIT.md` summary is a stamper-written projection from the checklist. The canonical ownership table is in [`AI-CONTRIBUTOR-AUDIT-MODEL.md` § Artifact And Field Ownership](../AI-CONTRIBUTOR-AUDIT-MODEL.md#artifact-and-field-ownership).
+
+## Audit lifecycle and field ownership
+
+The full lifecycle is: collect evidence, stamp mechanical fields, review current-run evidence and fill judgment-required gaps, stamp again, validate, then have a human or named accountable owner accept the result before claiming conformance.
+
+- **Collector/stamper-owned fields:** assessment timestamps and duration, `spec_source`, `audited_commit`, identity fields supplied by flags or environment, `validator_version`, `collector_version`, automated checklist `A` / `Status` / `Comment` cells, stamped audit-log blocks, conformance summary `Status`, `conformance_level`, backlog derived columns, verification-gap stamped rows, and the root `AI-CONTRIBUTOR-AUDIT.md` summary. Do not hand-edit them.
+- **Auditor-owned fields:** judgment-required checklist `Status` and `Comment` cells, manual audit-log rows below stamped blocks, conformance summary `Notes`, backlog `Next action` / `Owner` / `Target date`, and manual verification-gap rows. The auditor can be a human or an agent, but every populated row still needs current-run evidence.
+- **Owner profile input:** `.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-PROFILE.md` is owner-authored pre-audit input. The audit reads it but does not silently edit it. If the audit finds missing, ambiguous, or contradictory owner facts, record `⚠️ Warning` or a verification gap, update the profile in a separate profile step, then rerun the audit.
+- **Hybrid field:** `Date reached` is entered by the auditor only when a level is first claimed as `✅ Yes`; the stamper preserves it while that level remains reached and clears it if the level later drops out of `✅ Yes`.
+- **Human/accountable reviewer-owned step:** an agent-run audit is valid audit output when it follows this lifecycle and passes validation, but publishing a conformance claim requires human or named owner acceptance of the filled artifacts.
+
+## Low-barrier way to fill this checklist
+
+If this is your first audit, use this order:
+
+1. Run the evidence collector.
+2. Run the stamper once so mechanical frontmatter, automated rows, and stamped audit-log rows are current.
+3. Work through auditor-owned rows from Level 0 upward. Do not skip a row.
+4. For each row, ask: does the trigger apply, what evidence proves the answer, and what status does that evidence support?
+5. Fill conformance summary `Notes`, and fill `Date reached` only for levels newly claimed as `✅ Yes`.
+6. Run the stamper again, then run the validator before committing the audit files; the stamper refreshes the root `AI-CONTRIBUTOR-AUDIT.md` summary.
+7. Have a human or named accountable owner review the filled artifacts before publishing a conformance claim.
+
+Use `Warning` when you are unsure. A conservative `Warning` is a valid audit result; an unsupported `Fulfilled` is a defect.
+
+## How to use this checklist
+
+- Read [`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md) first — the normative text lives there, and this checklist turns it into audit rows. Terms in this checklist (agent, harness, destructive action, security-sensitive action, release-affecting action, material action, engineering guardrail, equivalent) are defined in [`AI-CONTRIBUTOR-SPECIFICATION.md` § Definitions](../AI-CONTRIBUTOR-SPECIFICATION.md#definitions) and those definitions govern here. The conformance levels referenced below are defined in [`AI-CONTRIBUTOR-SPECIFICATION.md` § Conformance levels](../AI-CONTRIBUTOR-SPECIFICATION.md#conformance-levels).
+- Copy this file into your repository and fill the **Status** column for every row.
+- Allowed status values — apply the definitions strictly:
+  - `Fulfilled` — requires evidence from the repository. Evidence may be a file excerpt, a command output, or a clear architectural property visible in configuration (for example `&quot;strict&quot;: true` in `tsconfig.json`). &quot;Obvious from the code&quot; without backing is not evidence. No evidence, no `Fulfilled`.
+  - `Warning` — the correct answer under uncertainty or partial evidence. Name what would be needed to verify. This is a default, not a fallback.
+  - `Alarm` — requires a specific negative finding (for example: `.env` is tracked in git; the default branch has no protection rules; a dependency audit reports critical CVEs).
+  - `Not relevant` — requires naming the `MUST when applicable` condition that does not hold, with evidence. Absence of evidence that a trigger applies is not enough; under uncertainty use `Warning`. `MUST` rows cannot be `Not relevant`.
+  - Leave blank while unassessed — a blank row is an open gap, not a pass.
+  - Prefix the status with an emoji for human readability and quick column scanning: `✅ Fulfilled`, `⚠️ Warning`, `🚨 Alarm`, `➖ Not relevant`. Matches the emoji convention used in the conformance-level summary table below.
+- **Comment format.** Every non-blank status needs evidence a reader can independently verify:
+...</code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="audit-log-template">Audit log template</h2><a class="sl-anchor-link" href="#audit-log-template"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “Audit log template”</span></a></div>
+<p>The audit log records the commands and short output excerpts that support
+checklist comments. Stamped collector rows live between the stamped
+markers; manual rows are appended outside them.</p>
+<pre class="artifact-pre"><code>---
+spec_version: &quot;0.2&quot;
+spec_source:           # Stamped automatically by audit-stamp.ts from --spec-source, AI_CONTRIBUTOR_SPEC_SOURCE, the bootstrap manifest, or the pinned runbook path. Must match the companion checklist exactly.
+assessment_started_at:    # Stamped automatically by audit-stamp.ts from the collector&#39;s evidence JSON. Leave blank — the stamper overwrites it. ISO 8601 date-time with seconds.
+assessment_completed_at:  # Stamped automatically by audit-stamp.ts. Leave blank — the stamper overwrites it.
+assessment_duration:      # Stamped automatically by audit-stamp.ts (HH:MM:SS, derived from the two timestamps). Leave blank — the stamper overwrites it.
+audited_commit:     # Stamped automatically by audit-stamp.ts from AI-CONTRIBUTOR-EVIDENCE.json target.audited_commit, falling back to git rev-parse HEAD.
+auditor:            # Stamped by audit-stamp.ts from --auditor or AI_CONTRIBUTOR_AUDITOR. Human: name (e.g. Jane Smith); AI: AGENT | MODEL | REASONING_EFFORT (e.g. &quot;GitHub Copilot | gpt-5.4 | high&quot;). Use &quot;n/a&quot; if the agent has no reasoning setting.
+validator_version:  # Stamped automatically by audit-stamp.ts from the `VALIDATOR_VERSION` constant baked into the running stamper. Leave blank — the stamper overwrites it. Must match the companion checklist exactly.
+collector_version:  # Stamped automatically by audit-stamp.ts from the `COLLECTOR_VERSION` constant baked into the running collector. Leave blank — the stamper overwrites it. Must match the companion checklist exactly.
+runner_agent:       # Stamped by audit-stamp.ts from --runner-agent or AI_CONTRIBUTOR_RUNNER_AGENT. Must match the companion checklist exactly.
+runner_model:       # Stamped by audit-stamp.ts from --runner-model or AI_CONTRIBUTOR_RUNNER_MODEL. Must match the companion checklist exactly.
+conformance_level:  # one of: none, 0, 1, 2, 3, 4. Stamped automatically by audit-stamp.ts from the highest ✅ Yes row in the Conformance level summary table on the companion checklist. Leave blank — the stamper overwrites it. Must match the companion checklist exactly.
+---
+
+# AI Contributor Audit Log
+
+&gt; Audit-log companion to [`AI-CONTRIBUTOR-CHECKLIST.md`](AI-CONTRIBUTOR-CHECKLIST.md). Record every auditor-run command used to gather evidence. The stamper records collector-run commands in the stamped block. A fresh checkout plus the same external-service access should reproduce the findings. This helps reviewers catch invented or stale evidence, especially in AI-run audits.
+&gt;
+&gt; Keep this file next to the checklist. Checklist evidence references point here for command output. Keep the stamper-owned frontmatter fields (`spec_source`, `assessment_started_at`, `assessment_completed_at`, `assessment_duration`, `audited_commit`, `auditor`, `validator_version`, `collector_version`, `runner_agent`, `runner_model`, `conformance_level`) in sync with the checklist frontmatter.
+
+## Where this asset lives
+
+- **This file belongs under `.ai-contributor-audit/`**, next to `AI-CONTRIBUTOR-CHECKLIST.md` and `AI-CONTRIBUTOR-EVIDENCE.json`.
+- **Commit and push it with every audit**, together with the root `AI-CONTRIBUTOR-AUDIT.md` summary and the full `.ai-contributor-audit/` artifacts. `audited_commit`, `spec_source`, and `assessment_started_at` pin each audit to a point in time. Git history becomes the audit trail.
+- **Prior audit logs live in git history.** To inspect old evidence, run `git log -- .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md` or `git show &lt;sha&gt;:.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md`. Do not copy old entries into a new audit.
+
+## Shortest correct use
+
+Record one row for every command or hosted-setting check that supports the checklist. The first row is the evidence collector. Do not record `date` rows for the assessment timestamps — `audit-stamp.ts` stamps `assessment_started_at`, `assessment_completed_at`, and `assessment_duration` itself.
+
+Keep each output excerpt short. Do not paste a full terminal session. Show enough for another reviewer to see which command produced each checklist status.
+
+## Re-audit protocol (start from scratch)
+
+The re-audit protocol is defined in [`AI-CONTRIBUTOR-CHECKLIST.md` § Re-audit protocol](AI-CONTRIBUTOR-CHECKLIST.md#re-audit-protocol-start-from-scratch). It applies to both files. Start from the blank template, let the collector and stamper write fresh timestamps, and let the stamper record an immutable `spec_source`. The first stamped evidence row must be the `audit-collect` command and its `[audit-collect] wrote ...` summary. Every checklist `Comment` must cite current-run evidence: a command in this log, a `file:line` or section citation from `audited_commit`, or `AI-CONTRIBUTOR-EVIDENCE.json` from this collector run.
+
+## What to record
+
+- **Use the table form only.** Columns: `Spec IDs | Rules | Command | Output excerpt`. This keeps audits easy to compare and validate.
+- **Every evidence row must name the checklist rule(s) it supports** in the `Rules` column. Use `&lt;preflight&gt;` only for setup rows such as `audit-collect` and token disclosure.
+- **Every non-preflight row must list the spec IDs it supports** in the `Spec IDs` column. Use backtick-quoted `AIC-*` IDs from [`AI-CONTRIBUTOR-SPECIFICATION.md`](../AI-CONTRIBUTOR-SPECIFICATION.md), separated by commas. Preflight rows such as `audit-collect` may leave `Spec IDs` blank and use `&lt;preflight&gt;` in `Rules`. CI checks non-preflight IDs against the spec and checklist.
+- Include two to three rows per rule (or per cluster of related rules) — enough that a reviewer on a fresh clone can reproduce the finding without guessing which command produced which evidence.
+- Paste the command exactly as run (including flags and working directory when non-obvious). `Output excerpt` is a short preview — up to ~5 lines, with long output truncated using `…` and a pointer like `# truncated — full output in &lt;path or CI job link&gt;`. Do not paste 20-line blocks into cells; move them to a linked file or gist.
+- Prefer commands that read repository state (`ls`, `cat`, `grep`, `git log`, `git config --get-all branch.*.protection`, `gh api`, package-manager introspection). Avoid commands that mutate the repository or call external services with side effects.
+- Redact secrets from pasted output. If a command&#39;s output would include credentials, record the command but replace secret values with `***redacted***` and note the redaction.
+- If you relied on GitHub UI screenshots or settings pages that have no CLI equivalent, record the navigation path instead (for example `Settings → Branches → main → Require a pull request before merging: ON`) and still name the rule it evidences.
+- For external settings that can be queried, prefer timestamped API evidence over UI memory. Record the exact endpoint or command, the authenticated actor or role if relevant, and the output excerpt. A local checkout cannot reproduce external branch protection, security settings, deployment environments, or SaaS policy state by itself.
+- Negative findings count: a command that returned `No files found` or `no matches` is evidence for a `Warning` or `Alarm` row and should be logged with the rule it supports.
+
+Example commands to record (illustrative, not exhaustive): `ls -la AGENTS.md .github/copilot-instructions.md CLAUDE.md .cursorrules`, `grep -n &#39;&quot;strict&quot;&#39; tsconfig*.json`, `pnpm test --reporter=min`, `pnpm audit --prod`, `gh api repos/:owner/:repo/branches/main/protection`, `gh secret list`, CI job IDs or URLs for protected-branch runs.
+
+Row-shape examples, not live rows:
+
+- Preflight row: leave `Spec IDs` blank, set `Rules` to `&lt;preflight&gt;`, record the `audit-collect` command, and paste its `[audit-collect] wrote ...` summary.
+- Evidence row: set `Spec IDs` to one or more real backtick-quoted `AIC-*` IDs, set `Rules` to the exact checklist rule name, paste the command exactly as run, and include a short output excerpt.
+
+---
+
+Rows between `&lt;!-- BEGIN:STAMPED-COLLECTOR-ROWS --&gt;` and `&lt;!-- END:STAMPED-COLLECTOR-ROWS --&gt;` are written by `audit-stamp.ts` from `AI-CONTRIBUTOR-EVIDENCE.json` — do not edit them. The stamper adds a checksum sentinel inside non-empty stamped blocks and refuses to overwrite a block whose checksum no longer matches. Add manual rows for judgment-required rules below the END marker.
+
+| Spec IDs | Rules | Command | Output excerpt |
+|---------|-----------------|---------|----------------|
+&lt;!-- BEGIN:STAMPED-COLLECTOR-ROWS --&gt;
+&lt;!-- END:STAMPED-COLLECTOR-ROWS --&gt;
+
+Append further rows as needed. If a rule is evidenced entirely by `AI-CONTRIBUTOR-EVIDENCE.json`, keep the collector row and cite `AI-CONTRIBUTOR-EVIDENCE.json` in the checklist Comment.
+
+## Validating this audit log
+
+Run the structural validator over both files before committing the audit. It cross-checks this log against [`AI-CONTRIBUTOR-CHECKLIST.md`](AI-CONTRIBUTOR-CHECKLIST.md) — every Comment that cites a `` `command` `` must match a Command cell here, every `Rules` entry must name a real checklist rule, and the synchronized frontmatter fields must be identical in both files. Exit 0 means the pair is mechanically consistent; exit 1 prints every defect with a stable `AUDITxxx` code.
+
+Validation makes the audit mechanically consistent. A human or named accountable owner still reviews and accepts the filled artifacts before publishing a conformance claim, especially for agent-run audits.
+
+```sh
+# If the spec-repo tools package lives in your repo:
+# Full cycle: collect, stamp, fill judgment-required rows, stamp again, validate
+npm --prefix tools run audit -- \
+  --auditor &quot;AGENT | MODEL | REASONING_EFFORT&quot; \
+  --runner-agent &quot;&lt;runner&gt;&quot; \
+  --runner-model &quot;&lt;model&gt;&quot;
+npm --prefix tools run audit:stamp     # writes derivable cells
+npm --prefix tools run audit:validate  # read-only structural check (re-audit: append -- --previous /tmp/previous-checklist.md)
+
+# Or invoke directly:
+tsx skills/ai-contributor-audit/scripts/audit-stamp.ts \
+  .ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md \
+  .ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md \
+  --auditor &quot;AGENT | MODEL | REASONING_EFFORT&quot; \
+  --runner-agent &quot;&lt;runner&gt;&quot; \
+...</code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="how-to-reproduce">How to reproduce</h2><a class="sl-anchor-link" href="#how-to-reproduce"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="true">Section titled “How to reproduce”</span></a></div>
+<p>For a filled audit, clone the target repository, check out the audited
+commit recorded in the artifact frontmatter, run the collector and
+stamper against the same immutable spec source, then run the validator.
+The template text above defines which fields are stamper-owned, which
+fields are auditor-owned, and which differences are expected between two
+runs.</p>
+<style>
+  .artifact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 22px 0 32px;
+  }
+  .artifact-card {
+    background: var(--sl-color-bg-sidebar);
+    border: 1px solid var(--sl-color-hairline);
+    padding: 16px 18px;
+  }
+  .artifact-k {
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-system-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .artifact-n {
+    color: var(--sl-color-text);
+    font-family: var(--sl-font-system-mono);
+    font-size: 13px;
+    margin: 8px 0;
+    word-break: break-word;
+  }
+  .artifact-d {
+    color: var(--sl-color-gray-2);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  pre.artifact-pre {
+    background: var(--sl-color-gray-7);
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-text);
+    font-family: var(--sl-font-system-mono);
+    font-size: 12px;
+    line-height: 1.55;
+    margin: 14px 0 30px;
+    overflow-x: auto;
+    padding: 16px 18px;
+    white-space: pre;
+  }
+  @media (max-width: 880px) {
+    .artifact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style></div><footer class="dx-footer"><span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span><span class="sep">·</span><span><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>tooling/template/runtime</span></footer></div></div></main></div></div></div></div></body></html>

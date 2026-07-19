@@ -71,7 +71,7 @@ jobs:
 
       - name: Setup Node
         if: steps.detect.outputs.bump == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm

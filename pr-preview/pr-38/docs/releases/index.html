@@ -1,0 +1,380 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-gngnogca"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Release Changelog | ai-contributor-spec / audit</title><link rel="canonical" href="https://ai-contributors.dev/pr-preview/pr-38/docs/releases/"/><link rel="sitemap" href="/pr-preview/pr-38/sitemap-index.xml"/><link rel="shortcut icon" href="/pr-preview/pr-38/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.1.0"/><meta name="generator" content="Starlight v0.41.2"/><meta property="og:title" content="Release Changelog"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ai-contributors.dev/pr-preview/pr-38/docs/releases/"/><meta property="og:locale" content="en"/><meta property="og:description" content="This file records notable normative changes to the AI Contributor Specification and its companion checklist, guide, and audit-log templates."/><meta property="og:site_name" content="ai-contributor-spec / audit"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="This file records notable normative changes to the AI Contributor Specification and its companion checklist, guide, and audit-log templates."/><script>
+  // Starlight defaults to the system theme when its own storage key is
+  // unset. This site owns theme persistence through `theme-mode`
+  // instead, with light as the first-visit default.
+  (function () {
+    try {
+      var theme = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (_) {}
+  })();
+</script><link rel="prefetch" href="/pr-preview/pr-38/pagefind/pagefind-ui.js" as="script" crossorigin><link rel="prefetch" href="/pr-preview/pr-38/pagefind/pagefind-ui.css" as="style"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-38/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DDiogqUc.js"></script><script>
+  // Capture the docs-sidebar pane's scrollTop right before the new
+  // page replaces it. The `<nav class="sidebar">` and its inner
+  // `#starlight__sidebar` scroll container are NOT covered by the
+  // transition:persist on the Sidebar override (PageFrame is outside
+  // our reach), so the new page mounts a fresh pane with scrollTop=0.
+  // Restoring the saved value below avoids a perceived flicker as
+  // the rail jumps to the top on every navigation.
+  let _docsSidebarScroll = 0;
+  document.addEventListener('astro:before-swap', () => {
+    const pane = document.getElementById('starlight__sidebar');
+    if (pane) _docsSidebarScroll = pane.scrollTop;
+  });
+
+  // ClientRouter applies the destination page's <html> attributes after
+  // each swap, which overwrites the user-toggled theme with Starlight's
+  // SSR default (`data-theme="dark"`). Reapply the site-owned choice on
+  // every transition so the theme survives navigation.
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const saved = localStorage.getItem('theme-mode') === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch (_) {}
+
+    // The docs sidebar uses transition:persist to avoid flicker between
+    // pages. That keeps the old DOM, including the previous page's
+    // aria-current="page" marker AND the previous page's collapsed-
+    // section state. Re-derive the active link from the new URL, then
+    // open every <details> ancestor so the entry is actually visible
+    // (otherwise navigating from a Start page to a Project page leaves
+    // the Project section collapsed).
+    try {
+      const sidebar = document.querySelector('nav.sidebar');
+      if (!sidebar) return;
+      sidebar.querySelectorAll('a[aria-current="page"]').forEach((a) => {
+        a.removeAttribute('aria-current');
+      });
+      const path = location.pathname.replace(/\/+$/, '');
+      const links = sidebar.querySelectorAll('a[href]');
+      let active = null;
+      for (const a of links) {
+        const href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+        if (href === path) {
+          a.setAttribute('aria-current', 'page');
+          active = a;
+          break;
+        }
+      }
+      if (active) {
+        let el = active.parentElement;
+        while (el && el !== sidebar) {
+          if (el.tagName === 'DETAILS') el.open = true;
+          el = el.parentElement;
+        }
+        // Restore the previously-saved scroll position first (this
+        // keeps the rail visually stable when the user clicks a link
+        // that was already in view). If the active entry then turns
+        // out to be off-screen — e.g. they jumped from /docs/ to
+        // /docs/releases at the bottom of the rail — pull it back
+        // into view.
+        const pane = sidebar.querySelector('#starlight__sidebar') || sidebar;
+        if (pane && pane.scrollTop !== _docsSidebarScroll) {
+          pane.scrollTop = _docsSidebarScroll;
+        }
+        const aRect = active.getBoundingClientRect();
+        const pRect = pane.getBoundingClientRect();
+        if (aRect.top < pRect.top || aRect.bottom > pRect.bottom) {
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    } catch (_) {}
+  });
+</script><script>
+  window.StarlightThemeProvider = (() => {
+    const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme-mode');
+    const theme = storedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    return {
+      updatePickers(theme = storedTheme === 'dark' ? 'dark' : 'light') {
+        document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+          const select = picker.querySelector('select');
+          if (select) select.value = theme;
+          /** @type {HTMLTemplateElement | null} */
+          const tmpl = document.querySelector(`#theme-icons`);
+          const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+          if (newIcon) {
+            const oldIcon = picker.querySelector('svg.label-icon');
+            if (oldIcon) {
+              oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+            }
+          }
+        });
+      },
+    };
+  })();
+</script><link rel="stylesheet" href="/pr-preview/pr-38/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/pr-preview/pr-38/_astro/index.BuvzVcCx.css"><style>.astro-route-announcer{clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;width:1px;height:1px;position:absolute;top:0;left:0;overflow:hidden}
+</style><script type="module" src="/pr-preview/pr-38/_astro/page.BOCGgm5i.js"></script></head><body class="astro-gngnogca"><a href="#_top" class="astro-67xy4vt7">Skip to content</a><div class="page sl-flex astro-npa6uigv"><header class="header astro-npa6uigv"><div class="header astro-arbz66vw"><div class="title-wrapper sl-flex astro-arbz66vw"><a href="/pr-preview/pr-38/" class="site-title sl-flex astro-alkif3pm"><img class="astro-alkif3pm" alt="ai-contributors logomark" src="/pr-preview/pr-38/_astro/logomark.M5JGvKcj.svg" width="120" height="120"><span class="astro-alkif3pm" translate="no">ai-contributor-spec / audit</span></a></div><div class="sl-flex print:hidden astro-arbz66vw"><site-search class="astro-arbz66vw astro-hrhncvqt" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-hrhncvqt"><svg aria-hidden="true" class="astro-hrhncvqt astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-hrhncvqt" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-hrhncvqt" style="display: none;"><kbd class="astro-hrhncvqt">Ctrl</kbd><kbd class="astro-hrhncvqt">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-hrhncvqt"><div class="dialog-frame sl-flex astro-hrhncvqt"><button data-close-modal class="sl-flex md:sl-hidden astro-hrhncvqt">Cancel</button><div class="search-container astro-hrhncvqt"><div id="starlight__search" class="astro-hrhncvqt"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/pr-preview/pr-38/_astro/Search.astro_astro_type_script_index_0_lang.Dz4MIaj-.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-arbz66vw"><div class="sl-flex social-icons astro-arbz66vw"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-npa6uigv" aria-label="Main"><starlight-menu-button class="print:hidden astro-ti7ld4af"><button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-ti7ld4af"><svg aria-hidden="true" class="open-menu astro-ti7ld4af astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-ti7ld4af astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg></button></starlight-menu-button><script type="module">var e=class extends HTMLElement{btn=this.querySelector(`button`);constructor(){super(),this.btn.addEventListener(`click`,()=>this.toggleExpanded());let e=this.closest(`nav`);e&&e.addEventListener(`keyup`,e=>this.closeOnEscape(e))}setExpanded(e){this.setAttribute(`aria-expanded`,String(e)),document.body.toggleAttribute(`data-mobile-menu-expanded`,e)}toggleExpanded(){this.setExpanded(this.getAttribute(`aria-expanded`)!==`true`)}closeOnEscape(e){e.code===`Escape`&&(this.setExpanded(!1),this.btn.focus())}};customElements.define(`starlight-menu-button`,e);</script><div id="starlight__sidebar" class="sidebar-pane astro-npa6uigv"><div class="sidebar-content sl-flex astro-npa6uigv"><div data-astro-transition-persist="docs-sidebar"><sl-sidebar-state-persist data-hash="166z0uv" class="astro-kcak2osm"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-hhyh2l6h"><li class="astro-hhyh2l6h"><details open class="astro-hhyh2l6h"><summary class="astro-hhyh2l6h"><span class="group-label astro-hhyh2l6h"><span class="large astro-hhyh2l6h">Start</span></span><svg aria-hidden="true" class="caret astro-hhyh2l6h astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-hhyh2l6h"><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Overview</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/quickstart/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Quickstart</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/adoption-guide/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Adoption guide</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/skill-profile/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">ai-contributor-audit-profile</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/skill-audit/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">ai-contributor-audit</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/skill-fix/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">ai-contributor-audit-fix</span></a></li></ul></details></li><li class="astro-hhyh2l6h"><details open class="astro-hhyh2l6h"><summary class="astro-hhyh2l6h"><span class="group-label astro-hhyh2l6h"><span class="large astro-hhyh2l6h">Specification</span></span><svg aria-hidden="true" class="caret astro-hhyh2l6h astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-hhyh2l6h"><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/specification/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Full specification</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/pillars/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Pillars overview</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/conformance-levels/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Levels overview</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/coverage-map/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Coverage map</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/rule-catalog/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Rule catalog</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/threat-model/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Threat model template</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/glossary/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Glossary</span></a></li></ul></details></li><li class="astro-hhyh2l6h"><details open class="astro-hhyh2l6h"><summary class="astro-hhyh2l6h"><span class="group-label astro-hhyh2l6h"><span class="large astro-hhyh2l6h">Audit</span></span><svg aria-hidden="true" class="caret astro-hhyh2l6h astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-hhyh2l6h"><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/audit-overview/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">How the audit works</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/profile/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">The profile</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/audit/prompt/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">No-install prompt</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/stamped-audit/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">A stamped audit</span></a></li></ul></details></li><li class="astro-hhyh2l6h"><details open class="astro-hhyh2l6h"><summary class="astro-hhyh2l6h"><span class="group-label astro-hhyh2l6h"><span class="large astro-hhyh2l6h">Project</span></span><svg aria-hidden="true" class="caret astro-hhyh2l6h astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-hhyh2l6h"><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/releases/" aria-current="page" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Releases</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/contributing/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Contributing</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/authors/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Authors</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/tooling/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Tooling</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/security-policy/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Security policy</span></a></li><li class="astro-hhyh2l6h"><a href="/pr-preview/pr-38/docs/doc-coverage/" class="astro-hhyh2l6h"><span class="astro-hhyh2l6h">Published pages</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-hjntgisg"><div class="social-icons astro-hjntgisg"></div><button class="theme-toggle astro-davbrek5" type="button" aria-label="Toggle theme" aria-pressed="false" data-theme-toggle><span class="theme-toggle-icon astro-davbrek5" aria-hidden="true">◐</span><span class="theme-toggle-label astro-davbrek5" data-theme-label>Dark</span></button><script data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    function isDark() {
+      const t = root.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return false;
+    }
+
+    function syncButtons() {
+      const dark = isDark();
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        const label = btn.querySelector('[data-theme-label]');
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+      });
+    }
+
+    function setTheme(next) {
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme-mode', next);
+      } catch (_) {}
+
+      syncButtons();
+
+      // Keep Starlight's own picker (if it exists elsewhere on the page,
+      // e.g. via mobile menu) in sync.
+      try {
+        if (window.StarlightThemeProvider?.updatePickers)
+          window.StarlightThemeProvider.updatePickers(next);
+      } catch (_) {}
+    }
+
+    syncButtons();
+    // Starlight renders ThemeSelect twice on every page (desktop topbar
+    // and mobile menu). Each instance ships its own copy of this script.
+    // Without dedup, both copies attach a click listener to every button
+    // and the click toggles twice — net no-op. Mark each button after
+    // binding so the second copy skips it.
+    buttons.forEach((btn) => {
+      if (btn.dataset.themeBound === '1') return;
+      btn.dataset.themeBound = '1';
+      btn.addEventListener('click', () => {
+        setTheme(isDark() ? 'light' : 'dark');
+      });
+    });
+
+    // React to other tabs toggling the shared site theme.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'theme-mode') return;
+      const next = e.newValue === 'dark' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      syncButtons();
+    });
+  })();
+</script></div></div></div></div></div></nav><div class="main-frame astro-npa6uigv"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()}),addEventListener(`pageHide`,a);</script><div class="lg:sl-flex astro-c5gbxq4c"><aside class="right-sidebar-container print:hidden astro-c5gbxq4c"><div class="right-sidebar astro-c5gbxq4c"><div class="lg:sl-hidden astro-firrcpkn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-oprqsg5d"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-oprqsg5d"><details id="starlight__mobile-toc" class="astro-oprqsg5d"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-oprqsg5d"><span class="toggle sl-flex astro-oprqsg5d">On this page<svg aria-hidden="true" class="caret astro-oprqsg5d astro-fjnd7tlx" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-oprqsg5d"></span></summary><div class="dropdown astro-oprqsg5d"><ul class="isMobile astro-7tajuef7" style="--depth: 0;"><li style="--depth: 0;" class="astro-7tajuef7"><a href="#_top" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">Overview</span></a></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#unreleased" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[Unreleased]</span></a></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#02--2026-07-03" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.2] — 2026-07-03</span></a><ul class="isMobile astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#014--2026-07-02" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.4] — 2026-07-02</span></a><ul class="isMobile astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-1" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#013--2026-07-02" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.3] — 2026-07-02</span></a><ul class="isMobile astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-2" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#012--2026-05-10" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.2] — 2026-05-10</span></a><ul class="isMobile astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-3" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#011--2026-05-05" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.1] — 2026-05-05</span></a><ul class="isMobile astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-4" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#01--2026-05-03" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1] — 2026-05-03</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/pr-preview/pr-38/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-firrcpkn"><div class="sl-container astro-firrcpkn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-7tajuef7" style="--depth: 0;"><li style="--depth: 0;" class="astro-7tajuef7"><a href="#_top" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">Overview</span></a></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#unreleased" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[Unreleased]</span></a></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#02--2026-07-03" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.2] — 2026-07-03</span></a><ul class="astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#014--2026-07-02" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.4] — 2026-07-02</span></a><ul class="astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-1" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#013--2026-07-02" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.3] — 2026-07-02</span></a><ul class="astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-2" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#012--2026-05-10" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.2] — 2026-05-10</span></a><ul class="astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-3" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#011--2026-05-05" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1.1] — 2026-05-05</span></a><ul class="astro-7tajuef7" style="--depth: 1;"><li style="--depth: 1;" class="astro-7tajuef7"><a href="#changed-4" style="--depth: 1;" class="astro-7tajuef7"><span style="--depth: 1;" class="astro-7tajuef7">Changed</span></a></li></ul></li><li style="--depth: 0;" class="astro-7tajuef7"><a href="#01--2026-05-03" style="--depth: 0;" class="astro-7tajuef7"><span style="--depth: 0;" class="astro-7tajuef7">[0.1] — 2026-05-03</span></a></li></ul></nav></starlight-toc><script type="module" src="/pr-preview/pr-38/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-c5gbxq4c"><main data-pagefind-body class="astro-gngnogca" lang="en" dir="ltr"><div class="content-panel astro-h2z62jqe"><div class="sl-container astro-h2z62jqe"><div class="dx-eyebrow">Project › Release Changelog</div><h1 id="_top" class="astro-2y3utml4">Release Changelog</h1></div></div><div class="content-panel astro-h2z62jqe"><div class="sl-container astro-h2z62jqe"><div class="sl-markdown-content"><!-- generated by scripts/spec-content.mjs; do not edit -->
+<p><strong>Scope.</strong> Only normative changes appear here: new or modified <code dir="auto">MUST</code> / <code dir="auto">SHOULD</code> / <code dir="auto">MAY</code> clauses, checklist row changes, audit-log or evidence-model changes, and changes to shipped audit/skill behavior that adopters can observe. Tooling, coverage lifts, internal refactors, and CI gate adjustments live in <code dir="auto">git log</code> rather than this file. Squash-merged commits to <code dir="auto">main</code> therefore do not all map one-to-one to CHANGELOG entries.</p>
+<p>The format follows <a href="https://keepachangelog.com/en/1.1.0/" target="_blank" rel="noopener noreferrer">Keep a Changelog</a>. Specification releases use SemVer bump semantics with compact patch-zero notation:</p>
+<ul>
+<li>A major bump marks a change that breaks existing conformance claims.</li>
+<li>A minor bump adds or tightens normative requirements.</li>
+<li>A patch bump covers corrections that do not change what a conforming repository must do.</li>
+</ul>
+<p>For the specification and companion templates, patch-zero releases are written as <code dir="auto">MAJOR.MINOR</code> (<code dir="auto">0.1</code>, <code dir="auto">1.2</code>) rather than <code dir="auto">MAJOR.MINOR.0</code>. Patch releases are explicit only when they exist (<code dir="auto">0.1.1</code>, <code dir="auto">1.2.1</code>). Maintainers should prefer minor releases for meaningful specification changes and reserve patch releases for narrow corrections to an already published minor line.</p>
+<p><strong>Release tag versus tool versions.</strong> A Git release tag such as <code dir="auto">v0.1</code> is the specification release and pins the whole adopter-facing bundle at that commit: specification, guide, checklist template, audit-log template, audit skill, examples, bootstrap, collector, stamper, and validator. The tag version is the spec version. It is not the same thing as <code dir="auto">BOOTSTRAP_VERSION</code>, <code dir="auto">collector_version</code>, or <code dir="auto">validator_version</code>; those are implementation versions stamped into audit artifacts so auditors can identify which runtime produced a result. Mention runtime/tool changes in a release entry only when adopters can observe the behavior. Internal refactors, test-only changes, coverage lifts, and implementation version bumps with no adopter-visible behavior stay in <code dir="auto">git log</code>.</p>
+<p>The catalog’s <code dir="auto">specVersion</code> is the adopter-facing specification release, while
+<code dir="auto">schemaVersion</code> is the catalog JSON shape version used by tooling. Patch
+releases may update <code dir="auto">specVersion</code> without changing <code dir="auto">schemaVersion</code>.</p>
+<p>Every released entry lists the release date (the day the version lands on <code dir="auto">main</code>).</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="unreleased">[Unreleased]</h2><a class="sl-anchor-link" href="#unreleased"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[Unreleased]”</span></a></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="02--2026-07-03">[0.2] — 2026-07-03</h2><a class="sl-anchor-link" href="#02--2026-07-03"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.2] — 2026-07-03”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="changed">Changed</h3><a class="sl-anchor-link" href="#changed"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Changed”</span></a></div>
+<ul>
+<li>The shipped skills (<code dir="auto">ai-contributor-audit</code>, <code dir="auto">ai-contributor-audit-fix</code>,
+<code dir="auto">ai-contributor-audit-profile</code>) are now user-invoked only
+(<code dir="auto">disable-model-invocation: true</code>). Agents no longer start them from a
+matched prompt; invoke them explicitly (for example <code dir="auto">/ai-contributor-audit</code>).
+Adopters who relied on natural-language triggering must switch to explicit
+invocation — this behavior change is why this release is a minor bump.</li>
+<li><code dir="auto">ai-contributor-audit-fix</code> now runs in two explicit modes: <strong>fix-next-level</strong>
+(default) fixes every backlog row blocking the next unreached conformance
+level in one confirmed batch, recording a per-finding outcome (<code dir="auto">fixed</code>,
+<code dir="auto">blocked</code>, or <code dir="auto">awaiting hosted-setting confirmation</code>); <strong>fix-one</strong> (a rule
+named in the invocation) fixes that single row. Both modes run exactly one
+collect → stamp → validate re-audit cycle after the batch instead of one per
+finding.</li>
+<li>The audit skill’s non-vendored bootstrap and copy-and-paste runbook flows
+moved from <code dir="auto">SKILL.md</code> into
+<code dir="auto">skills/ai-contributor-audit/references/bootstrap-run.md</code>, which the
+bootstrap manifest now materializes.</li>
+</ul>
+<p>This release does not change rule semantics, checklist rows, audit frontmatter
+fields, or conformance obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="014--2026-07-02">[0.1.4] — 2026-07-02</h2><a class="sl-anchor-link" href="#014--2026-07-02"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.1.4] — 2026-07-02”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="changed-1">Changed</h3><a class="sl-anchor-link" href="#changed-1"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Changed”</span></a></div>
+<ul>
+<li>Re-audits now require a change rationale on auditor-owned checklist rows
+whose status changed since the previous committed audit. <code dir="auto">audit-run.ts</code>
+extracts the <code dir="auto">HEAD</code> version of the checklist and passes it to
+<code dir="auto">audit-validate.ts --previous</code>; validation fails with <code dir="auto">AUDIT070</code> (missing
+rationale), <code dir="auto">AUDIT071</code> (rationale without a current-run citation), or
+<code dir="auto">AUDIT072</code> (unreadable previous checklist). Collector-derived and
+owner-profile stamped rows are exempt. Non-normative tooling change;
+<code dir="auto">validator_version</code> is now <code dir="auto">0.2.0</code>.</li>
+</ul>
+<p>This patch release does not change rule semantics, checklist rows, audit
+frontmatter fields, or conformance obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="013--2026-07-02">[0.1.3] — 2026-07-02</h2><a class="sl-anchor-link" href="#013--2026-07-02"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.1.3] — 2026-07-02”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="changed-2">Changed</h3><a class="sl-anchor-link" href="#changed-2"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Changed”</span></a></div>
+<ul>
+<li>Collapsed the three documented process options (manual self-assessment,
+scripted human audit, agent-assisted audit) into a single scripted audit
+process whose judgment-required rows are filled by a human or an agent.
+Both auditor choices produce the same artifacts and evidence chain and
+require human/accountable-owner acceptance before a conformance claim.</li>
+<li>Manual self-assessment is now described as a script-free planning exercise
+for gap analysis rather than a peer process option; it was never a valid
+conformance-claim path, and that remains unchanged.</li>
+<li>Audit field-ownership documentation is consolidated:
+<code dir="auto">AI-CONTRIBUTOR-AUDIT-MODEL.md</code> § Artifact And Field Ownership is the single
+canonical table, and the shipped audit protocol and <code dir="auto">CONTRIBUTING.md</code> link
+to it instead of restating it. The ownership rules themselves are unchanged.</li>
+<li>The bootstrap runbook manifest now materializes
+<code dir="auto">AI-CONTRIBUTOR-AUDIT-MODEL.md</code> so the protocol’s canonical ownership
+reference resolves inside pinned runbooks.</li>
+</ul>
+<p>This patch release does not change rule semantics, checklist rows, audit
+frontmatter fields, or conformance obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="012--2026-05-10">[0.1.2] — 2026-05-10</h2><a class="sl-anchor-link" href="#012--2026-05-10"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.1.2] — 2026-05-10”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="changed-3">Changed</h3><a class="sl-anchor-link" href="#changed-3"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Changed”</span></a></div>
+<ul>
+<li>Added stable generated anchors to specification pillar and clause headings so
+internal links remain readable and deterministic.</li>
+<li>Expanded adopter-facing reference docs for the rule catalog, glossary, audit
+profile, and threat model without changing conformance obligations.</li>
+<li>Clarified audit artifact terminology and catalog/checklist relationships to
+match the current generated audit templates.</li>
+</ul>
+<p>This patch release does not change rule semantics, checklist rows, audit
+frontmatter fields, or conformance obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="011--2026-05-05">[0.1.1] — 2026-05-05</h2><a class="sl-anchor-link" href="#011--2026-05-05"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.1.1] — 2026-05-05”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="changed-4">Changed</h3><a class="sl-anchor-link" href="#changed-4"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “Changed”</span></a></div>
+<ul>
+<li><code dir="auto">AI-CONTRIBUTOR-RULE-CATALOG.json</code> is now the canonical source for rule IDs,
+normative rule text, pillar and clause metadata, conformance-level metadata,
+checklist row bindings, coverage data, and generated audit-template version
+fields.</li>
+<li>Generated projections now render from Markdown templates plus the rule
+catalog: <code dir="auto">AI-CONTRIBUTOR-SPECIFICATION.md</code>,
+<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-CHECKLIST.md</code>,
+<code dir="auto">AI-CONTRIBUTOR-COVERAGE.md</code>, <code dir="auto">AI-CONTRIBUTOR-AUDIT.md</code>, and
+<code dir="auto">.ai-contributor-audit/AI-CONTRIBUTOR-AUDIT-LOG.md</code>.</li>
+<li>Checklist rule-table ordering is now mechanical and may differ from earlier
+hand-authored ordering, while visible <code dir="auto">AIC-*</code> IDs and checklist semantics
+remain unchanged.</li>
+<li>The specification clause section now uses a nested heading hierarchy:
+pillars under <code dir="auto">###</code>, clauses under <code dir="auto">####</code>, and scope groups under <code dir="auto">#####</code>.
+Rule IDs and normative text are unchanged.</li>
+<li>Non-normative explanatory clause prose was moved into scope guidance,
+definitions, or the adoption guide so the generated specification clause
+body contains only catalog-owned structure and normative rule bullets.</li>
+<li>Shipped audit templates now carry <code dir="auto">spec_version: "0.1.1"</code> to match the
+current specification release.</li>
+</ul>
+<p>This patch release does not change rule semantics or conformance obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="01--2026-05-03">[0.1] — 2026-05-03</h2><a class="sl-anchor-link" href="#01--2026-05-03"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “[0.1] — 2026-05-03”</span></a></div>
+<p>Initial public version of the AI Contributor Specification.</p></div><footer class="dx-footer"><span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> docs/spec</span><span class="sep">·</span><span><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0</a>tooling/template/runtime</span></footer></div></div></main></div></div></div></div></body></html>

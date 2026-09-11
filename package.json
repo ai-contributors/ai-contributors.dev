@@ -58,7 +58,7 @@
     "secretlint": "13.0.2",
     "typescript": "6.0.3",
     "unist-util-visit": "5.1.0",
-    "vitest": "4.1.9"
+    "vitest": "4.1.11"
   },
   "pnpm": {
     "overrides": {
